@@ -18,6 +18,7 @@
 	1. Số nguyên
 	- Lâm: a b c d
 	- Duy: e f i j
+	- Kim: g h
 	
 	2. Số thực
 	- Đức: a b
