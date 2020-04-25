@@ -112,7 +112,7 @@ void QInt::output() //just for test
 	string result = "";
 	for (int i = 0; i < 128; i++)
 	{
-		char c = getBit(val[i / 32], i % 32, 32) + '0';
+		char c = getBit(val[i / 8], i % 8, 8) + '0';
 		result += c;
 	}
 	normalizeNumber(result);
