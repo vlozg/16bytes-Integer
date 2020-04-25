@@ -19,15 +19,14 @@ Thiết kế kiểu dữ liệu và các hàm và toán tử gồm nhập, xuấ
 
 ### Be a clean coder 
 
-1. Đặt tên biến và hàm kiểu CapitalCamelCase, dùng từ tiếng anh dễ hiểu và gọn ghẻ, biến tạm cũng phải đặt là tạm cho cái gì.
+1. Đặt tên biến kiểu camelCase và hàm (function) kiểu CapitalCamelCase, dùng từ tiếng anh dễ hiểu và gọn ghẻ, biến tạm cũng phải đặt là tạm cho cái gì.
 2. Đặt tên hằng (constant) dùng kiểu UPPER_SNAKE_CASE.
 3. Code rõ ràng không code tắt như:
 	- Không có điều kiện rõ ràng trong if: if (SomeVariable) {...}
 	- Sử dụng toán tử 3 ngôi: (a>b) ? a : b.
 4. Xuống dòng thụt đầu dòng đầy đủ.
 5. Không code luôn tuồng, 1 dòng for cũng phải có bracket.
-6. Command line đầy đủ, kể cả 1 dòng khởi tạo, có thể ko cần cho những tên biến đã đầy đủ.<br />
-	Ví dụ: int countStep;
+6. Comment code đầy đủ, tránh mơ hồ, không rõ nghĩa.<br />
 
 ### Tiêu chí đặt tên biến
   **Tiêu chí 1**: Tên phải thể hiện được đầy đủ ý nghĩa và vai trò của nó. 
