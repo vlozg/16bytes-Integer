@@ -14,9 +14,12 @@ public:
 
 	void Input(string);
 	void Output();
-
 	bool* DecToInt();
 	void BinToDec(bool* bit);
+
+	QInt ComplementTwo();
+	QInt operator+(QInt);
+	QInt operator-(QInt);
 	QInt();
 };
 
