@@ -1,63 +1,72 @@
-#include "QInt.h"
+﻿#include "QInt.h"
 
+//Lấy bit tại vị trí thứ i
 bool QInt::GetBit(int i)
 {
 	return (value[i / 8] >> (7 - (i % 8))) & 1;
 }
 
-void QInt::SetBit(int i)
+//Set bit
+// bit: bit cần set
+// i : vị trí cần set
+void QInt::SetBit(int i, bool bit)
 {
-	value[i / 8] = value[i / 8] | (1 << (7 - (i % 8)));
+	if (bit == 1)
+	{
+		value[i / 8] = value[i / 8] | (1 << (7 - (i % 8)));
+	}
+	else
+	{
+		value[i / 8] = value[i / 8] & (0 << (7 - (i % 8)));
+	}
+
 }
 
-//Chuoi Dec -> Chuoi Bin -> QInt
+//Chuỗi Dec -> Chuỗi Bin -> QInt
 void QInt::Input(string number)
 {
-	string bin = DecToBinStr(number);			//bin se la dang binary cua number
+	string bin = DecToBinStr(number);			//Chuỗi Dec number -> Chuỗi Bin bin
 	for (int i = 0; i < 128; i++)
 	{					
-		if (bin[i] == '1')					// set bit 1 tai vi tri i
+		if (bin[i] == '1')					// Set bit 1 tại vị trí i
 		{
-			SetBit(i);
+			SetBit(i, 1);
 		}
 
 	}
 }
 
-//	Tu QInt --> chuoi Bin --> chuoi Dec
+//	QInt --> chuỗi Bin --> chuỗi Dec
 void QInt::Output() 
 {
 	string bin = "";
 	string result = "0";
-	QInt temp = *this;	//Luu so bu 2 neu can
+	QInt temp = *this;	//Biến tạm lưu dãy bit
 
-	bool negative = GetBit(0);
+	bool negative = GetBit(0);	//Xét bit dấu
 	if (negative == true)
 	{
-		temp = this->ComplementTwo();
+		temp = this->ComplementTwo();	//Nếu là số âm thì khi lấy bù 2 sẽ trả lại số dương
 	}
 
-	for (int i = 0; i < 128; i++)	// QInt --> chuoi bin
+	for (int i = 0; i < 128; i++)	// QInt --> chuỗi Bin
 	{
 		char c = temp.GetBit(i) + '0';
 		bin += c;
 	}
 
 	string pow[128] = { "" };
-	PowOfTwo(pow);					//	Lap thanh cac so luy thua cua 2
+	PowOfTwo(pow);					//	Lập thành các lũy thừa của số 2
 
-	//	------------------WARNING-------------------
-	//	--------CHUA XU LI BIT DAU, SO BU 2 --------
-	//	--------------------------------------------
 	for (int i = 0; i < 128; i++)	
 	{
 		if (bin[127 - i] == '1')
 		{
-			result = SumNumbers(result, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
+			result = SumNumbers(result, pow[i]);	//	Cộng theo công thức: 2^x1 + 2^x2 + 2^x3 +...
 		}
 	}
 
-	//	Ket qua tra ve dang chuoi o so thap phan
+	//Kết quả trả về số thập phân ở dạng chuỗi
 	if (negative)
 	{
 		result = "-" + result;
@@ -67,17 +76,19 @@ void QInt::Output()
 
 //Chuyen day bit thanh day bool
 //Neu k xai nua thi phai delete[] bool
+//Lấy bit từ x -> dãy bool 128 phần tử
 bool* DecToBin(QInt x)
 {
 	bool* bit = new bool[128];
 	for (int i = 0; i < 128; i++)
 	{
-		bit[i] = x.GetBit(i);	//Gan bit tu QInt vao mang bit tren
+		bit[i] = x.GetBit(i);	
 	}
 	return bit;
 }
 
-//Chi dung khi mang bin co du 128 phan tu
+//Set các phần tử của bin vào QInt
+//bin cần có 128 phần tử
 QInt BinToDec(bool* bin)	
 {
 	QInt result;
@@ -86,7 +97,7 @@ QInt BinToDec(bool* bin)
 	{
 		if (bin[i] == 1)
 		{
-			result.SetBit(i);
+			result.SetBit(i, 1);
 		}
 	}
 	return result;
@@ -107,8 +118,8 @@ QInt::QInt()
 //	------------------------------------------------------
 
 
-//Xoa so 0 va space o truoc
-//Xoa space phia sau
+//Xóa số 0 và space phía trước số thập phân
+//Xóa space phía sau số thập phân
 void NormalizeNumber(string& number)
 {
 	while (number[0] == '0' || number[0] == ' ')	//Delete all the '0' and the space in front of number
@@ -126,46 +137,46 @@ void NormalizeNumber(string& number)
 
 }
 
-//Chia chuoi dec cho 2
+//Trả về chuỗi thập phân của number/2
 string DivideByTwo(string number)	
 {
-	// Thuc hien nhu phep chia o cap 1
+	// Thực hiện phép chia như cấp 1
 
-	string result = "";	//Ket qua
+	string result = "";	
 
-	string temp = "";	//Chuoi luu tung chu so dung de chia
+	string temp = "";	//Chuỗi dùng để trích từng số để chia
 
-	int q = 0;	//La thuong cua phep chia tung chu so (la 1 phan cua result)
+	int q = 0;	//Thương của phép chia từng số (là 1 phần của result)
 	int len = number.length();
-	int p = 0;	//La temp nhung o dang so
+	int p = 0;	//p -> dạng int của temp
 
-	//		CACH CHIA:
-	//	DUA TUNG CHU SO TU TRAI SANG VAO TEMP
-	//	SAU DO CHUYEN TEMP TU DANG CHUOI SANG P DANG SO
-	//	DUNG P / 2 = Q, NEU CO DU THI CONG SO DU VAO TEMP O DANG CHUOI
-	//	TIEP TUC CHO DEN KHI HET TAT CA CHU SO CUA SO BI CHIA
+	//		CÁCH CHIA:
+	//	ĐƯA TỪNG CHỮ SỐ VÀO TEMP
+	//	SAU ĐỐ CHUYỂN TEMP TỪ DẠNG CHUỖI SANG P DẠNG SỐ
+	//	DÙNG P / 2 = Q, NẾU CÓ DƯ THÌ CỘNG SỐ DƯ VÀO TEMP Ở DẠNG CHUỖI
+	//	TIẾP TỤC CHO ĐÉN KHI HẾT TẤT CẢ CHỮ SỐ CỦA SÓ BỊ CHIA
 
 	for (int i = 0; i < len; i++)
 	{
-		temp += number[i];	//	Them vao tung chu so vao temp
+		temp += number[i];	//	Thêm từng chữ số vào temp
 
-		if (temp.length() == 1)	//Neu temp chi co 1 chu so
+		if (temp.length() == 1)	
 		{
-			p = temp[0] - '0';	//	Chuyen temp thanh p o dang so
+			p = temp[0] - '0';	
 			q = p / 2;			//	q la ket qua cua phep chia
 			result += q + '0';	//	dua q vao ket qua
-			temp.clear();		//	Xoa temp di
+			temp.clear();		//	Xóa temp cho đợt chia tiếp theo
 
-			temp += (p - q * 2) + '0';	//	Dua so du con lai vao temp
+			temp += (p - q * 2) + '0';	//	Nếu còn dư thì đưa vào temp
 
-			if (temp[0] == '0')	//	Neu temp van chi co 0 thi xoa luon
+			if (temp[0] == '0')	// Nếu không dư thì xóa
 			{
 				temp.clear();
 			}
 		}
-		else	//	Neu temp co 2 chu so (chi khac o tren cach chuyen sang p)
+		else	//	Nếu temp có 2 chữ số
 		{
-			p = (temp[1] - '0' + (temp[0] - '0') * 10);	//	Chuyen temp co 2 chu so sang p
+			p = (temp[1] - '0' + (temp[0] - '0') * 10);	//	VD: "12" -> 12
 			q = p / 2;									//	q la ket qua cua phep chia
 			result += q + '0';							//	dua q vao ket qua
 			temp.clear();								//	Xoa temp di
@@ -177,11 +188,11 @@ string DivideByTwo(string number)
 			}
 		}	
 	}
-	NormalizeNumber(result);	//Co nhiem vu xoa cac so 0 o phia truoc 
+	NormalizeNumber(result);	//Có nhiệm vụ xóa số 0 phía trước
 	return result;
 }
 
-//	Chuyen chuoi dec --> chuoi bin (co 128 ki tu)
+//	Chuỗi dec number -> chuỗi bin (128 kí tự)
 string DecToBinStr(string number)	
 {
 	bool positive = true;
@@ -192,29 +203,29 @@ string DecToBinStr(string number)
 	}
 
 	int last_index = number.length() - 1;
-	string temp = number;	//temp luu ket qua cua chuoi sau cac phep chia 2
-	string bin = "";	//Chuoi ket qua binary
-	//			LAM NHU CONG THUC:
-	//CHIA SO NUMBER CHO 2, LAY SO DU THEM VAO DANG TRUOC KET QUA
-	//THUC HIEN LIEN TUC CHO DEN KHI SO BI CHIA LA 0
-	//NEU BIN VAN CHUA DU 128 KI TU, CHEN CAC SO 0 VAO
+	string temp = number;	//temp lưu lại kết quả sau các phép chia 2
+	string bin = "";	
+	//			LÀM NHƯ CÔNG THỨC:
+	//CHIA NUMBER CHO 2, LẤY SỐ DƯ THÊM VÀO PHÍA TRƯỚC KẾT QUẢ
+	//THỰC HIỆN LIÊN TỤC CHO ĐẾN KHI SỐ BỊ CHIA LÀ 0
+	//NẾU KẾT QUẢ CHƯA ĐỦ 128 BIT, CHÈN CÁC SỐ 0 VÀO TRƯỚC
 
 	while (temp != "0")
 	{
-		last_index = temp.length() - 1;			//Trich chu so cuoi cung de xem so do chia co du hay khong
-		int r = (temp[last_index] - '0') % 2;	//r se la so du (0 hoac 1)
-		temp = DivideByTwo(temp);				//temp mang ket qua sau khi chia 2
+		last_index = temp.length() - 1;			
+		int r = (temp[last_index] - '0') % 2;	//Chữ số cuối cùng chia dư cho 2 --> bit
+		temp = DivideByTwo(temp);				//Chia liên tục cho 2
 		char c = r + '0';
-		bin = c + bin;							//Them so du do vao truoc ket qua da co
+		bin = c + bin;							
 	}
-	for (int i = bin.length(); i < 128; i++)	//Chen cac so 0 vao cho du 128 bit
+	for (int i = bin.length(); i < 128; i++)	//Chèn các số 0 vào trước kết quả
 	{
 		bin = "0" + bin;
 	}
 
-	if (positive == false)	//Neu la so am thi chuyen sang bu 2
+	if (positive == false)	//Nếu là số âm thì phải chuyển chuỗi bit về bù 2
 	{
-		for (int i = 0; i < 128; i++)	//Bu 1
+		for (int i = 0; i < 128; i++)	//Bù 1
 		{
 			if (bin[i] == '0') {
 				bin[i] = '1';
@@ -223,7 +234,7 @@ string DecToBinStr(string number)
 				bin[i] = '0';
 			}
 		}
-		int carry = 1; //bien nho cho viec cong 1 bit
+		int carry = 1; //biến nhớ cộng 1 bit
 		for (int i = 127; i >= 0; i--)
 		{
 			int s = bin[i] - '0' + carry;
@@ -249,7 +260,7 @@ string DecToBinStr(string number)
 }
 
 
-//Nhan chuoi dec cho 2
+//Chuỗi number x 2
 string MultiplyByTwo(string number)	
 {
 	string result = "";
@@ -273,7 +284,7 @@ string MultiplyByTwo(string number)
 	return result;
 }
 
-//Luy thua cua 2
+//Lũy thừa của 2
 void PowOfTwo(string pow[128])	
 {
 	//		Ket qua se luu vao mang string pow co 128 phan tu
@@ -288,7 +299,7 @@ void PowOfTwo(string pow[128])
 	}
 }
 
-//Cong 2 chuoi so dec (only for output)
+//Cộng 2 chuỗi dec --> chuỗi sum dec
 string SumNumbers(string n1, string n2)		
 {
 	string result = "";
@@ -416,7 +427,7 @@ QInt QInt::operator +(QInt number)
 		bool secondBit = number.GetBit(127 - i);
 		bool newBit = FullAdder(firstBit, secondBit, carrierBit);
 		if (newBit) //if new bit is 1 then set it in value
-			product.SetBit(127 - i);
+			product.SetBit(127 - i, 1);
 	}
 	return product;
 }
@@ -428,7 +439,7 @@ QInt QInt::operator -(QInt number)
 	return (*this) + number.ComplementTwo(); //turns number into two's complement then sum
 }
 
-//Tao mang chuoi cho user nhap vao
+//Nhập vào số thập phân ở dạng chuỗi
 void ScanQInt(QInt& x)
 {
 	string number;
@@ -447,6 +458,7 @@ void ScanQInt(QInt& x)
 
 }
 
+//Xuất ở dạng thập phân
 void PrintQInt(QInt x)
 {
 	x.Output();

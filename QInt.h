@@ -10,7 +10,7 @@ private:
 	char value[16] = { 0 };
 public:
 	bool GetBit(int i);
-	void SetBit(int i);	//Ham chi bat bit tu 0 -> 1, muon set bit 0 thi no phai la 0 truoc do
+	void SetBit(int i, bool bit);
 
 	void Input(string);
 	void Output();
