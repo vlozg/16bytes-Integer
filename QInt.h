@@ -15,15 +15,24 @@ public:
 	void Input(string);
 	void Output();
 
-	bool* DecToInt();
-	void BinToDec(bool* bit);
 	QInt();
+
+	QInt ComplementTwo();
+	QInt operator+(QInt number);
+	QInt operator-(QInt number);
 };
 
-bool GetBitAll(char data, int i, int size);		
-void SetBitAll(char& data, int i, int size);	
+void ScanQInt(QInt& x);		//Cau a
+void PrintQInt(QInt x);		//Cau b
+bool* DecToBin(QInt x);		//Cau c
+QInt BinToDec(bool* bit);	//Cau d
+
+
+	
 string DivideByTwo(string number);
-string DecToBin(string number);
-string MultiplyWithTwo(string number);
+string DecToBinStr(string number);	//Ham nay moi sua ten do nha! (DecToBin -> DecToBinStr)
+string MultiplyByTwo(string number);
 void PowOfTwo(string pow[128]);
 string PlusNumber(string n1, string n2);
+bool checkNumber(string number);
+void normalizeNumber(string& number);
