@@ -1,7 +1,8 @@
 #pragma once
 #include <iostream>
 #include <string>
-
+#define SIZE 16
+#define BIT_RANGE 128
 using namespace std;
 
 class QInt
@@ -20,6 +21,17 @@ public:
 	QInt ComplementTwo();
 	QInt operator+(QInt);
 	QInt operator-(QInt);
+
+	QInt operator=(const QInt&);
+	bool operator<(const QInt&);
+	bool operator>(const QInt&);
+	bool operator<=(const QInt&);
+	bool operator>=(const QInt&);
+	bool operator==(const QInt&);
+
+	bool IsNegative();
+	char MostSignificantBit();
+
 	QInt();
 };
 
