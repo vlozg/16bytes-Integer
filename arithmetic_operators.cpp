@@ -1,15 +1,15 @@
 #include "QInt.h"
 
-//Calculate sum of 2 bits using half-adder algorithm
-//Input: first bit A, secoond bit B, carrier bit C
+/*Calculate sum of 2 bits using half-adder algorithm
+Input: first bit A, secoond bit B, carrier bit C*/
 bool HalfAdder(bool A, bool B, bool& C)
 {
 	C = A & B;
 	return A ^ B;
 }
 
-//Calculate sum of 2 bits using full-adder algorithm
-//Input: first bit A, secoond bit B, previous carrier bit prevC
+/*Calculate sum of 2 bits using full-adder algorithm
+Input: first bit A, secoond bit B, previous carrier bit prevC*/
 bool FullAdder(bool A, bool B, bool& prevC)
 {
 	bool C, newC; //carrier bits
@@ -19,7 +19,7 @@ bool FullAdder(bool A, bool B, bool& prevC)
 	return sum;
 }
 
-//Calculate sum
+//Calculate sum of 2 QInt
 QInt QInt::operator +(QInt number)
 {
 	QInt product;
@@ -35,7 +35,7 @@ QInt QInt::operator +(QInt number)
 }
 
 
-//Calculate subtraction
+//Calculate subtraction of 2 QInt
 QInt QInt::operator -(QInt number)
 {
 	number.Complement2(); //turns number into complement 2
