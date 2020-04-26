@@ -8,7 +8,7 @@ class Qfloat
 private:
 	char value[16] = {0};
 public:
-	void SetBit(int pos,bool bit);
+	void SetBit(int pos, bool bit);
 	bool GetBit(int pos);
 };
 
