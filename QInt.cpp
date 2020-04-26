@@ -10,6 +10,7 @@ void QInt::SetBit(int i)
 	val[i / 8] = val[i / 8] | (1 << (7 - (i % 8)));
 }
 
+//Chuoi Dec -> Chuoi Bin -> QInt
 void QInt::Input(string number)
 {
 	string bin = DecToBinStr(number);			//bin se la dang binary cua number
@@ -52,7 +53,7 @@ void QInt::Output()
 	{
 		if (bin[127 - i] == '1')
 		{
-			result = PlusNumber(result, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
+			result = SumNumbers(result, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
 		}
 	}
 
@@ -106,8 +107,9 @@ QInt::QInt()
 //	------------------------------------------------------
 
 
-
-void normalizeNumber(string& number)
+//Xoa so 0 va space o truoc
+//Xoa space phia sau
+void NormalizeNumber(string& number)
 {
 	while (number[0] == '0' || number[0] == ' ')	//Delete all the '0' and the space in front of number
 	{
@@ -175,7 +177,7 @@ string DivideByTwo(string number)
 			}
 		}	
 	}
-	normalizeNumber(result);	//Co nhiem vu xoa cac so 0 o phia truoc 
+	NormalizeNumber(result);	//Co nhiem vu xoa cac so 0 o phia truoc 
 	return result;
 }
 
@@ -221,24 +223,24 @@ string DecToBinStr(string number)
 				bin[i] = '0';
 			}
 		}
-		int c = 1; //bien nho cho viec cong 1 bit
+		int carry = 1; //bien nho cho viec cong 1 bit
 		for (int i = 127; i >= 0; i--)
 		{
-			int s = bin[i] - '0' + c;
+			int s = bin[i] - '0' + carry;
 			if (s > 1)
 			{
 				bin[i] = '0';
-				c = 1;
+				carry = 1;
 			}
 			else if(s == 1)
 			{
 				bin[i] = '1';
-				c = 0;
+				carry = 0;
 			}
 			else
 			{
 				bin[i] = '0';
-				c = 0;
+				carry = 0;
 			}
 		}
 
@@ -252,21 +254,21 @@ string MultiplyByTwo(string number)
 {
 	string result = "";
 	int number_len = number.length();
-	int mem = 0;	//Bien nho
+	int carry = 0;	//Bien nho
 
 	for (int i = number_len - 1; i >= 0; i--)
 	{
-		int m = (number[i] - '0') * 2 + mem;	//m la ket qua cua phep nhan cua 2 voi tung chu so cua number
+		int m = (number[i] - '0') * 2 + carry;	//m la ket qua cua phep nhan cua 2 voi tung chu so cua number
 
-		mem = m / 10;	//mem se ghi nho chu so dau tien neu m >= 10
+		carry = m / 10;	//mem se ghi nho chu so dau tien neu m >= 10
 
 		char c = m % 10 + '0';	//c se luu chu so cuoi cung cua m duoi dang char
 		result = c + result;	//dua c vao truoc chuoi ket qua da co
 	}
-	if (mem > 0)
+	if (carry > 0)
 	{
 		//Neu van con bien nho sau khi nhan 2 cho tat chu so, them bien nho vao truoc chuoi ket qua
-		result = char(mem + '0') + result;
+		result = char(carry + '0') + result;
 	}
 	return result;
 }
@@ -287,7 +289,7 @@ void PowOfTwo(string pow[128])
 }
 
 //Cong 2 chuoi so dec (only for output)
-string PlusNumber(string n1, string n2)		
+string SumNumbers(string n1, string n2)		
 {
 	string result = "";
 	string longer = "", shorter = "";	//longer se luu chuoi so co nhieu chu so hon, shorter nguoc lai
@@ -309,33 +311,33 @@ string PlusNumber(string n1, string n2)
 
 	// --> Cong nhu kieu dat tinh roi tinh o cap 1 :)))
 	
-	int mem = 0;	//Cong co nho
+	int carry = 0;	//Cong co nho
 
 	int i = 0, j = 0;
 
 	for (i = small - 1, j = large - 1; i >= 0; i--, j--)
 	{
-		int s = (shorter[i] - '0') + (longer[j] - '0') + mem; //Lay 2 ki tu cung don vi cong voi nhau va cong them bien nho
+		int s = (shorter[i] - '0') + (longer[j] - '0') + carry; //Lay 2 ki tu cung don vi cong voi nhau va cong them bien nho
 
-		mem = s / 10;			//Bien nho la chu so dang truoc cua s
+		carry = s / 10;			//Bien nho la chu so dang truoc cua s
 
 		char c = s % 10 + '0';	//Luu hang don vi cua s o dang char
 		result = c + result;	//Them vao ket qua da co
 	}
 	while (j >= 0)
 	{
-		int s = (longer[j] - '0') + mem;	// Cong cac chu so con lai cho mem
+		int s = (longer[j] - '0') + carry;	// Cong cac chu so con lai cho mem
 
-		mem = s / 10;
+		carry = s / 10;
 
 		char c = s % 10 + '0';
 		result = c + result;
 
 		j--;
 	}
-	if (mem > 0)
+	if (carry > 0)
 	{
-		result = char(mem + '0') + result;	// Them mem vao truoc chuoi neu con
+		result = char(carry + '0') + result;	// Them mem vao truoc chuoi neu con
 	}
 	return result;
 }
@@ -343,7 +345,7 @@ string PlusNumber(string n1, string n2)
 
 //Tra ve True neu la so nguyen
 //Tra ve False neu nguoc lai
-bool checkNumber(string number)
+bool CheckNumber(string number)
 {
 	int i = 0;
 	if (number[i] == '+' || number[i] == '-')
@@ -431,8 +433,8 @@ void ScanQInt(QInt& x)
 {
 	string number;
 	getline(cin, number);
-	normalizeNumber(number);
-	if (checkNumber(number) == false)
+	NormalizeNumber(number);	//
+	if (CheckNumber(number) == false)
 	{
 		//Do something
 		cout << "Khong phai so";

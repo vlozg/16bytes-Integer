@@ -33,6 +33,6 @@ string DivideByTwo(string number);
 string DecToBinStr(string number);	//Ham nay moi sua ten do nha! (DecToBin -> DecToBinStr)
 string MultiplyByTwo(string number);
 void PowOfTwo(string pow[128]);
-string PlusNumber(string n1, string n2);
-bool checkNumber(string number);
-void normalizeNumber(string& number);
+string SumNumbers(string n1, string n2);
+bool CheckNumber(string number);
+void NormalizeNumber(string& number);
