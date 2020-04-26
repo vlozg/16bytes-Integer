@@ -6,10 +6,10 @@ using namespace std;
 class Qfloat
 {
 private:
-	char value[16];
+	char value[16] = {0};
 public:
-	Qfloat();
-	~Qfloat();
+	void SetBit(int pos,bool bit);
+	bool GetBit(int pos);
 };
 
 void ScanQfloat(Qfloat&);
