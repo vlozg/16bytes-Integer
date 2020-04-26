@@ -31,7 +31,11 @@ public:
 	QInt operator|(QInt number);
 	QInt operator^(QInt number);
 	QInt operator~();
-	
+	QInt operator<<(int number);
+	QInt operator>>(int number);
+
+	void RotateLeft(int number);
+	void RotateRight(int number);
 };
 
 void ScanQInt(QInt& x);		//Cau a
