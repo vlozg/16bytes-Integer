@@ -30,7 +30,7 @@ public:
 	QInt operator&(QInt number);
 	QInt operator|(QInt number);
 	QInt operator^(QInt number);
-	QInt operator~(QInt number);
+	QInt operator~();
 	
 };
 

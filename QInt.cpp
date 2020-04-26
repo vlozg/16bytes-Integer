@@ -417,6 +417,8 @@ QInt QInt::ComplementTwo()
 	return complement;
 }
 
+
+
 //Calculate sum of 2 QInt
 QInt QInt::operator +(QInt number)
 {
@@ -477,12 +479,12 @@ QInt QInt::operator ^(QInt number) {
 }
 
 //Hàm trả về kết quả khi 2 kiểu dữ liệu QInt ~ nhau
-QInt QInt::operator ~(QInt number) {
+QInt QInt::operator ~() {
 	QInt result; // kết quả trả về
 
 	for (int i = 0; i < BIT_RANGE; i++) {
 		// res là kết quả của phép ~ giữa 2 QInt
-		result.value[i] = (*this).value[i] ~ number.value[i];
+		result.value[i] = ~(*this).value[i];
 	}
 
 	return result;
