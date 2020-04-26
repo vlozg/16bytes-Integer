@@ -30,13 +30,13 @@ public:
 	bool operator==(const QInt&);
 
 	bool IsNegative();
-	char MostSignificantBit();
+	int MostSignificantBit();
 
 	QInt();
 };
 
-bool GetBitAll(char data, int i, int size);		
-void SetBitAll(char& data, int i, int size);	
+bool GetBitAll(char data, int i, int size);
+void SetBitAll(char& data, int i, int size);
 string DivideByTwo(string number);
 string DecToBin(string number);
 string MultiplyWithTwo(string number);
