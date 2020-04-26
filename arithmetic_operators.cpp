@@ -28,15 +28,15 @@ QInt QInt::ComplementTwo()
 	int i;
 	for (i = SIZE - 1;i >= 0;i--)
 	{
-		complement.val[i] = 255 - val[i];
+		complement.value[i] = 255 - value[i];
 		//chuyển thành số bù 1: 
 		//255 - 1 số 8 bit sẽ ra số nhị phân có các bit đảo ngược của số đó
 	}
 	cout << endl;
 	for (i = SIZE - 1;i >= 0;i--)
 	{
-		complement.val[i] += 1; //+1 tuần tự vào từng block
-		if (complement.val[i] == 0) //nếu tràn số thì tiếp tục +1 vào block kế tiếp
+		complement.value[i] += 1; //+1 tuần tự vào từng block
+		if (complement.value[i] == 0) //nếu tràn số thì tiếp tục +1 vào block kế tiếp
 			continue;
 		else
 			break;
@@ -53,8 +53,7 @@ QInt QInt::operator +(QInt number)
 		bool firstBit = this->GetBit(BIT_RANGE - i - 1);
 		bool secondBit = number.GetBit(BIT_RANGE - i - 1);
 		bool newBit = FullAdder(firstBit, secondBit, carrierBit);
-		if (newBit) //nếu bit 1 thì set bit
-			product.SetBit(BIT_RANGE - i - 1);
+		product.SetBit(BIT_RANGE - i - 1, newBit);
 	}
 	return product;
 }
@@ -70,7 +69,7 @@ QInt QInt::operator=(const QInt& number)
 		return *this;
 	for (int i = 0;i < SIZE;i++) //copy giá trị
 	{
-		this->val[i] = number.val[i];
+		this->value[i] = number.value[i];
 	}
 	return *this;
 }
@@ -84,7 +83,7 @@ bool QInt::operator<(const QInt& number)
 		return true;
 	if (!negative1 && negative2) //số hiện tại dương, số number âm
 		return false;
-	
+
 	if (negative1 && negative2) //cả 2 số cùng âm
 	{
 		A = A.ComplementTwo();
@@ -135,24 +134,77 @@ bool QInt::operator<(const QInt& number)
 
 bool QInt::operator<=(const QInt& number)
 {
-	return true;
+	return (*this == number || *this < number);
 }
 
 bool QInt::operator>(const QInt& number)
 {
-	return true;
+	QInt A = *this, B = number; //biến tạm để so sánh
+	bool negative1 = A.IsNegative();
+	bool negative2 = B.IsNegative();
+	if (negative1 && !negative2) //số hiện tại âm, số number dương
+		return true;
+	if (!negative1 && negative2) //số hiện tại dương, số number âm
+		return false;
+
+	if (negative1 && negative2) //cả 2 số cùng âm
+	{
+		A = A.ComplementTwo();
+		B = B.ComplementTwo();
+	}
+
+	int msb1 = A.MostSignificantBit(); //most significant bit(msb) của số hiện tại
+	int msb2 = B.MostSignificantBit(); //most significant bit(msb) của number
+
+	if (msb1 < msb2) //nếu số hiện tại > number 
+	{
+		if (!negative1) //nếu cả 2 số dương
+			return true;
+		else
+			return false;
+	}
+	else if (msb1 > msb2)
+	{
+		if (!negative1) //nếu cả 2 số dương
+			return false;
+		else
+			return true;
+	}
+	else
+	{
+		for (int i = msb1;i < BIT_RANGE;i++)
+		{
+			//nếu bit tại vị trí i của số này = 1 còn number = 0
+			if (A.GetBit(i) && !B.GetBit(i))
+			{
+				if (!negative1) //nếu cả 2 số dương
+					return true;
+				else
+					return false;
+			}
+			//ngược lại
+			else if (!A.GetBit(i) && B.GetBit(i))
+			{
+				if (!negative1) //nếu cả 2 số dương
+					return false;
+				else
+					return true;
+			}
+		}
+	}
+	return false;
 }
 
 bool QInt::operator>=(const QInt& number)
 {
-	return true;
+	return (*this == number || *this > number);
 }
 
 bool QInt::operator==(const QInt& number)
 {
 	for (int i = 0;i < SIZE;i++)
 	{
-		if (val[i] != number.val[i])
+		if (value[i] != number.value[i])
 			return false;
 	}
 	return true;
@@ -174,7 +226,7 @@ int QInt::MostSignificantBit()
 {
 	for (int i = 0;i < SIZE;i++)
 	{
-		if (val[i] != 0)
+		if (value[i] != 0)
 		{
 			int j;
 			if (i == 0)
