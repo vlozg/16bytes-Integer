@@ -8,17 +8,18 @@ bool QInt::GetBit(int i)
 
 //Set bit
 // bit: bit cần set
-// i : vị trí cần set
-void QInt::SetBit(int i, bool bit)
+// pos : vị trí cần set
+void QInt::SetBit(int pos, bool bit)
 {
-	if (bit == 1)
-	{
-		value[i / 8] = value[i / 8] | (1 << (7 - (i % 8)));
-	}
-	else
-	{
-		value[i / 8] = value[i / 8] & (0 << (7 - (i % 8)));
-	}
+    if (pos > 127) return;
+
+    char mask = 1 << (pos%8);   //Mặt nạ đánh dấu bit cần sửa
+
+    if (bit == 1){
+        value[pos/8] |= mask;   //OR với mask để bật bit
+    } else {
+        value[pos/8] &= ~mask;  //Đảo mask và AND để tắt bit
+    }
 
 }
 
