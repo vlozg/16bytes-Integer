@@ -1,50 +1,53 @@
 ﻿#include "QInt.h"
 
-//Lấy bit tại vị trí thứ i
-bool QInt::GetBit(int pos)
-{
+/*
+Lấy giá trị bit tại vị trí bất kì
+Parameter:
+- pos: vị trí bit cần lấy
+*/
+bool QInt::GetBit(int pos) {
 	if (pos > 127 || pos < 0) return 0;
-    char mask = 1 << (pos%8);   //Mặt nạ đánh dấu bit cần lấy
-    return (value[pos/8] & mask);
+	char mask = 1 << (pos % 8);   //Mặt nạ đánh dấu bit cần lấy
+	return (value[pos / 8] & mask);
 }
 
-//Set bit
-// bit: bit cần set
-// pos : vị trí cần set
-void QInt::SetBit(int pos, bool bit)
-{
-    if (pos > 127) return;
 
-    char mask = 1 << (pos%8);   //Mặt nạ đánh dấu bit cần sửa
+/*
+Set bit tại vị trí bất kì
+Parameter:
+- pos: vị trí set
+- bit: giá trị set
+*/
+void QInt::SetBit(int pos, bool bit) {
+	if (pos > 127) return;
 
-    if (bit == 1){
-        value[pos/8] |= mask;   //OR với mask để bật bit
-    } else {
-        value[pos/8] &= ~mask;  //Đảo mask và AND để tắt bit
-    }
+	char mask = 1 << (pos % 8);   //Mặt nạ đánh dấu bit cần sửa
 
+	if (bit == 1) {
+		value[pos / 8] |= mask;   //OR với mask để bật bit
+	}
+	else {
+		value[pos / 8] &= ~mask;  //Đảo mask và AND để tắt bit
+	}
 }
 
 //Chuỗi Dec -> Chuỗi Bin -> QInt
 void QInt::Input(string number)
 {
-	string bin = DecToBinStr(number);			//Chuỗi Dec number -> Chuỗi Bin bin
-	for (int i = 0; i < 128; i++)
+	bool* bin = DecToBinStr(number);			//Chuỗi Dec number -> Chuỗi Bin bin
+	for (int i = 0; i < BIT_RANGE; i++)
 	{					
-		if (bin[i] == '1')					// Set bit 1 tại vị trí i
-		{
-			SetBit(i, 1);
-		}
+		SetBit(i, bin[i]);
 
 	}
 }
 
-//	QInt --> chuỗi Bin --> chuỗi Dec
+//	QInt --> mảng Bin --> chuỗi Dec
 void QInt::Output() 
 {
-	string bin = "";
+	bool *bin = new bool[BIT_RANGE];
 	string result = "0";
-	QInt temp = *this;	//Biến tạm lưu dãy bit
+	QInt temp = *this;	//Biến tạm lưu dãy bit (để không làm thay đổi *this) 
 
 	bool negative = GetBit(0);	//Xét bit dấu
 	if (negative == true)
@@ -52,18 +55,17 @@ void QInt::Output()
 		temp = this->ComplementTwo();	//Nếu là số âm thì khi lấy bù 2 sẽ trả lại số dương
 	}
 
-	for (int i = 0; i < 128; i++)	// QInt --> chuỗi Bin
+	for (int i = 0; i < BIT_RANGE; i++)	// QInt --> mảng Bin
 	{
-		char c = temp.GetBit(i) + '0';
-		bin += c;
+		bin[i] = temp.GetBit(i);
 	}
 
-	string pow[128] = { "" };
+	string pow[BIT_RANGE] = { "" };
 	PowOfTwo(pow);					//	Lập thành các lũy thừa của số 2
 
-	for (int i = 0; i < 128; i++)	
+	for (int i = 0; i < BIT_RANGE; i++)	
 	{
-		if (bin[127 - i] == '1')
+		if (bin[BIT_RANGE - 1 - i])
 		{
 			result = SumNumbers(result, pow[i]);	//	Cộng theo công thức: 2^x1 + 2^x2 + 2^x3 +...
 		}
@@ -78,12 +80,12 @@ void QInt::Output()
 }
 
 //Chuyen day bit thanh day bool
-//Neu k xai nua thi phai delete[] bool
+//Có khởi tạo, nhớ delete
 //Lấy bit từ x -> dãy bool 128 phần tử
 bool* DecToBin(QInt x)
 {
-	bool* bit = new bool[128];
-	for (int i = 0; i < 128; i++)
+	bool* bit = new bool[BIT_RANGE];
+	for (int i = 0; i < BIT_RANGE; i++)
 	{
 		bit[i] = x.GetBit(i);	
 	}
@@ -96,350 +98,24 @@ QInt BinToDec(bool* bin)
 {
 	QInt result;
 
-	for (int i = 0; i < 128; i++)
+	for (int i = 0; i < BIT_RANGE; i++)
 	{
-		if (bin[i] == 1)
-		{
-			result.SetBit(i, 1);
-		}
+		result.SetBit(i, bin[i]);
 	}
 	return result;
 }
 
 QInt::QInt()
 {
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < SIZE; i++)
 	{
 		value[i] = 0;
 	}
 }
 
-//	------------------------------------------------------
-//	------------------------------------------------------
-//	----------------- HAM HO TRO -------------------------
-//	------------------------------------------------------
-//	------------------------------------------------------
-
-
-//Xóa số 0 và space phía trước số thập phân
-//Xóa space phía sau số thập phân
-void NormalizeNumber(string& number)
+QInt::QInt(string number)
 {
-	while (number[0] == '0' || number[0] == ' ')	//Delete all the '0' and the space in front of number
-	{
-		number = number.erase(0,1);
-	}
-	if (number.empty())	//Add '0' in case the number above is just 0
-	{
-		number += '0';
-	}
-	while (number[number.length() - 1] == ' ')	//Delete all the space behind number
-	{
-		number = number.erase(number.length() - 1, 1);
-	}
-
-}
-
-//Trả về chuỗi thập phân của number/2
-string DivideByTwo(string number)	
-{
-	// Thực hiện phép chia như cấp 1
-
-	string result = "";	
-
-	string temp = "";	//Chuỗi dùng để trích từng số để chia
-
-	int q = 0;	//Thương của phép chia từng số (là 1 phần của result)
-	int len = number.length();
-	int p = 0;	//p -> dạng int của temp
-
-	//		CÁCH CHIA:
-	//	ĐƯA TỪNG CHỮ SỐ VÀO TEMP
-	//	SAU ĐỐ CHUYỂN TEMP TỪ DẠNG CHUỖI SANG P DẠNG SỐ
-	//	DÙNG P / 2 = Q, NẾU CÓ DƯ THÌ CỘNG SỐ DƯ VÀO TEMP Ở DẠNG CHUỖI
-	//	TIẾP TỤC CHO ĐÉN KHI HẾT TẤT CẢ CHỮ SỐ CỦA SÓ BỊ CHIA
-
-	for (int i = 0; i < len; i++)
-	{
-		temp += number[i];	//	Thêm từng chữ số vào temp
-
-		if (temp.length() == 1)	
-		{
-			p = temp[0] - '0';	
-			q = p / 2;			//	q la ket qua cua phep chia
-			result += q + '0';	//	dua q vao ket qua
-			temp.clear();		//	Xóa temp cho đợt chia tiếp theo
-
-			temp += (p - q * 2) + '0';	//	Nếu còn dư thì đưa vào temp
-
-			if (temp[0] == '0')	// Nếu không dư thì xóa
-			{
-				temp.clear();
-			}
-		}
-		else	//	Nếu temp có 2 chữ số
-		{
-			p = (temp[1] - '0' + (temp[0] - '0') * 10);	//	VD: "12" -> 12
-			q = p / 2;									//	q la ket qua cua phep chia
-			result += q + '0';							//	dua q vao ket qua
-			temp.clear();								//	Xoa temp di
-
-			temp += (p - q * 2) + '0';					//	Dua so du con lai vao temp
-			if (temp[0] == '0')							//	Neu temp van chi co 0 thi xoa luon
-			{
-				temp.clear();
-			}
-		}	
-	}
-	NormalizeNumber(result);	//Có nhiệm vụ xóa số 0 phía trước
-	return result;
-}
-
-//	Chuỗi dec number -> chuỗi bin (128 kí tự)
-string DecToBinStr(string number)	
-{
-	bool positive = true;
-	if (number[0] == '-')
-	{
-		positive = false;
-		number.erase(0, 1);
-	}
-
-	int last_index = number.length() - 1;
-	string temp = number;	//temp lưu lại kết quả sau các phép chia 2
-	string bin = "";	
-	//			LÀM NHƯ CÔNG THỨC:
-	//CHIA NUMBER CHO 2, LẤY SỐ DƯ THÊM VÀO PHÍA TRƯỚC KẾT QUẢ
-	//THỰC HIỆN LIÊN TỤC CHO ĐẾN KHI SỐ BỊ CHIA LÀ 0
-	//NẾU KẾT QUẢ CHƯA ĐỦ 128 BIT, CHÈN CÁC SỐ 0 VÀO TRƯỚC
-
-	while (temp != "0")
-	{
-		last_index = temp.length() - 1;			
-		int r = (temp[last_index] - '0') % 2;	//Chữ số cuối cùng chia dư cho 2 --> bit
-		temp = DivideByTwo(temp);				//Chia liên tục cho 2
-		char c = r + '0';
-		bin = c + bin;							
-	}
-	for (int i = bin.length(); i < 128; i++)	//Chèn các số 0 vào trước kết quả
-	{
-		bin = "0" + bin;
-	}
-
-	if (positive == false)	//Nếu là số âm thì phải chuyển chuỗi bit về bù 2
-	{
-		for (int i = 0; i < 128; i++)	//Bù 1
-		{
-			if (bin[i] == '0') {
-				bin[i] = '1';
-			}
-			else {
-				bin[i] = '0';
-			}
-		}
-		int carry = 1; //biến nhớ cộng 1 bit
-		for (int i = 127; i >= 0; i--)
-		{
-			int s = bin[i] - '0' + carry;
-			if (s > 1)
-			{
-				bin[i] = '0';
-				carry = 1;
-			}
-			else if(s == 1)
-			{
-				bin[i] = '1';
-				carry = 0;
-			}
-			else
-			{
-				bin[i] = '0';
-				carry = 0;
-			}
-		}
-
-	}
-	return bin;
-}
-
-
-//Chuỗi number x 2
-string MultiplyByTwo(string number)	
-{
-	string result = "";
-	int number_len = number.length();
-	int carry = 0;	//Bien nho
-
-	for (int i = number_len - 1; i >= 0; i--)
-	{
-		int m = (number[i] - '0') * 2 + carry;	//m la ket qua cua phep nhan cua 2 voi tung chu so cua number
-
-		carry = m / 10;	//mem se ghi nho chu so dau tien neu m >= 10
-
-		char c = m % 10 + '0';	//c se luu chu so cuoi cung cua m duoi dang char
-		result = c + result;	//dua c vao truoc chuoi ket qua da co
-	}
-	if (carry > 0)
-	{
-		//Neu van con bien nho sau khi nhan 2 cho tat chu so, them bien nho vao truoc chuoi ket qua
-		result = char(carry + '0') + result;
-	}
-	return result;
-}
-
-//Lũy thừa của 2
-void PowOfTwo(string pow[128])	
-{
-	//		Ket qua se luu vao mang string pow co 128 phan tu
-	//
-	//		--> nen khoi tao mang nay truoc khi bat dau hay luu o ngoai file ???
-	//
-	//
-	pow[0] = "1";
-	for (int i = 1; i < 128; i++)
-	{
-		pow[i] = MultiplyByTwo(pow[i - 1]);	//So dang sau thi bang so dang truoc x 2
-	}
-}
-
-//Cộng 2 chuỗi dec --> chuỗi sum dec
-string SumNumbers(string n1, string n2)		
-{
-	string result = "";
-	string longer = "", shorter = "";	//longer se luu chuoi so co nhieu chu so hon, shorter nguoc lai
-	int small = 0, large = 0;	//small se luu do dai chuoi ngan hon, large luu do dai cua chuoi dai hon
-	if (n1.length() > n2.length())
-	{
-		small = n2.length();
-		large = n1.length();
-		longer = n1;
-		shorter = n2;
-	}
-	else
-	{
-		small = n1.length();
-		large = n2.length();
-		longer = n2;
-		shorter = n1;
-	}
-
-	// --> Cong nhu kieu dat tinh roi tinh o cap 1 :)))
-	
-	int carry = 0;	//Cong co nho
-
-	int i = 0, j = 0;
-
-	for (i = small - 1, j = large - 1; i >= 0; i--, j--)
-	{
-		int s = (shorter[i] - '0') + (longer[j] - '0') + carry; //Lay 2 ki tu cung don vi cong voi nhau va cong them bien nho
-
-		carry = s / 10;			//Bien nho la chu so dang truoc cua s
-
-		char c = s % 10 + '0';	//Luu hang don vi cua s o dang char
-		result = c + result;	//Them vao ket qua da co
-	}
-	while (j >= 0)
-	{
-		int s = (longer[j] - '0') + carry;	// Cong cac chu so con lai cho mem
-
-		carry = s / 10;
-
-		char c = s % 10 + '0';
-		result = c + result;
-
-		j--;
-	}
-	if (carry > 0)
-	{
-		result = char(carry + '0') + result;	// Them mem vao truoc chuoi neu con
-	}
-	return result;
-}
-
-
-//Tra ve True neu la so nguyen
-//Tra ve False neu nguoc lai
-bool CheckNumber(string number)
-{
-	int i = 0;
-	if (number[i] == '+' || number[i] == '-')
-	{
-		i++;
-	}
-
-	while (i < number.length())
-	{
-		if (number[i] < '0' || number[i] > '9')
-		{
-			return 0;
-		}
-		i++;
-	}
-	return 1;
-}
-
-
-/*Calculate sum of 2 bits using half-adder algorithm
-Input: first bit A, secoond bit B, carrier bit C*/
-bool HalfAdder(bool A, bool B, bool& C)
-{
-	C = A & B;
-	return A ^ B;
-}
-
-/*Calculate sum of 2 bits using full-adder algorithm
-Input: first bit A, secoond bit B, previous carrier bit prevC
-Output: returns sum 2 bit, remainder bit into carrier bit prevC*/
-bool FullAdder(bool A, bool B, bool& prevC)
-{
-	bool C, newC; //carrier bits
-	bool sum = HalfAdder(A, B, C); //C is now remainder bit
-	sum = HalfAdder(sum, prevC, newC);
-	prevC = C | newC;
-	return sum;
-}
-
-//Return QInt complement two
-QInt QInt::ComplementTwo()
-{
-	QInt complement;
-	int i;
-	for (i = 15; i >= 0; i--)
-	{
-		complement.value[i] = 255 - value[i];
-	} //Complement one
-	for (i = 15; i >= 0; i--)
-	{
-		complement.value[i] += 1;
-		if (complement.value[i] == 0) //if overflow
-			continue;
-		else
-			break;
-	}
-	return complement;
-}
-
-//Calculate sum of 2 QInt
-QInt QInt::operator +(QInt number)
-{
-	QInt product;
-	bool carrierBit = 0;
-	for (int i = 0; i < 128; i++)
-	{
-		bool firstBit = this->GetBit(127 - i);
-		bool secondBit = number.GetBit(127 - i);
-		bool newBit = FullAdder(firstBit, secondBit, carrierBit);
-		if (newBit) //if new bit is 1 then set it in value
-			product.SetBit(127 - i, 1);
-	}
-	return product;
-}
-
-
-//Calculate subtraction of 2 QInt
-QInt QInt::operator -(QInt number)
-{
-	return (*this) + number.ComplementTwo(); //turns number into two's complement then sum
+	this->Input(number);
 }
 
 //Nhập vào số thập phân ở dạng chuỗi
@@ -465,4 +141,352 @@ void ScanQInt(QInt& x)
 void PrintQInt(QInt x)
 {
 	x.Output();
+}
+
+//Hàm dịch phải n bit 
+QInt QInt::operator>>(int number) {
+	if (number <= 0) return *this;
+	else {
+		if (number > BIT_RANGE) {
+			number = BIT_RANGE;
+		}
+		bool FirstBit = (*this).GetBit(BIT_RANGE - 1);
+		QInt res;
+		for (int i = BIT_RANGE; i >= number; i--)
+			res.SetBit(i, (*this).GetBit(i - number));
+		for (int i = number - 1; i >= 0; i--)
+			res.SetBit(i, 0);
+
+		return res;
+	}
+}
+
+
+// Hàm dịch trái n bit
+QInt QInt::operator<<(int number) {
+	if (number <= 0) return *this;
+	else
+	{
+		if (number > BIT_RANGE) {
+			number = BIT_RANGE;
+		}
+		QInt res;
+		//gán vị trí đầu tiên theo vị trí từ number
+		for (int i = 0; i < BIT_RANGE - number; i++)
+		{
+			res.SetBit(i, (*this).GetBit(i + number));
+			/*print(res, i, (*this).GetBit(i + number));
+			if (i == 111)
+				continue;*/
+		}
+		for (int i = BIT_RANGE - number; i <= BIT_RANGE; i++)
+			res.SetBit(i, 0);
+		
+		return res;
+	}
+}
+
+
+/*Tổng 2 bit dùng half adder
+Input: bit A, bit B, bit nhớ C*/
+bool HalfAdder(bool A, bool B, bool& C)
+{
+	C = A & B;
+	return A ^ B;
+}
+
+/*Tính tổng 2 bit dùng full-adder
+Input: bit A, bit B, carrier bit prevC
+Output: trả về tổng 2 bit, bit nhớ được đưa vào prevC*/
+bool FullAdder(bool A, bool B, bool& prevC)
+{
+	bool C, newC; //các bit nhớ
+	bool sum = HalfAdder(A, B, C); //C bit nhớ
+	sum = HalfAdder(sum, prevC, newC);
+	prevC = C | newC;
+	return sum;
+}
+
+
+//Output: dạng bù 2 của QInt
+QInt QInt::ComplementTwo()
+{
+	QInt complement;
+	int i;
+	for (i = SIZE - 1; i >= 0; i--)
+	{
+		complement.value[i] = 255 - value[i];
+		//chuyển thành số bù 1: 
+		//255 - 1 số 8 bit sẽ ra số nhị phân có các bit đảo ngược của số đó
+	}
+	complement = complement + QInt("1");
+	return complement;
+}
+
+QInt QInt::operator +(QInt number)
+{
+	QInt product;
+	bool carrierBit = 0;
+	for (int i = 0; i < BIT_RANGE; i++)
+	{
+		bool firstBit = this->GetBit(BIT_RANGE - i - 1);
+		bool secondBit = number.GetBit(BIT_RANGE - i - 1);
+		bool newBit = FullAdder(firstBit, secondBit, carrierBit);
+		product.SetBit(BIT_RANGE - i - 1, newBit);
+	}
+	return product;
+}
+
+QInt QInt::operator -(QInt number)
+{
+	return (*this) + number.ComplementTwo(); //chuyển number về dạng bù 2 rồi cộng
+}
+
+//Phép nhân 2 số dương
+QInt Multiplication(QInt A, QInt B)
+{
+	QInt result;
+	for (int i = BIT_RANGE - 1; i >= 1; i--)
+	{
+		if (B.GetBit(i) == 1)
+		{
+			result = result + (A << (BIT_RANGE - 1 - i));
+		}
+	}
+	return result;
+}
+
+
+QInt QInt::operator *(QInt number)
+{
+	QInt result; //kết quả
+	QInt A = *this, B = number; //biến tạm
+	bool negative1 = A.IsNegative();
+	bool negative2 = B.IsNegative();
+	//chuyển 2 số về dương
+	if (negative1)
+		A = A.ComplementTwo();
+	if (negative2)
+		B = B.ComplementTwo();
+	/*lấy số lớn hơn làm toán hạng thứ nhất
+	choice = false: *this làm toán hạng 1
+	choice = true: number làm toán hạng 1*/
+	bool choice = false;
+	if (number > * this)
+		choice = true;
+	if (choice)
+		result = Multiplication(B, A);
+	else
+		result = Multiplication(A, B);
+
+	if (negative1 ^ negative2) //2 số trái dấu
+		result = result.ComplementTwo();
+
+	return result;
+}
+
+QInt QInt::operator=(const QInt& number)
+{
+	if (this == &number) //nếu gán cho chính nó
+		return *this;
+	for (int i = 0; i < SIZE; i++) //copy giá trị
+	{
+		this->value[i] = number.value[i];
+	}
+	return *this;
+}
+
+bool QInt::operator<(const QInt& number)
+{
+	QInt A = *this, B = number; //biến tạm để so sánh
+	bool negative1 = A.IsNegative();
+	bool negative2 = B.IsNegative();
+	if (negative1 && !negative2) //số hiện tại âm, số number dương
+		return true;
+	if (!negative1 && negative2) //số hiện tại dương, số number âm
+		return false;
+
+	if (negative1 && negative2) //cả 2 số cùng âm
+	{
+		A = A.ComplementTwo();
+		B = B.ComplementTwo();
+	}
+
+	int msb1 = A.MostSignificantBit(); //most significant bit(msb) của số hiện tại
+	int msb2 = B.MostSignificantBit(); //most significant bit(msb) của number
+
+	if (msb1 > msb2) //nếu số hiện tại < number 
+	{
+		if (!negative1) //nếu cả 2 số dương
+			return true;
+		else
+			return false;
+	}
+	else if (msb1 < msb2)
+	{
+		if (!negative1) //nếu cả 2 số dương
+			return false;
+		else
+			return true;
+	}
+	else
+	{
+		for (int i = msb1; i < BIT_RANGE; i++)
+		{
+			//nếu bit tại vị trí i của số này = 1 còn number = 0
+			if (A.GetBit(i) && !B.GetBit(i))
+			{
+				if (!negative1) //nếu cả 2 số dương
+					return false;
+				else
+					return true;
+			}
+			//ngược lại
+			else if (!A.GetBit(i) && B.GetBit(i))
+			{
+				if (!negative1) //nếu cả 2 số dương
+					return true;
+				else
+					return false;
+			}
+		}
+	}
+	return false;
+}
+
+bool QInt::operator<=(const QInt& number)
+{
+	return (*this == number || *this < number);
+}
+
+bool QInt::operator>(const QInt& number)
+{
+	QInt A = *this, B = number; //biến tạm để so sánh
+	bool negative1 = A.IsNegative();
+	bool negative2 = B.IsNegative();
+	if (negative1 && !negative2) //số hiện tại âm, số number dương
+		return false;
+	if (!negative1 && negative2) //số hiện tại dương, số number âm
+		return true;
+
+	if (negative1 && negative2) //cả 2 số cùng âm
+	{
+		A = A.ComplementTwo();
+		B = B.ComplementTwo();
+	}
+
+	int msb1 = A.MostSignificantBit(); //most significant bit(msb) của số hiện tại
+	int msb2 = B.MostSignificantBit(); //most significant bit(msb) của number
+
+	if (msb1 < msb2) //nếu số hiện tại > number 
+	{
+		if (!negative1) //nếu cả 2 số dương
+			return true;
+		else
+			return false;
+	}
+	else if (msb1 > msb2)
+	{
+		if (!negative1) //nếu cả 2 số dương
+			return false;
+		else
+			return true;
+	}
+	else
+	{
+		for (int i = msb1; i < BIT_RANGE; i++)
+		{
+			//nếu bit tại vị trí i của số này = 1 còn number = 0
+			if (A.GetBit(i) && !B.GetBit(i))
+			{
+				if (!negative1) //nếu cả 2 số dương
+					return true;
+				else
+					return false;
+			}
+			//ngược lại
+			else if (!A.GetBit(i) && B.GetBit(i))
+			{
+				if (!negative1) //nếu cả 2 số dương
+					return false;
+				else
+					return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool QInt::operator>=(const QInt& number)
+{
+	return (*this == number || *this > number);
+}
+
+bool QInt::operator==(const QInt& number)
+{
+	for (int i = 0; i < SIZE; i++)
+	{
+		if (value[i] != number.value[i])
+			return false;
+	}
+	return true;
+}
+
+/*Hàm kiểm tra số âm.
+Output: là số âm thì True, ngược lại False
+*/
+bool QInt::IsNegative()
+{
+	return this->GetBit(0);
+}
+
+
+/*
+Hàm trả về vị trí bit có giá trị lớn nhất.
+*/
+int QInt::MostSignificantBit()
+{
+	for (int i = 0; i < SIZE; i++)
+	{
+		if (value[i] != 0)
+		{
+			int j;
+			if (i == 0)
+				j = 1;
+			else
+				j = 0; //nếu block 0 thì check từ bit 1, còn lại thì check từ bit 0
+			for (; j < 8; j++)
+			{
+				if (this->GetBit(i * 8 + j)) //trả về vị trí bit 1 đầu tiên
+					return i * 8 + j;
+			}
+		}
+	}
+	return 0; //số 0
+}
+
+QInt QInt::operator/(QInt number)
+{
+	if (number == QInt("0"))
+		return QInt("0");	//Chia cho 0
+	QInt divisor = *this;
+	bool negative1 = divisor.IsNegative();
+	bool negative2 = number.IsNegative();
+	//chuyển 2 số về dương
+	if (negative1)
+		divisor = divisor.ComplementTwo();
+	if (negative2)
+		number = number.ComplementTwo();
+
+	QInt result("-1"); //kết quả là số lần trừ
+	while (!(divisor.IsNegative())) //lặp khi số bị chia >= 0
+	{
+		divisor = divisor - number;
+		result = result + QInt("1");
+	}
+
+	if (negative1 ^ negative2) //2 số trái dấu
+		result = result.ComplementTwo();
+
+	return result;
 }
