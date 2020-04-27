@@ -1,6 +1,7 @@
 ﻿#include "QInt.h"
 
 
+
 /*Tổng 2 bit dùng half adder
 Input: bit A, bit B, bit nhớ C*/
 bool HalfAdder(bool A, bool B, bool& C)
@@ -33,7 +34,7 @@ QInt QInt::ComplementTwo()
 		//chuyển thành số bù 1: 
 		//255 - 1 số 8 bit sẽ ra số nhị phân có các bit đảo ngược của số đó
 	}
-	complement = complement + QInt("1");
+	complement = complement + QInt("1"); //bù 1 + 1
 	return complement;
 }
 
@@ -92,6 +93,32 @@ QInt QInt::operator *(QInt number)
 		result = Multiplication(B, A);
 	else
 		result = Multiplication(A, B);
+
+	if (negative1 ^ negative2) //2 số trái dấu
+		result = result.ComplementTwo();
+
+	return result;
+}
+
+QInt QInt::operator/(QInt number)
+{
+	if (number == QInt("0"))
+		return QInt("0");
+	QInt divisor = *this;
+	bool negative1 = divisor.IsNegative();
+	bool negative2 = number.IsNegative();
+	//chuyển 2 số về dương
+	if (negative1)
+		divisor = divisor.ComplementTwo();
+	if (negative2)
+		number = number.ComplementTwo();
+	
+	QInt result("-1"); //kết quả là số lần trừ
+	while (!(divisor.IsNegative())) //lặp khi số bị chia >= 0
+	{
+		divisor = divisor - number;
+		result = result + QInt("1");
+	}
 
 	if (negative1 ^ negative2) //2 số trái dấu
 		result = result.ComplementTwo();
@@ -179,9 +206,9 @@ bool QInt::operator>(const QInt& number)
 	bool negative1 = A.IsNegative();
 	bool negative2 = B.IsNegative();
 	if (negative1 && !negative2) //số hiện tại âm, số number dương
-		return true;
-	if (!negative1 && negative2) //số hiện tại dương, số number âm
 		return false;
+	if (!negative1 && negative2) //số hiện tại dương, số number âm
+		return true;
 
 	if (negative1 && negative2) //cả 2 số cùng âm
 	{
@@ -272,7 +299,7 @@ int QInt::MostSignificantBit()
 			for (;j < 8;j++)
 			{
 				if (this->GetBit(i * 8 + j)) //trả về vị trí bit 1 đầu tiên
-					return i;
+					return i*8+j;
 			}
 		}
 	}

@@ -452,8 +452,7 @@ QInt QInt::operator<<(int number) {
 		}
 		for (int i = BIT_RANGE - number; i <= BIT_RANGE; i++)
 			res.SetBit(i, 0);
-		
-		cout << endl;
+
 		return res;
 	}
 }
