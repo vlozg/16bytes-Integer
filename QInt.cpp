@@ -435,7 +435,7 @@ QInt QInt::operator -(QInt number)
 QInt QInt::operator &(QInt number) {
 	QInt result; // kết quả trả về
 
-	for (int i = 0; i < BIT_RANGE; i++) {
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
 		// res là kết quả của phép & giữa 2 QInt
 		result.value[i] = (*this).value[i] & number.value[i];
 	}
@@ -447,7 +447,7 @@ QInt QInt::operator &(QInt number) {
 QInt QInt::operator |(QInt number) {
 	QInt result; // kết quả trả về
 
-	for (int i = 0; i < BIT_RANGE; i++) {
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
 		// res là kết quả của phép | giữa 2 bit
 		result.value[i] = (*this).value[i] | number.value[i];
 	}
@@ -459,7 +459,7 @@ QInt QInt::operator |(QInt number) {
 QInt QInt::operator ^(QInt number) {
 	QInt result; // kết quả trả về
 
-	for (int i = 0; i < BIT_RANGE; i++) {
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
 		// res là kết quả của phép ^ giữa 2 QInt
 		result.value[i] = (*this).value[i] ^ number.value[i];
 	}
@@ -471,7 +471,7 @@ QInt QInt::operator ^(QInt number) {
 QInt QInt::operator ~() {
 	QInt result; // kết quả trả về
 
-	for (int i = 0; i < BIT_RANGE; i++) {
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
 		// res là kết quả của phép ~ giữa 2 QInt
 		result.value[i] = ~(*this).value[i];
 	}
@@ -479,6 +479,41 @@ QInt QInt::operator ~() {
 	return result;
 }
 
+//Hàm dịch phải n bit 
+QInt QInt::operator>>(int number) {
+	if (number <= 0) return *this;
+	else {
+		if (number > BIT_RANGE) {
+			number = BIT_RANGE;
+		}
+		bool FirstBit = (*this).GetBit(BIT_RANGE - 1);
+		QInt res;
+		for (int i = BIT_RANGE; i >= number; i--)
+			res.SetBit1(i, (*this).GetBit(i - number));
+		for (int i = number - 1; i >= 0; i--)
+			res.SetBit1(i, 0);
+
+		return res;
+	}
+}
+
+// Hàm dịch trái n bit
+QInt QInt::operator<<(int number) {
+	if (number <= 0) return *this;
+	else
+	{
+		if (number > BIT_RANGE) {
+			number = BIT_RANGE;
+		}
+		QInt res;
+		//gán vị trí đầu tiên theo vị trí từ number
+		for (int i = 0; i < BIT_RANGE - number; i++)
+			res.SetBit1(i, (*this).GetBit(i + number));
+		for (int i = BIT_RANGE - number; i <= BIT_RANGE; i++)
+			res.SetBit1(i, 0);
+		return res;
+	}
+}
 
 
 //Tao mang chuoi cho user nhap vao
@@ -566,4 +601,49 @@ char* BinToHex(bool* bit) {
 char* DecToHex(QInt x) {
 	bool* binConvert = DecToBin(x);
 	return BinToHex(binConvert);
+}
+
+/*
+	Xoay trái n bit bằng cách dịch n bit sang trái và lưu các bit bị văng ra khỏi 
+	mảng rồi gán lại vào sau 
+*/
+void QInt::RotateLeft(int number) {
+	//xét nhưng TH không cần xoay
+	if (number <= 0 && number >= BIT_RANGE - 1) {
+		return;
+	}
+	else {
+		bool *tempBit = new bool[number]; // mảng chứa các bit bị dịch ra khỏi mảng
+		for (int i = 0; i < number; i++) {
+			tempBit[i] = (*this).GetBit(i);
+		}
+		// dịch trái number bit
+		*(this) << number;
+		//gán lại bit đã lưu ra phía sau
+		for (int i = BIT_RANGE - number; i < BIT_RANGE; i++) {
+			(*this).SetBit1(i, tempBit[i]);
+		}
+
+	}
+}
+/*
+	Xoay phải n bit cách làm như trên
+*/
+void QInt::RotateRight(int number) {
+	//xét nhưng TH không cần xoay
+	if (number <= 0 && number >= BIT_RANGE - 1) {
+		return;
+	}
+	else {
+		bool* tempBit = new bool[number]; // mảng chứa các bit bị dịch ra khỏi mảng
+		for (int i = BIT_RANGE-number; i < BIT_RANGE; i++) {
+			tempBit[i] = (*this).GetBit(i);
+		}
+		// dịch phải number bit
+		*(this) >> number;
+		//gán lại bit đã lưu ra phía sau
+		for (int i = 0; i < number; i++) {
+			(*this).SetBit1(i, tempBit[i]);
+		}
+	}
 }

@@ -9,6 +9,7 @@ using namespace std;
 	Define của Duy
 */
 #define BIT_RANGE 128
+#define MAX_VALUE_BIT 16
 #define FOUR_BIT 4
 
 class QInt
@@ -31,7 +32,11 @@ public:
 	QInt operator|(QInt number);
 	QInt operator^(QInt number);
 	QInt operator~();
-	
+	QInt operator<<(int number);
+	QInt operator>>(int number);
+
+	void RotateLeft(int number);
+	void RotateRight(int number);
 };
 
 void ScanQInt(QInt& x);		//Cau a
