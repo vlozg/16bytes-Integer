@@ -17,8 +17,7 @@ private:
 	char value[16] = { 0 };
 public:
 	bool GetBit(int i);
-	void SetBit(int i);	//Ham chi bat bit tu 0 -> 1, muon set bit 0 thi no phai la 0 truoc do
-	void SetBit1(int pos, bool bit); // hàm set bit bên qfloat
+	void SetBit(int pos, bool bit); // hàm set bit bên qfloat
 
 	void Input(string);
 	void Output();

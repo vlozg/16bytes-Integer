@@ -5,13 +5,8 @@ bool QInt::GetBit(int i)
 	return (value[i / 8] >> (7 - (i % 8))) & 1;
 }
 
-void QInt::SetBit(int i)
-{
-	value[i / 8] = value[i / 8] | (1 << (7 - (i % 8)));
-}
-
 // Hàm copy bên Qfloat
-void QInt::SetBit1(int pos, bool bit) {
+void QInt::SetBit(int pos, bool bit) {
 	if (pos > 127) return;
 
 	char mask = 1 << (pos % 8);   //Mặt nạ đánh dấu bit cần sửa
@@ -29,10 +24,7 @@ void QInt::Input(string number)
 	string bin = DecToBinStr(number);			//bin se la dang binary cua number
 	for (int i = 0; i < 128; i++)
 	{
-		if (bin[i] == '1')					// set bit 1 tai vi tri i
-		{
-			SetBit(i);
-		}
+		SetBit(i, bin[i]==1);
 
 	}
 }
@@ -97,10 +89,7 @@ QInt BinToDec(bool* bin)
 
 	for (int i = 0; i < 128; i++)
 	{
-		if (bin[i] == 1)
-		{
-			result.SetBit(i);
-		}
+		result.SetBit(i, bin[i]);
 	}
 	return result;
 }
@@ -430,7 +419,7 @@ QInt QInt::operator +(QInt number)
 		bool secondBit = number.GetBit(127 - i);
 		bool newBit = FullAdder(firstBit, secondBit, carrierBit);
 		if (newBit) //if new bit is 1 then set it in value
-			product.SetBit(127 - i);
+			product.SetBit(127 - i, 1);
 	}
 	return product;
 }
