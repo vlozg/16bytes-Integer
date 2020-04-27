@@ -1,6 +1,4 @@
 
-.vscode/c_cpp_properties.json
-.vscode/launch.json
-.vscode/tasks.json
-a.exe
-Qfloat.exe
+.vscode/
+test.cpp
+*.exe

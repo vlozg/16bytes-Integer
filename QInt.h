@@ -17,8 +17,8 @@ class QInt
 private:
 	char value[16] = { 0 };
 public:
-	bool GetBit(int i);
-	void SetBit(int pos, bool bit); // hàm set bit bên qfloat
+	bool GetBit(int pos);
+	void SetBit(int pos, bool bit);
 
 	void Input(string);
 	void Output();
@@ -53,7 +53,7 @@ string DivideByTwo(string number);
 string DecToBinStr(string number);	//Ham nay moi sua ten do nha! (DecToBin -> DecToBinStr)
 string MultiplyByTwo(string number);
 void PowOfTwo(string pow[128]);
-string PlusNumber(string n1, string n2);
+string SumNumber(string n1, string n2);
 bool checkNumber(string number);
 void normalizeNumber(string& number);
 char BinToHexChar(string num);
