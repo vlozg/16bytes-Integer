@@ -9,8 +9,8 @@ class QInt
 private:
 	char value[16] = { 0 };
 public:
-	bool GetBit(int i);
-	void SetBit(int i, bool bit);
+	bool GetBit(int pos);
+	void SetBit(int pos, bool bit);
 
 	void Input(string);
 	void Output();
