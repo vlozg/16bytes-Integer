@@ -497,13 +497,12 @@ QInt QInt::operator>>(int number) {
 		if (number > BIT_RANGE) {
 			number = BIT_RANGE;
 		}
-		//bit cao nhất
 		bool FirstBit = (*this).GetBit(BIT_RANGE - 1);
 		QInt res;
-		for (int i = BIT_RANGE - number; i >= 0; i--)
-			res.SetBit1(i, (*this).GetBit(i + number));
-		for (int i = BIT_RANGE - 1; i >= BIT_RANGE - 1 - number; i--)
-			res.SetBit1(i, FirstBit & 1);
+		for (int i = BIT_RANGE; i >= number; i--)
+			res.SetBit1(i, (*this).GetBit(i - number));
+		for (int i = number - 1; i >= 0; i--)
+			res.SetBit1(i, 0);
 
 		return res;
 	}
@@ -518,11 +517,10 @@ QInt QInt::operator<<(int number) {
 			number = BIT_RANGE;
 		}
 		QInt res;
-		//Duyệt từ phải sang(127) -> number
-		for (int i = BIT_RANGE - 1; i >= number; i--)
-			//Tại vị trí bit i của res gán bit bằng vị trí i - num của bit hiện tại
-			res.SetBit1(i, (*this).GetBit(i - number));
-		for (int i = number - 1; i >= 0; i--)
+		//gán vị trí đầu tiên theo vị trí từ number
+		for (int i = 0; i < BIT_RANGE - number; i++)
+			res.SetBit1(i, (*this).GetBit(i + number));
+		for (int i = BIT_RANGE - number; i <= BIT_RANGE; i++)
 			res.SetBit1(i, 0);
 		return res;
 	}
