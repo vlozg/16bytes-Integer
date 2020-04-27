@@ -1,9 +1,11 @@
 ﻿#include "QInt.h"
 
 //Lấy bit tại vị trí thứ i
-bool QInt::GetBit(int i)
+bool QInt::GetBit(int pos)
 {
-	return (value[i / 8] >> (7 - (i % 8))) & 1;
+	if (pos > 127 || pos < 0) return 0;
+    char mask = 1 << (pos%8);   //Mặt nạ đánh dấu bit cần lấy
+    return (value[pos/8] & mask);
 }
 
 //Set bit
