@@ -39,13 +39,13 @@ public:
 	void RotateRight(int number);
 };
 
-void ScanQInt(QInt& x);		//Cau a
-void PrintQInt(QInt x);		//Cau b
-bool* DecToBin(QInt x);		//Cau c
-QInt BinToDec(bool* bit);	//Cau d
+void ScanQInt(QInt& x);
+void PrintQInt(QInt x);	
+bool* DecToBin(QInt x);	
+QInt BinToDec(bool* bit);
 
-char* BinToHex(bool* bit); //cau e
-char* DecToHex(QInt x); // cau f
+char* BinToHex(bool* bit); 
+char* DecToHex(QInt x); 
 
 
 
