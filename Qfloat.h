@@ -92,16 +92,17 @@ void ScanQfloat(Qfloat& input)
 	// nếu integerDigits = 0 thì dời sang phải đến khi qua khỏi số 1
 	int e = 0;
 	char tempBit;	//lưu bit chuyển
-	if (integerDigits == "") {	//nếu số đầu = 0 thì dời sang phải
+	if (integerDigits == "") {	//nếu phần nguyên = 0 thì dời sang phải
 		for (int i = 0;; i++) {
 			if (temp[i] == '1') {
 				tempBit = temp[i];
 				integerDigits += tempBit;
+				e--;
 				break;
 			}
 			else {	
 				tempBit = temp[i];
-				integerDigits += tempBit;					
+				integerDigits += tempBit;
 			}
 			e--;
 		}
@@ -188,7 +189,7 @@ void PrintQfloat(Qfloat input)
 	//Tính toán để ra E
 	Exponent = IntegerBinToDec(Exponent);
 	int E = stoi(Exponent);
-	E = E - KNUMBER;
+	E = E - KNUMBER;	
 
 	//Lấy lại phần nguyên ban đầu
 	string integerDigits;
@@ -202,7 +203,8 @@ void PrintQfloat(Qfloat input)
 		}
 	}
 	else if (E < 0) {
-		for (int i = E; i < 0; i++) {
+		Significand = '1' + Significand;
+		for (int i = E + 1; i < 0; i++) {
 			Significand = '0' + Significand;	//thêm vào các bit 0
 		}
 		integerDigits = "0";
