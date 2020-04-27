@@ -53,7 +53,7 @@ void ScanQfloat(Qfloat& input)
 
 	//kiểm tra dấu
 	if (CheckMinus(temp[0])) {
-		input.SetBit(0, 1);	//có dấu - thì set bit đầu tiên thành 0
+		input.SetBit(0, 127);	//có dấu - thì set bit đầu tiên thành 0
 		temp.erase(temp.begin(), (temp.begin() + 1));	//xong xóa char dấu
 	}
 
@@ -79,7 +79,7 @@ void ScanQfloat(Qfloat& input)
 	//xóa phần nguyên khỏi string đầu
 	temp.erase(temp.begin(), (temp.begin() + k));
 	if (temp.length() == 1) {
-		temp.erase(temp.begin(), temp.end());	//chỉ còn 1 phần từ thì đó là dấu . nên xóa luôn
+		temp.erase(temp.begin(), temp.end());	//chỉ còn 1 phần tử thì đó là dấu . nên xóa luôn
 	}
 
 	//chuyển phần nguyên sang binary
@@ -92,28 +92,37 @@ void ScanQfloat(Qfloat& input)
 	// nếu integerDigits = 0 thì dời sang phải đến khi qua khỏi số 1
 	int e = 0;
 	char tempBit;	//lưu bit chuyển
-	if (integerDigits == "") {
+	if (integerDigits == "") {	//nếu phần nguyên = 0 thì dời sang phải
 		for (int i = 0;; i++) {
 			if (temp[i] == '1') {
 				tempBit = temp[i];
 				integerDigits += tempBit;
+				e--;
 				break;
 			}
-			else {
+			else {	
 				tempBit = temp[i];
 				integerDigits += tempBit;
 			}
 			e--;
 		}
+		//xóa e bit đầu của temp (chứa significand)
+		for (int i = e; i < 0; i++) {
+			temp.erase(temp.begin(), temp.begin() + 1);
+		}
 	}
-	else {
+	else {	//ngược lại dời qua trái
 		for (int i = integerDigits.length() - 1; i > 0; i--) {
 			tempBit = integerDigits[i];
 			temp = tempBit + temp;
 			e++;
 		}
+		//xóa e bit cuối của integerDigits để ra phần định trị
+		for (int i = 0; i < e; i++) {
+			integerDigits.pop_back();
+		}
 	}
-	
+
 	e += KNUMBER;	// cộng E với số thừa K để ra Exponent
 	string E = to_string(e);
 	E = IntegerDecToBin(E);	//chuyển E sang binary
@@ -182,20 +191,6 @@ void PrintQfloat(Qfloat input)
 	int E = stoi(Exponent);
 	E = E - KNUMBER;	
 
-	//Xóa bớt số 0 bên phải string significand
-	/*
-	int sLength = Significand.length();
-	for (int i = Significand.length() - 1; i >= 0; i--) {
-		if (Significand[i] == '0') {
-			Significand.pop_back();
-			//i++;
-		}
-		else {
-			break;
-		}
-	}
-	*/
-
 	//Lấy lại phần nguyên ban đầu
 	string integerDigits;
 	if (E >= 0) {
@@ -208,8 +203,9 @@ void PrintQfloat(Qfloat input)
 		}
 	}
 	else if (E < 0) {
-		for (int i = E; i < 0; i++) {
-			Significand = Significand + '0';
+		Significand = '1' + Significand;
+		for (int i = E + 1; i < 0; i++) {
+			Significand = '0' + Significand;	//thêm vào các bit 0
 		}
 		integerDigits = "0";
 	}
