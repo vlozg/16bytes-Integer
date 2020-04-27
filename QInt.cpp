@@ -31,7 +31,7 @@ void QInt::Input(string number)
 	string bin = DecToBinStr(number);			//bin se la dang binary cua number
 	for (int i = 0; i < 128; i++)
 	{
-		SetBit(i, bin[i]==1);
+		this->SetBit(i, bin[i]=='1');
 	}
 }
 
@@ -73,9 +73,9 @@ void QInt::Output()
 	cout << result;
 }
 
-//Chuyen day bit thanh day bool
-//Neu k xai nua thi phai delete[] bool
-//Lấy bit từ x -> dãy bool 128 phần tử
+//Chuyển dạng số thập phân QInt ra dãy nhị phân
+//Parameter:
+//- x: số thập phân QInt cần chuyển
 bool* DecToBin(QInt x)
 {
 	bool* bit = new bool[128];
@@ -99,20 +99,11 @@ QInt BinToDec(bool* bin)
 	return result;
 }
 
-QInt::QInt()
-{
-	for (int i = 0; i < 16; i++)
-	{
-		value[i] = 0;
-	}
-}
-
 //	------------------------------------------------------
 //	------------------------------------------------------
 //	----------------- HAM HO TRO -------------------------
 //	------------------------------------------------------
 //	------------------------------------------------------
-
 
 //Xóa số 0 và space phía trước số thập phân
 //Xóa space phía sau số thập phân
@@ -255,7 +246,6 @@ string DecToBinStr(string number)
 	return bin;
 }
 
-
 //Chuỗi number x 2
 string MultiplyByTwo(string number)	
 {
@@ -296,7 +286,7 @@ void PowOfTwo(string pow[128])
 }
 
 //Cộng 2 chuỗi dec --> chuỗi sum dec
-string SumNumbers(string n1, string n2)		
+string SumNumber(string n1, string n2)		
 {
 	string result = "";
 	string longer = "", shorter = "";	//longer se luu chuoi so co nhieu chu so hon, shorter nguoc lai
@@ -371,27 +361,6 @@ bool CheckNumber(string number)
 	return 1;
 }
 
-
-/*Calculate sum of 2 bits using half-adder algorithm
-Input: first bit A, secoond bit B, carrier bit C*/
-bool HalfAdder(bool A, bool B, bool& C)
-{
-	C = A & B;
-	return A ^ B;
-}
-
-/*Calculate sum of 2 bits using full-adder algorithm
-Input: first bit A, secoond bit B, previous carrier bit prevC
-Output: returns sum 2 bit, remainder bit into carrier bit prevC*/
-bool FullAdder(bool A, bool B, bool& prevC)
-{
-	bool C, newC; //carrier bits
-	bool sum = HalfAdder(A, B, C); //C is now remainder bit
-	sum = HalfAdder(sum, prevC, newC);
-	prevC = C | newC;
-	return sum;
-}
-
 //Return QInt complement two
 QInt QInt::ComplementTwo()
 {
@@ -410,29 +379,6 @@ QInt QInt::ComplementTwo()
 			break;
 	}
 	return complement;
-}
-
-//Calculate sum of 2 QInt
-QInt QInt::operator +(QInt number)
-{
-	QInt product;
-	bool carrierBit = 0;
-	for (int i = 0; i < 128; i++)
-	{
-		bool firstBit = this->GetBit(127 - i);
-		bool secondBit = number.GetBit(127 - i);
-		bool newBit = FullAdder(firstBit, secondBit, carrierBit);
-		if (newBit) //if new bit is 1 then set it in value
-			product.SetBit(127 - i, 1);
-	}
-	return product;
-}
-
-
-//Calculate subtraction of 2 QInt
-QInt QInt::operator -(QInt number)
-{
-	return (*this) + number.ComplementTwo(); //turns number into two's complement then sum
 }
 
 //Hàm trả về kết quả khi 2 kiểu dữ liệu QInt & nhau
@@ -524,8 +470,8 @@ void ScanQInt(QInt& x)
 {
 	string number;
 	getline(cin, number);
-	normalizeNumber(number);
-	if (checkNumber(number) == false)
+	NormalizeNumber(number);
+	if (CheckNumber(number) == false)
 	{
 		//Do something
 		cout << "Khong phai so";
@@ -566,7 +512,6 @@ char BinToHexChar(string num) {
 	if (num == "1111") return 'F';
 	return '\0';
 }
-
 
 /*
 	Hàm chuyển đổi chuỗi bool* dạng binary -> chuỗi char* dạng hex

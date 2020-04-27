@@ -5,9 +5,6 @@
 
 using namespace std;
 
-/*
-	Define của Duy
-*/
 #define BIT_RANGE 128
 #define MAX_VALUE_BIT 16
 #define FOUR_BIT 4
@@ -22,8 +19,6 @@ public:
 
 	void Input(string);
 	void Output();
-
-	QInt();
 
 	QInt ComplementTwo();
 	QInt operator+(QInt number);
@@ -54,6 +49,6 @@ string DecToBinStr(string number);	//Ham nay moi sua ten do nha! (DecToBin -> De
 string MultiplyByTwo(string number);
 void PowOfTwo(string pow[128]);
 string SumNumber(string n1, string n2);
-bool checkNumber(string number);
-void normalizeNumber(string& number);
+bool CheckNumber(string number);
+void NormalizeNumber(string& number);
 char BinToHexChar(string num);
