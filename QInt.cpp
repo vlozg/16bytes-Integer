@@ -446,7 +446,7 @@ QInt QInt::operator -(QInt number)
 QInt QInt::operator &(QInt number) {
 	QInt result; // kết quả trả về
 
-	for (int i = 0; i < BIT_RANGE; i++) {
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
 		// res là kết quả của phép & giữa 2 QInt
 		result.value[i] = (*this).value[i] & number.value[i];
 	}
@@ -458,7 +458,7 @@ QInt QInt::operator &(QInt number) {
 QInt QInt::operator |(QInt number) {
 	QInt result; // kết quả trả về
 
-	for (int i = 0; i < BIT_RANGE; i++) {
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
 		// res là kết quả của phép | giữa 2 bit
 		result.value[i] = (*this).value[i] | number.value[i];
 	}
@@ -470,7 +470,7 @@ QInt QInt::operator |(QInt number) {
 QInt QInt::operator ^(QInt number) {
 	QInt result; // kết quả trả về
 
-	for (int i = 0; i < BIT_RANGE; i++) {
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
 		// res là kết quả của phép ^ giữa 2 QInt
 		result.value[i] = (*this).value[i] ^ number.value[i];
 	}
@@ -482,7 +482,7 @@ QInt QInt::operator ^(QInt number) {
 QInt QInt::operator ~() {
 	QInt result; // kết quả trả về
 
-	for (int i = 0; i < BIT_RANGE; i++) {
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
 		// res là kết quả của phép ~ giữa 2 QInt
 		result.value[i] = ~(*this).value[i];
 	}

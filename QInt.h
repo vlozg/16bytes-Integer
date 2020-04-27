@@ -8,6 +8,7 @@ using namespace std;
 	Define của Duy
 */
 #define BIT_RANGE 128
+#define MAX_VALUE_BIT 16
 #define FOUR_BIT 4
 
 class QInt
