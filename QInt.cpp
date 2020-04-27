@@ -1,5 +1,7 @@
 ﻿#include "QInt.h"
 
+
+
 /*
 Lấy giá trị bit tại vị trí bất kì
 Parameter:
@@ -285,6 +287,33 @@ QInt QInt::operator *(QInt number)
 	return result;
 }
 
+
+QInt QInt::operator/(QInt number)
+{
+	if (number == QInt("0"))
+		return QInt("0");	//Chia cho 0
+	QInt divisor = *this;
+	bool negative1 = divisor.IsNegative();
+	bool negative2 = number.IsNegative();
+	//chuyển 2 số về dương
+	if (negative1)
+		divisor = divisor.ComplementTwo();
+	if (negative2)
+		number = number.ComplementTwo();
+
+	QInt result("-1"); //kết quả là số lần trừ
+	while (!(divisor.IsNegative())) //lặp khi số bị chia >= 0
+	{
+		divisor = divisor - number;
+		result = result + QInt("1");
+	}
+
+	if (negative1 ^ negative2) //2 số trái dấu
+		result = result.ComplementTwo();
+
+	return result;
+}
+
 QInt QInt::operator=(const QInt& number)
 {
 	if (this == &number) //nếu gán cho chính nó
@@ -295,6 +324,12 @@ QInt QInt::operator=(const QInt& number)
 	}
 	return *this;
 }
+
+/*
+================================
+		CÁC TOÁN TỬ SO SÁNH
+=================================
+*/
 
 bool QInt::operator<(const QInt& number)
 {
@@ -432,64 +467,11 @@ bool QInt::operator==(const QInt& number)
 	return true;
 }
 
-/*Hàm kiểm tra số âm.
-Output: là số âm thì True, ngược lại False
-*/
-bool QInt::IsNegative()
-{
-	return this->GetBit(0);
-}
-
-
 /*
-Hàm trả về vị trí bit có giá trị lớn nhất.
+================================
+	CÁC TOÁN TỬ BITWISE
+=================================
 */
-int QInt::MostSignificantBit()
-{
-	for (int i = 0; i < SIZE; i++)
-	{
-		if (value[i] != 0)
-		{
-			int j;
-			if (i == 0)
-				j = 1;
-			else
-				j = 0; //nếu block 0 thì check từ bit 1, còn lại thì check từ bit 0
-			for (; j < 8; j++)
-			{
-				if (this->GetBit(i * 8 + j)) //trả về vị trí bit 1 đầu tiên
-					return i * 8 + j;
-			}
-		}
-	}
-	return 0; //số 0
-}
-
-QInt QInt::operator/(QInt number)
-{
-	if (number == QInt("0"))
-		return QInt("0");	//Chia cho 0
-	QInt divisor = *this;
-	bool negative1 = divisor.IsNegative();
-	bool negative2 = number.IsNegative();
-	//chuyển 2 số về dương
-	if (negative1)
-		divisor = divisor.ComplementTwo();
-	if (negative2)
-		number = number.ComplementTwo();
-
-	QInt result("-1"); //kết quả là số lần trừ
-	while (!(divisor.IsNegative())) //lặp khi số bị chia >= 0
-	{
-		divisor = divisor - number;
-		result = result + QInt("1");
-	}
-
-	if (negative1 ^ negative2) //2 số trái dấu
-		result = result.ComplementTwo();
-
-	return result;
-}
 
 
 /*
@@ -515,6 +497,7 @@ void QInt::RotateLeft(int number) {
 
 	}
 }
+
 /*
 	Xoay phải n bit cách làm như trên
 */
@@ -535,4 +518,89 @@ void QInt::RotateRight(int number) {
 			(*this).SetBit(i, tempBit[i]);
 		}
 	}
+}
+
+//Hàm trả về kết quả khi 2 kiểu dữ liệu QInt & nhau
+QInt QInt::operator &(QInt number) {
+	QInt result; // kết quả trả về
+
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
+		// res là kết quả của phép & giữa 2 QInt
+		result.value[i] = (*this).value[i] & number.value[i];
+	}
+
+	return result;
+}
+
+//Hàm trả về kết quả khi 2 kiểu dữ liệu QInt | nhau
+QInt QInt::operator |(QInt number) {
+	QInt result; // kết quả trả về
+
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
+		// res là kết quả của phép | giữa 2 bit
+		result.value[i] = (*this).value[i] | number.value[i];
+	}
+
+	return result;
+}
+
+//Hàm trả về kết quả khi 2 kiểu dữ liệu QInt ^ nhau
+QInt QInt::operator ^(QInt number) {
+	QInt result; // kết quả trả về
+
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
+		// res là kết quả của phép ^ giữa 2 QInt
+		result.value[i] = (*this).value[i] ^ number.value[i];
+	}
+
+	return result;
+}
+
+//Hàm trả về kết quả khi 2 kiểu dữ liệu QInt ~ nhau
+QInt QInt::operator ~() {
+	QInt result; // kết quả trả về
+
+	for (int i = 0; i < MAX_VALUE_BIT; i++) {
+		// res là kết quả của phép ~ giữa 2 QInt
+		result.value[i] = ~(*this).value[i];
+	}
+
+	return result;
+}
+
+/*
+================================
+		CÁC HÀM BỔ TRỢ
+=================================
+*/
+
+
+/*Hàm kiểm tra số âm.
+Output: là số âm thì True, ngược lại False*/
+bool QInt::IsNegative()
+{
+	return this->GetBit(0);
+}
+
+
+//Hàm trả về vị trí bit có giá trị lớn nhất.
+int QInt::MostSignificantBit()
+{
+	for (int i = 0; i < SIZE; i++)
+	{
+		if (value[i] != 0)
+		{
+			int j;
+			if (i == 0)
+				j = 1;
+			else
+				j = 0; //nếu block 0 thì check từ bit 1, còn lại thì check từ bit 0
+			for (; j < 8; j++)
+			{
+				if (this->GetBit(i * 8 + j)) //trả về vị trí bit 1 đầu tiên
+					return i * 8 + j;
+			}
+		}
+	}
+	return 0; //số 0
 }

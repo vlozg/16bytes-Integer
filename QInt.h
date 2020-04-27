@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include <string>
 #define SIZE 16
@@ -18,24 +18,32 @@ public:
 	void Output();
 
 	QInt ComplementTwo();
+
+	//các hàm số học
 	QInt operator+(QInt);
 	QInt operator-(QInt);
 	QInt operator*(QInt);
 	QInt operator/(QInt);
 
+	//các hàm bitwise
 	void RotateLeft(int number);
 	void RotateRight(int number);
+	QInt operator&(QInt number);
+	QInt operator|(QInt number);
+	QInt operator^(QInt number);
+	QInt operator~();
+	QInt operator>>(int number);
+	QInt operator<<(int number);
+
 
 	QInt operator=(const QInt&);
+	
+	//các hàm so sánh
 	bool operator<(const QInt&);
 	bool operator>(const QInt&);
 	bool operator<=(const QInt&);
 	bool operator>=(const QInt&);
 	bool operator==(const QInt&);
-
-	QInt operator>>(int number);
-	QInt operator<<(int number);
-
 
 	bool IsNegative();
 	int MostSignificantBit();

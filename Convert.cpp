@@ -324,3 +324,5 @@ char* DecToHex(QInt x) {
 	bool* binConvert = DecToBin(x);
 	return BinToHex(binConvert);
 }
+
+
