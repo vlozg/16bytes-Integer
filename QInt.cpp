@@ -1,25 +1,34 @@
 ﻿#include "QInt.h"
 
-//Lấy bit tại vị trí thứ i
-bool QInt::GetBit(int i)
-{
-	return (value[i / 8] >> (7 - (i % 8))) & 1;
+/*
+Lấy giá trị bit tại vị trí bất kì
+Parameter:
+- pos: vị trí bit cần lấy
+*/
+bool QInt::GetBit(int pos) {
+	if (pos > 127 || pos < 0) return 0;
+	char mask = 1 << (pos % 8);   //Mặt nạ đánh dấu bit cần lấy
+	return (value[pos / 8] & mask);
 }
 
-//Set bit
-// bit: bit cần set
-// i : vị trí cần set
-void QInt::SetBit(int i, bool bit)
-{
-	if (bit == 1)
-	{
-		value[i / 8] = value[i / 8] | (1 << (7 - (i % 8)));
-	}
-	else
-	{
-		value[i / 8] = value[i / 8] & (0 << (7 - (i % 8)));
-	}
 
+/*
+Set bit tại vị trí bất kì
+Parameter:
+- pos: vị trí set
+- bit: giá trị set
+*/
+void QInt::SetBit(int pos, bool bit) {
+	if (pos > 127) return;
+
+	char mask = 1 << (pos % 8);   //Mặt nạ đánh dấu bit cần sửa
+
+	if (bit == 1) {
+		value[pos / 8] |= mask;   //OR với mask để bật bit
+	}
+	else {
+		value[pos / 8] &= ~mask;  //Đảo mask và AND để tắt bit
+	}
 }
 
 //Chuỗi Dec -> Chuỗi Bin -> QInt
@@ -109,6 +118,11 @@ QInt::QInt()
 	{
 		value[i] = 0;
 	}
+}
+
+QInt::QInt(string number)
+{
+	this->Input(number);
 }
 
 //	------------------------------------------------------
@@ -398,4 +412,48 @@ void ScanQInt(QInt& x)
 void PrintQInt(QInt x)
 {
 	x.Output();
+}
+
+//Hàm dịch phải n bit 
+QInt QInt::operator>>(int number) {
+	if (number <= 0) return *this;
+	else {
+		if (number > BIT_RANGE) {
+			number = BIT_RANGE;
+		}
+		bool FirstBit = (*this).GetBit(BIT_RANGE - 1);
+		QInt res;
+		for (int i = BIT_RANGE; i >= number; i--)
+			res.SetBit(i, (*this).GetBit(i - number));
+		for (int i = number - 1; i >= 0; i--)
+			res.SetBit(i, 0);
+
+		return res;
+	}
+}
+
+
+// Hàm dịch trái n bit
+QInt QInt::operator<<(int number) {
+	if (number <= 0) return *this;
+	else
+	{
+		if (number > BIT_RANGE) {
+			number = BIT_RANGE;
+		}
+		QInt res;
+		//gán vị trí đầu tiên theo vị trí từ number
+		for (int i = 0; i < BIT_RANGE - number; i++)
+		{
+			res.SetBit(i, (*this).GetBit(i + number));
+			/*print(res, i, (*this).GetBit(i + number));
+			if (i == 111)
+				continue;*/
+		}
+		for (int i = BIT_RANGE - number; i <= BIT_RANGE; i++)
+			res.SetBit(i, 0);
+		
+		cout << endl;
+		return res;
+	}
 }

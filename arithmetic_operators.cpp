@@ -1,5 +1,6 @@
 ﻿#include "QInt.h"
 
+
 /*Tổng 2 bit dùng half adder
 Input: bit A, bit B, bit nhớ C*/
 bool HalfAdder(bool A, bool B, bool& C)
@@ -32,15 +33,7 @@ QInt QInt::ComplementTwo()
 		//chuyển thành số bù 1: 
 		//255 - 1 số 8 bit sẽ ra số nhị phân có các bit đảo ngược của số đó
 	}
-	cout << endl;
-	for (i = SIZE - 1;i >= 0;i--)
-	{
-		complement.value[i] += 1; //+1 tuần tự vào từng block
-		if (complement.value[i] == 0) //nếu tràn số thì tiếp tục +1 vào block kế tiếp
-			continue;
-		else
-			break;
-	}
+	complement = complement + QInt("1");
 	return complement;
 }
 
@@ -61,6 +54,49 @@ QInt QInt::operator +(QInt number)
 QInt QInt::operator -(QInt number)
 {
 	return (*this) + number.ComplementTwo(); //chuyển number về dạng bù 2 rồi cộng
+}
+
+//Phép nhân 2 số dương
+QInt Multiplication(QInt A, QInt B)
+{
+	QInt result;
+	for (int i = BIT_RANGE - 1;i >= 1;i--)
+	{
+		if (B.GetBit(i) == 1)
+		{
+			result = result + (A << (BIT_RANGE - 1 - i));
+		}
+	}
+	return result;
+}
+
+
+QInt QInt::operator *(QInt number)
+{
+	QInt result; //kết quả
+	QInt A = *this, B = number; //biến tạm
+	bool negative1 = A.IsNegative();
+	bool negative2 = B.IsNegative();
+	//chuyển 2 số về dương
+	if (negative1)
+		A = A.ComplementTwo();
+	if (negative2)
+		B = B.ComplementTwo();
+	/*lấy số lớn hơn làm toán hạng thứ nhất
+	choice = false: *this làm toán hạng 1
+	choice = true: number làm toán hạng 1*/
+	bool choice = false;
+	if (number > *this)
+		choice = true;
+	if (choice)
+		result = Multiplication(B, A);
+	else
+		result = Multiplication(A, B);
+
+	if (negative1 ^ negative2) //2 số trái dấu
+		result = result.ComplementTwo();
+
+	return result;
 }
 
 QInt QInt::operator=(const QInt& number)

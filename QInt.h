@@ -8,7 +8,7 @@ using namespace std;
 class QInt
 {
 private:
-	char value[16] = { 0 };
+	char value[SIZE] = { 0 };
 public:
 	bool GetBit(int i);
 	void SetBit(int i, bool bit);
@@ -19,6 +19,8 @@ public:
 	QInt ComplementTwo();
 	QInt operator+(QInt);
 	QInt operator-(QInt);
+	QInt operator*(QInt);
+	QInt operator/(QInt);
 
 	QInt operator=(const QInt&);
 	bool operator<(const QInt&);
@@ -27,10 +29,15 @@ public:
 	bool operator>=(const QInt&);
 	bool operator==(const QInt&);
 
+	QInt operator>>(int number);
+	QInt operator<<(int number);
+
+
 	bool IsNegative();
 	int MostSignificantBit();
 
 	QInt();
+	QInt(string);
 };
 
 
@@ -48,3 +55,4 @@ void PowOfTwo(string pow[128]);
 string SumNumbers(string n1, string n2);
 bool CheckNumber(string number);
 void NormalizeNumber(string& number);
+
