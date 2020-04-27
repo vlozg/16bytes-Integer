@@ -1,4 +1,4 @@
-﻿#include "Qfloat.h"
+#include "Qfloat.h"
 
 Qfloat::Qfloat()
 {
@@ -81,11 +81,6 @@ void ScanQfloat(Qfloat& input)
 	if (temp.length() == 1) {
 		temp.erase(temp.begin(), temp.end());	//chỉ còn 1 phần từ thì đó là dấu . nên xóa luôn
 	}
-	/*else {
-		if (temp.length() >= 1) {
-			temp.erase(temp.begin(), temp.begin() + 1);	//xóa dấu .
-		}
-	}*/
 
 	//chuyển phần nguyên sang binary
 	integerDigits = IntegerDecToBin(integerDigits);
@@ -94,19 +89,36 @@ void ScanQfloat(Qfloat& input)
 
 	// tính E bằng cách dời từng bit từ phần nguyên sang phần thập phân
 	// (từ phải qua trái) tới khi chỉ còn 1 bit 1
+	// nếu integerDigits = 0 thì dời sang phải đến khi qua khỏi số 1
 	int e = 0;
 	char tempBit;	//lưu bit chuyển
-	for (int i = integerDigits.length() - 1; i > 0; i--) {
-		tempBit = integerDigits[i];
-		temp = tempBit + temp;
-		e++;
+	if (integerDigits == "") {
+		for (int i = 0;; i++) {
+			if (temp[i] == '1') {
+				tempBit = temp[i];
+				integerDigits += tempBit;
+				break;
+			}
+			else {
+				tempBit = temp[i];
+				integerDigits += tempBit;
+			}
+			e--;
+		}
+	}
+	else {
+		for (int i = integerDigits.length() - 1; i > 0; i--) {
+			tempBit = integerDigits[i];
+			temp = tempBit + temp;
+			e++;
+		}
 	}
 	
 	e += KNUMBER;	// cộng E với số thừa K để ra Exponent
 	string E = to_string(e);
 	E = IntegerDecToBin(E);	//chuyển E sang binary
 
-	//Kiểm tra độ dài đủ 15 bit
+	//Kiểm tra độ dài đủ 15 bit, thiếu thì thêm 0 vào đầu
 	if (E.length() > 15) {
 		E.erase(E.begin() + 15, E.end());
 	}
@@ -146,7 +158,6 @@ void PrintQfloat(Qfloat input)
 	}
 
 	//lấy 15 bit tiếp theo ra làm phần exponent
-	int l = 0;
 	for (int i = 1; i < 16; i++) {
 		if (input.GetBit(i) == 1) {
 			Exponent += '1';
@@ -154,11 +165,9 @@ void PrintQfloat(Qfloat input)
 		else {
 			Exponent += '0';
 		}
-		l++;
 	}
 
 	//lấy các bit còn lại để xét significand
-	l = 0;
 	for (int i = 16; i < 128; i++) {
 		if (input.GetBit(i) == 1) {
 			Significand += '1';
@@ -166,7 +175,6 @@ void PrintQfloat(Qfloat input)
 		else {
 			Significand += '0';
 		}
-		l++;
 	}
 
 	//Tính toán để ra E
@@ -175,6 +183,7 @@ void PrintQfloat(Qfloat input)
 	E = E - KNUMBER;	
 
 	//Xóa bớt số 0 bên phải string significand
+	/*
 	int sLength = Significand.length();
 	for (int i = Significand.length() - 1; i >= 0; i--) {
 		if (Significand[i] == '0') {
@@ -185,18 +194,34 @@ void PrintQfloat(Qfloat input)
 			break;
 		}
 	}
+	*/
 
 	//Lấy lại phần nguyên ban đầu
-	string integerDigits = "1";
-	for (int i = 0; i < E; i++) {
-		integerDigits += Significand[0];
-		Significand.erase(Significand.begin(), Significand.begin() + 1);
+	string integerDigits;
+	if (E >= 0) {
+		integerDigits = "1";
+		for (int i = 0; i < E; i++) {
+			integerDigits += Significand[i];
+		}
+		if (integerDigits.length() > 1) {
+			Significand.erase(Significand.begin(), Significand.begin() + E);
+		}
 	}
+	else if (E < 0) {
+		for (int i = E; i < 0; i++) {
+			Significand = Significand + '0';
+		}
+		integerDigits = "0";
+	}
+	
 	integerDigits = IntegerBinToDec(integerDigits);
-	result = result + integerDigits + '.';
+	result = result + integerDigits;
 
 	//lấy lại phần thập phân ban đầu
 	string fractionalDigits = FractionalBinToDec(Significand);
+	if (fractionalDigits.length() > 0) {
+		fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1);
+	}
 	result += fractionalDigits;
 	
 	cout << result;
@@ -381,7 +406,8 @@ string FractionalDecToBin(string number) {
 			}
 			else {
 				c = '1';	//kết quả lớn hơn 1 thì lấy 1
-				temp[0] = 1;	//lấy kết quả trừ 1 (ở đây là đổi char đầu thành 0)
+				temp.erase(temp.begin(), (temp.begin() + 1));
+				temp = '0' + temp;	//lấy kết quả trừ 1 (ở đây là đổi char đầu thành 0)
 			}
 		}
 		else {
@@ -392,6 +418,7 @@ string FractionalDecToBin(string number) {
 	return bin;
 }
 
+//Chuyển chhuỗi binary sang chuỗi thập phân
 string IntegerBinToDec(string bin) {
 	string number = "0";
 	int binLength = bin.length();
@@ -410,17 +437,19 @@ string IntegerBinToDec(string bin) {
 	return number;
 }
 
+//chuyển phần thập phân binary sang thập phân
 string FractionalBinToDec(string bin) {
 	string number = "";
 
 	string pow[128];
 	PowOfTwoMinus(pow);	//khởi tạo chuỗi có các số 2 mũ -n
 
+	pow[0] = "0.0";
 	for (int i = 0; i < bin.length(); i++)
 	{
-		if (bin[0] == '1')
+		if (bin[i] == '1')
 		{
-			number = SumNumbers(number, pow[i+1]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
+			number = SumFractionals(number, pow[i+1]);	//	Cộng theo kiểu 2^-1 + 2^-2 + ...
 		}
 	}
 
@@ -458,6 +487,37 @@ string MultiplyByTwo(string number)
 	return result;
 }
 
+//Lấy chuỗi nhân 5
+string MultiplyByFive(string number)
+{
+	string result = "";
+	int number_len = number.length();
+	int mem = 0;	//biến nhớ khi nhân
+
+	for (int i = number_len - 1; i >= 0; i--)
+	{
+		//kiểm tra nếu gặp dấu phẩy
+		if (number[i] == '.') {
+			result = number[i] + result;
+		}
+		else {
+			int m = (number[i] - '0') * 5 + mem;
+
+			mem = m / 10;
+
+			char c = m % 10 + '0';
+			result = c + result;
+		}
+	}
+
+	//đưa số nhớ cuối cùng vào đầu kết quả
+	if (mem > 0)
+	{
+		result = char(mem + '0') + result;
+	}
+	return result;
+}
+
 //Tạo mảng 2 mũ n
 void PowOfTwo(string pow[128])
 {
@@ -468,13 +528,34 @@ void PowOfTwo(string pow[128])
 	}
 }
 
-//Tạo mảng 2 mũ -n
-void PowOfTwoMinus(string pow[128])
+//Tạo mảng 5 mũ n
+void PowOfFive(string pow[128])
 {
 	pow[0] = "1";
 	for (int i = 1; i < 128; i++)
 	{
-		pow[i] = DivideByTwo(pow[i - 1]);
+		pow[i] = MultiplyByFive(pow[i - 1]);
+	}
+}
+
+/*
+	Tạo mảng 2^-n
+	Đầu tiên tạo mảng các số 5^n
+	Vì các số 2^-n là 0.(00..0)5^n - với phần sau thập phân có n chữ số
+*/
+void PowOfTwoMinus(string pow[128])
+{
+	string five[128];
+	PowOfFive(five);	//khởi tạo mảng các số 5 mũ n
+
+	pow[0] = "1";
+	for (int i = 1; i < 128; i++)
+	{
+		pow[i] = five[i];
+		while (pow[i].length() < i) {
+			pow[i] = '0' + pow[i];
+		}
+		pow[i] = "0." + pow[i];
 	}
 }
 
@@ -529,5 +610,69 @@ string SumNumbers(string n1, string n2)
 	{
 		result = char(carry + '0') + result;	// Them mem vao truoc chuoi neu con
 	}
+	return result;
+}
+
+//Cộng 2 chuỗi có dạng 0.(...)
+string SumFractionals(string n1, string n2) {
+	string result = "";
+	string longer = "", shorter = "";	//longer se luu chuoi so co nhieu chu so hon, shorter nguoc lai
+	int small = 0, large = 0;
+
+	//phân biệt xem chuỗi nào dài hơn
+	if (n1.length() > n2.length())
+	{
+		small = n2.length();
+		large = n1.length();
+		longer = n1;
+		shorter = n2;
+	}
+	else
+	{
+		small = n1.length();
+		large = n2.length();
+		longer = n2;
+		shorter = n1;
+	}
+
+	//thêm số 0 vào đuôi chuỗi ngắn hơn cho bằng chuỗi dài
+	while (small < large) {
+		shorter += '0';
+		small++;
+	}
+
+	int carry = 0;	//Cong co nho
+
+	int i = 0, j = 0;
+
+	for (i = small - 1, j = large - 1; i >= 0; i--, j--)
+	{
+		if (shorter[i] == '.') {
+			result = '.' + result;
+			continue;
+		}
+		int s = (shorter[i] - '0') + (longer[j] - '0') + carry; //Lay 2 ki tu cung don vi cong voi nhau va cong them bien nho
+
+		carry = s / 10;			//Bien nho la chu so dang truoc cua s
+
+		char c = s % 10 + '0';	//Luu hang don vi cua s o dang char
+		result = c + result;	//Them vao ket qua da co
+	}
+	while (j >= 0)
+	{
+		int s = (longer[j] - '0') + carry;	// Cong cac chu so con lai cho mem
+
+		carry = s / 10;
+
+		char c = s % 10 + '0';
+		result = c + result;
+
+		j--;
+	}
+	if (carry > 0)
+	{
+		result = char(carry + '0') + result;	// Them mem vao truoc chuoi neu con
+	}
+
 	return result;
 }
