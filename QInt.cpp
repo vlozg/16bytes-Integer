@@ -489,9 +489,9 @@ QInt QInt::operator>>(int number) {
 		bool FirstBit = (*this).GetBit(BIT_RANGE - 1);
 		QInt res;
 		for (int i = BIT_RANGE; i >= number; i--)
-			res.SetBit1(i, (*this).GetBit(i - number));
+			res.SetBit(i, (*this).GetBit(i - number));
 		for (int i = number - 1; i >= 0; i--)
-			res.SetBit1(i, 0);
+			res.SetBit(i, 0);
 
 		return res;
 	}
@@ -508,9 +508,9 @@ QInt QInt::operator<<(int number) {
 		QInt res;
 		//gán vị trí đầu tiên theo vị trí từ number
 		for (int i = 0; i < BIT_RANGE - number; i++)
-			res.SetBit1(i, (*this).GetBit(i + number));
+			res.SetBit(i, (*this).GetBit(i + number));
 		for (int i = BIT_RANGE - number; i <= BIT_RANGE; i++)
-			res.SetBit1(i, 0);
+			res.SetBit(i, 0);
 		return res;
 	}
 }
@@ -621,7 +621,7 @@ void QInt::RotateLeft(int number) {
 		*(this) << number;
 		//gán lại bit đã lưu ra phía sau
 		for (int i = BIT_RANGE - number; i < BIT_RANGE; i++) {
-			(*this).SetBit1(i, tempBit[i]);
+			(*this).SetBit(i, tempBit[i]);
 		}
 
 	}
@@ -643,7 +643,7 @@ void QInt::RotateRight(int number) {
 		*(this) >> number;
 		//gán lại bit đã lưu ra phía sau
 		for (int i = 0; i < number; i++) {
-			(*this).SetBit1(i, tempBit[i]);
+			(*this).SetBit(i, tempBit[i]);
 		}
 	}
 }
