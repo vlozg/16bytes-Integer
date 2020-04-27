@@ -262,3 +262,65 @@ bool CheckNumber(string number)
 	}
 	return 1;
 }
+
+
+/*
+	Hàm chuyển đổi 4bit binary -> kí tự hex
+*/
+char BinToHexChar(string num) {
+	if (num == "0000") return '0';
+	if (num == "0001") return '1';
+	if (num == "0010") return '2';
+	if (num == "0011") return '3';
+	if (num == "0100") return '4';
+	if (num == "0101") return '5';
+	if (num == "0110") return '6';
+	if (num == "0111") return '7';
+	if (num == "1000") return '8';
+	if (num == "1001") return '9';
+	if (num == "1010") return 'A';
+	if (num == "1011") return 'B';
+	if (num == "1100") return 'C';
+	if (num == "1101") return 'D';
+	if (num == "1110") return 'E';
+	if (num == "1111") return 'F';
+	return '\0';
+}
+
+/*
+	Hàm chuyển đổi chuỗi bool* dạng binary -> chuỗi char* dạng hex
+
+*/
+char* BinToHex(bool* bit) {
+	string hexString = "";
+	string subString = ""; // khởi tạo sub string để hỗ trợ trong việc chuyển đổi 
+	char hexCode; // hex code cho mỗi 4 bit
+
+	int fourBitCount = FOUR_BIT; // biến đếm 4 bit 1 lần 
+
+	//cứ mỗi 4 bit kế tiếp nhau ta đổi nó qua hệ 16
+	for (int i = 0; i < BIT_RANGE; i++) {
+
+		//chưa đủ 4 bit thì gán thêm vào substring
+		subString += char(bit[i] + '0');
+		fourBitCount--;
+		// đủ 4 bit thì chuyển qua Hex
+		if (fourBitCount == 0) {
+			fourBitCount = FOUR_BIT;
+			hexCode = BinToHexChar(subString);
+			hexString += hexCode;
+			subString = "";
+		}
+	}
+	char* result = new char[hexString.length() + 1];
+	strcpy(result, hexString.c_str());
+	return result;
+};
+
+/*
+	Hàm chuyển đổi từ QInt Dec -> Char *hex
+*/
+char* DecToHex(QInt x) {
+	bool* binConvert = DecToBin(x);
+	return BinToHex(binConvert);
+}

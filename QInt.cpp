@@ -490,3 +490,49 @@ QInt QInt::operator/(QInt number)
 
 	return result;
 }
+
+
+/*
+	Xoay trái n bit bằng cách dịch n bit sang trái và lưu các bit bị văng ra khỏi
+	mảng rồi gán lại vào sau
+*/
+void QInt::RotateLeft(int number) {
+	//xét nhưng TH không cần xoay
+	if (number <= 0 && number >= BIT_RANGE - 1) {
+		return;
+	}
+	else {
+		bool* tempBit = new bool[number]; // mảng chứa các bit bị dịch ra khỏi mảng
+		for (int i = 0; i < number; i++) {
+			tempBit[i] = (*this).GetBit(i);
+		}
+		// dịch trái number bit
+		*(this) << number;
+		//gán lại bit đã lưu ra phía sau
+		for (int i = BIT_RANGE - number; i < BIT_RANGE; i++) {
+			(*this).SetBit(i, tempBit[i]);
+		}
+
+	}
+}
+/*
+	Xoay phải n bit cách làm như trên
+*/
+void QInt::RotateRight(int number) {
+	//xét nhưng TH không cần xoay
+	if (number <= 0 && number >= BIT_RANGE - 1) {
+		return;
+	}
+	else {
+		bool* tempBit = new bool[number]; // mảng chứa các bit bị dịch ra khỏi mảng
+		for (int i = BIT_RANGE - number; i < BIT_RANGE; i++) {
+			tempBit[i] = (*this).GetBit(i);
+		}
+		// dịch phải number bit
+		*(this) >> number;
+		//gán lại bit đã lưu ra phía sau
+		for (int i = 0; i < number; i++) {
+			(*this).SetBit(i, tempBit[i]);
+		}
+	}
+}

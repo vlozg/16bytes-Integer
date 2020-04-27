@@ -23,6 +23,9 @@ public:
 	QInt operator*(QInt);
 	QInt operator/(QInt);
 
+	void RotateLeft(int number);
+	void RotateRight(int number);
+
 	QInt operator=(const QInt&);
 	bool operator<(const QInt&);
 	bool operator>(const QInt&);
@@ -47,7 +50,8 @@ void PrintQInt(QInt x);		//Cau b
 bool* DecToBin(QInt x);		//Cau c
 QInt BinToDec(bool* bit);	//Cau d
 
-
+char* BinToHex(bool* bit);
+char* DecToHex(QInt x);
 
 string DivideByTwo(string number);
 bool* DecToBinStr(string number);	//Ham nay moi sua ten do nha! (DecToBin -> DecToBinStr)
@@ -56,3 +60,5 @@ void PowOfTwo(string pow[BIT_RANGE]);
 string SumNumbers(string n1, string n2);
 bool CheckNumber(string number);
 void NormalizeNumber(string& number);
+
+char BinToHexChar(string num);
