@@ -478,46 +478,56 @@ bool QInt::operator==(const QInt& number)
 	Xoay trái n bit bằng cách dịch n bit sang trái và lưu các bit bị văng ra khỏi
 	mảng rồi gán lại vào sau
 */
-void QInt::RotateLeft(int number) {
+QInt QInt::RotateLeft(int number) {
+	QInt res = *this;
 	//xét nhưng TH không cần xoay
 	if (number <= 0 && number >= BIT_RANGE - 1) {
-		return;
+		return *this;
 	}
 	else {
 		bool* tempBit = new bool[number]; // mảng chứa các bit bị dịch ra khỏi mảng
 		for (int i = 0; i < number; i++) {
-			tempBit[i] = (*this).GetBit(i);
+			tempBit[i] = (res).GetBit(i);
 		}
 		// dịch trái number bit
-		*(this) << number;
+		res = res << number;
 		//gán lại bit đã lưu ra phía sau
+		int j = 0;
 		for (int i = BIT_RANGE - number; i < BIT_RANGE; i++) {
-			(*this).SetBit(i, tempBit[i]);
+			res.SetBit(i, tempBit[j]);
+			j++;
 		}
 
 	}
+	return res;
 }
 
 /*
 	Xoay phải n bit cách làm như trên
 */
-void QInt::RotateRight(int number) {
+QInt QInt::RotateRight(int number) {
+	QInt res = *this;
 	//xét nhưng TH không cần xoay
 	if (number <= 0 && number >= BIT_RANGE - 1) {
-		return;
+		return *this;
 	}
 	else {
 		bool* tempBit = new bool[number]; // mảng chứa các bit bị dịch ra khỏi mảng
+		int j = 0;
 		for (int i = BIT_RANGE - number; i < BIT_RANGE; i++) {
-			tempBit[i] = (*this).GetBit(i);
+			tempBit[j] = res.GetBit(i);
+			j++;
 		}
 		// dịch phải number bit
-		*(this) >> number;
-		//gán lại bit đã lưu ra phía sau
+		res = res >> number;
+		//gán lại bit đã lưu ra phía trước
+		j = 0;
 		for (int i = 0; i < number; i++) {
-			(*this).SetBit(i, tempBit[i]);
+			res.SetBit(i, tempBit[j]);
+			j++;
 		}
 	}
+	return res;
 }
 
 //Hàm trả về kết quả khi 2 kiểu dữ liệu QInt & nhau

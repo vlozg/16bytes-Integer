@@ -28,8 +28,8 @@ public:
 	QInt operator/(QInt);
 
 	//các hàm bitwise
-	void RotateLeft(int number);
-	void RotateRight(int number);
+	QInt RotateLeft(int number);
+	QInt RotateRight(int number);
 	QInt operator&(QInt number);
 	QInt operator|(QInt number);
 	QInt operator^(QInt number);
