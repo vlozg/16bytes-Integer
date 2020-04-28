@@ -53,7 +53,7 @@ void ScanQfloat(Qfloat& input)
 
 	//kiểm tra dấu
 	if (CheckMinus(temp[0])) {
-		input.SetBit(0, 127);	//có dấu - thì set bit đầu tiên thành 0
+		input.SetBit(0, 1);	//có dấu - thì set bit đầu tiên thành 1
 		temp.erase(temp.begin(), (temp.begin() + 1));	//xong xóa char dấu
 	}
 
