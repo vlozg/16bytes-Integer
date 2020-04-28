@@ -1,6 +1,8 @@
-﻿#pragma once
+﻿#define _CRT_SECURE_NO_WARNINGS
+#pragma once
 #include <iostream>
 #include <string>
+
 #define SIZE 16
 #define BIT_RANGE 128
 #define MAX_VALUE_BIT 16
@@ -72,3 +74,6 @@ bool CheckNumber(string number);
 void NormalizeNumber(string& number);
 
 char BinToHexChar(string num);
+
+
+void OutputBin(bool* bin);

@@ -1,7 +1,5 @@
 ﻿#include "QInt.h"
 
-
-
 /*
 Lấy giá trị bit tại vị trí bất kì
 Parameter:
@@ -81,31 +79,6 @@ void QInt::Output()
 	cout << result;
 }
 
-//Chuyen day bit thanh day bool
-//Có khởi tạo, nhớ delete
-//Lấy bit từ x -> dãy bool 128 phần tử
-bool* DecToBin(QInt x)
-{
-	bool* bit = new bool[BIT_RANGE];
-	for (int i = 0; i < BIT_RANGE; i++)
-	{
-		bit[i] = x.GetBit(i);	
-	}
-	return bit;
-}
-
-//Set các phần tử của bin vào QInt
-//bin cần có 128 phần tử
-QInt BinToDec(bool* bin)	
-{
-	QInt result;
-
-	for (int i = 0; i < BIT_RANGE; i++)
-	{
-		result.SetBit(i, bin[i]);
-	}
-	return result;
-}
 
 QInt::QInt()
 {
