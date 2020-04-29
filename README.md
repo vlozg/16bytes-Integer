@@ -38,6 +38,33 @@ Chèn thêm những thông tin quan trọng vào tên.
 
 ## Log
 
+### 09:15PM 28/04/20
+
+**Nội dung họp lần 2**
+- Đánh giá chung tình hình đồ án.
+- Thảo luận các vấn đề phát sinh.
+- Phân chia công việc.
+
+**Tình hình đồ án**
+- Gần hoàn tất phần QInt (còn 1 vấn đề nhỏ về quy ước tràn số).
+- Qfloat code xong, chưa test
+
+**Vấn đề phát sinh**
+- Cách làm việc chung chưa nhất quán.
+- QInt phát sinh vấn đề tràn số (Nên tự quy định quy ước riêng hay xử lý giống ngôn ngữ C/C++?).
+- Có thể không đủ thời gian để làm giao diện.
+- Mâu thuẫn giữa file hướng dẫn đồ án và giáo viên.
+  **Giải pháp**: hỏi rõ hơn với giáo viên vào buổi học kế
+  
+**Kết quả phân việc**
+1. Số nguyên
+	- Lâm: chia nhỏ, tổ chức lại file cho gọn và dễ nhìn. **Deadline**: 12:00AM 29/04/20
+	- Lâm & Duy: thiết kế hàm xuất ra các định dạng nhị phân, thập lục phân. **Deadline**: 12:00PM 30/04/20
+	- Kim: thiết kế các hàm nhập xuất file theo định dạng của giáo viên. **Deadline**: 12:00PM 04/05/20
+2. Số thực
+	- Đức: hoàn thiện xử lý số thực. **Deadline**: 12:00PM 30/04/20
+	- Long: Test các hàm cho hoàn chỉnh. **Deadline**: 12:00PM 30/04/20
+
 ### 09:17PM 24/04/20
 
 **Nội dung họp lần đầu**
