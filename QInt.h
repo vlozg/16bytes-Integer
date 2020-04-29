@@ -77,3 +77,4 @@ char BinToHexChar(string num);
 
 
 void OutputBin(bool* bin);
+void OutputHex(char* hex);

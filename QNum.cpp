@@ -368,3 +368,12 @@ void OutputBin(bool* bin)
 	}
 }
 
+void OutputHex(char* hex)
+{
+	int len = strlen(hex);
+	for (int i = 0; i < len; i++)
+	{
+		cout << hex[i];
+	}
+
+}
