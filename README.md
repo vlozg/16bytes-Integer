@@ -38,6 +38,15 @@ Chèn thêm những thông tin quan trọng vào tên.
 
 ## Log
 
+### 04:30PM 29/04/20
+
+**Giải đáp thắc mắc từ giáo viên**
+- Xử lý tràn số tính toán giống như cách ngôn ngữ C/C++ xử lý.
+- Input vào gây tràn số thì nên có cảnh báo người dùng.
+- Giao diện không bắt buộc nhưng bắt buộc phải có phần mềm cho người dùng tương tác tùy ý.
+- Phải tự làm thêm một số hàm còn sót trong đề để hoàn thiện đủ chức năng.
+- Qfloat cũng phải làm đọc xuất file, định dạng file input giống QInt.
+
 ### 09:15PM 28/04/20
 
 **Nội dung họp lần 2**
