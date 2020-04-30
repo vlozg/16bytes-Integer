@@ -43,8 +43,18 @@ bool Qfloat::GetBit(int pos) {
 
 void ScanQfloat(Qfloat& input)
 {
+	//set tất cả bit của input về 0 tránh TH trùng
+	for (int i = 0; i < 128; i++) {
+		input.SetBit(i, 0);
+	}
+
 	string temp;
 	getline(cin, temp);
+	
+	//khởi tạo mảng gồm các số 2 mũ n
+	string pow2[128], powminus2[128];	
+	PowOfTwo(pow2);
+	PowOfFive(powminus2);
 		
 	//nếu string không có gì thì stop
 	if (temp.length() == 0) {
@@ -76,6 +86,12 @@ void ScanQfloat(Qfloat& input)
 		}
 	}
 
+	//nếu phần nguyên hay thập phân vượt qua giới hạn thì stop
+	//giới hạn của phần nguyên là (2^128)-1; của phần thập phân là 2^-128
+	if ((integerDigits.length() > pow2[127].length()) || (temp.length() > powminus2[127].length())) {
+		return;
+	}
+
 	//xóa phần nguyên khỏi string đầu
 	temp.erase(temp.begin(), (temp.begin() + k));
 	if (temp.length() == 1) {
@@ -93,6 +109,10 @@ void ScanQfloat(Qfloat& input)
 	int e = 0;
 	char tempBit;	//lưu bit chuyển
 	if (integerDigits == "") {	//nếu phần nguyên = 0 thì dời sang phải
+		//nếu temp không có gì luôn => input là số 0
+		if (temp.length() == 0) {
+			return;
+		}
 		for (int i = 0;; i++) {
 			if (temp[i] == '1') {
 				tempBit = temp[i];
@@ -117,10 +137,11 @@ void ScanQfloat(Qfloat& input)
 			temp = tempBit + temp;
 			e++;
 		}
-		//xóa e bit cuối của integerDigits để ra phần định trị
-		for (int i = 0; i < e; i++) {
-			integerDigits.pop_back();
-		}
+	}
+
+	//e > 112 có nghĩa là dời hơn 112 bit, sẽ không thể chứa hết trong phần định trị => stop
+	if (e >= 112 || e <=-112) {
+		return;
 	}
 
 	e += KNUMBER;	// cộng E với số thừa K để ra Exponent
@@ -186,6 +207,43 @@ void PrintQfloat(Qfloat input)
 		}
 	}
 
+	/*Kiểm tra Exponent và Significand để check các số đặc biệt*/
+	if (CheckAllChar(Exponent, '0')) {
+		if (CheckAllChar(Significand, '0')) { //nếu Ex và Si đều toàn 0 => số 0
+			cout << "0";
+			return;
+		}
+		else { //nếu Ex toàn 0 và Sig khác 0 thì là số không thể chuẩn hóa
+			//Exponent toàn bộ bit  0
+			for (int i = 0; i < Exponent.length(); i++) {
+				Exponent[i] = '0';
+			}
+
+			//Significand toàn 1
+			for (int i = 0; i < Significand.length(); i++) {
+				Significand[i] = '1';
+			}
+		}
+	}
+	if (CheckAllChar(Exponent, '1')) {
+		if (CheckAllChar(Significand, '0')) { //nếu Ex và Si toàn 1 => số vô cùng
+			//Exponent toàn bộ bit 1 bit cuối 0
+			for (int i = 0; i < Exponent.length() - 1; i++) {
+				Exponent[i] = '1';
+			}
+			Exponent[Exponent.length() - 1] = '0';
+
+			//Significand toàn 1
+			for (int i = 0; i < Significand.length(); i++) {
+				Significand[i] = '1';
+			}
+		}
+		else { //nếu Ex toàn 1 và Si khác 1 => số báo lỗi
+			cout << "NaN";
+			return;
+		}
+	}
+
 	//Tính toán để ra E
 	Exponent = IntegerBinToDec(Exponent);
 	int E = stoi(Exponent);
@@ -201,6 +259,9 @@ void PrintQfloat(Qfloat input)
 		if (integerDigits.length() > 1) {
 			Significand.erase(Significand.begin(), Significand.begin() + E);
 		}
+	}
+	else if (E < -KNUMBER) {
+		return;
 	}
 	else if (E < 0) {
 		Significand = '1' + Significand;
@@ -671,4 +732,38 @@ string SumFractionals(string n1, string n2) {
 	}
 
 	return result;
+}
+
+void PrintBinary(Qfloat x) {
+	cout << x.GetBit(0) << " ";
+	
+	for (int i = 1; i < 16; i++) {
+		cout << x.GetBit(i);
+	}
+	cout << " ";
+
+	for (int i = 16; i < 128; i++) {
+		cout << x.GetBit(i);
+	}
+}
+
+/*
+Hàm kiểm tra xem string có phải toàn là 1 char nào đó không
+	Input: string và char a
+	Output: true nếu string chứa toàn char a
+*/
+bool CheckAllChar(string input, char a)
+{
+	for (int i = 0; i < input.length(); i++) {
+		if (input[i] != a) {
+			return false;
+		}
+	}
+	return true;
+}
+
+//Hàm làm tròn số thập phân, nếu sau dấu phẩy có số .9999999999 thì làm tròn lên
+void RoundUp(string)
+{
+
 }
