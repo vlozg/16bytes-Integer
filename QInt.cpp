@@ -94,6 +94,7 @@ QInt::QInt(string number)
 }
 
 //Nhập vào số thập phân ở dạng chuỗi
+//Nếu có lỗi thì x vẫn giữ nguyên giá trị trước đó
 void ScanQInt(QInt& x)
 {
 	string number;
@@ -102,7 +103,7 @@ void ScanQInt(QInt& x)
 	if (CheckNumber(number) == false)
 	{
 		//Do something
-		cout << "Khong phai so";
+		cout << "Khong phai so hoac tran so!";
 		return;
 	}
 	else

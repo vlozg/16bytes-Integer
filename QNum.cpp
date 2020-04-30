@@ -253,6 +253,9 @@ bool CheckNumber(string number)
 	}
 
 	int len = number.length();	//Chặn người dùng nhập quá nhiều (40 kí tự trở lên)
+
+	//Chỉ khi nhập nhiều kí tự mới phát hiện được
+	//Nếu nhập số MAX + 1 or MIN - 1 hoặc số có cùng số chữ số thì vẫn chạy (nhưng k có lỗi)
 	if (len - i >= 40)
 	{
 		return false;
@@ -293,6 +296,27 @@ char BinToHexChar(string num) {
 	if (num == "1111") return 'F';
 	return '\0';
 }
+
+string HexToBinChar(char hex) {
+	if (hex == '0') return "0000";
+	if (hex == '1') return "0001";
+	if (hex == '2') return "0010";
+	if (hex == '3') return "0011";
+	if (hex == '4') return "0100";
+	if (hex == '5') return "0101";
+	if (hex == '6') return "0110";
+	if (hex == '7') return "0111";
+	if (hex == '8') return "1000";
+	if (hex == '9') return "1001";
+	if (hex == 'A') return "1010";
+	if (hex == 'B') return "1011";
+	if (hex == 'C') return "1100";
+	if (hex == 'D') return "1101";
+	if (hex == 'E') return "1110";
+	if (hex == 'F') return "1111";
+	return "\0";
+}
+
 
 /*
 	Hàm chuyển đổi chuỗi bool* dạng binary -> chuỗi char* dạng hex
@@ -368,6 +392,7 @@ void OutputBin(bool* bin)
 	}
 }
 
+//Xuất hex
 void OutputHex(char* hex)
 {
 	int len = strlen(hex);
@@ -377,3 +402,33 @@ void OutputHex(char* hex)
 	}
 
 }
+
+//Tạo chuỗi bin từ hex
+bool* HexToBin(char* hex)
+{
+	string bin_str = "";
+	bool* bin = new bool[128];
+
+
+	int len = strlen(hex);
+	for (int i = 0; i < len; i++)
+	{
+		bin_str += HexToBinChar(hex[i]);
+	}
+	for (int i = 0; i < bin_str.length(); i++)
+	{
+		bin[i] = bin_str[i] - '0';
+	}
+
+	return bin;
+}
+
+
+QInt HexToDec(char* hex)
+{
+	bool* bin = HexToBin(hex);
+	QInt a;
+	a = BinToDec(bin);
+	return a;
+}
+
