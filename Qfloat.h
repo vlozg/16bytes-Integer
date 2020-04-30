@@ -39,3 +39,6 @@ void PowOfFive(string pow[128]);
 void PowOfTwoMinus(string pow[128]);
 string SumNumbers(string n1, string n2);
 string SumFractionals(string n1, string n2);
+void PrintBinary(Qfloat x);
+bool CheckAllChar(string, char);
+void RoundUp(string);
