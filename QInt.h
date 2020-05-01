@@ -1,15 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #pragma once
 #include "QNum.h"
-#include <iostream>
-#include <string>
-
-#define SIZE 16
-#define BIT_RANGE 128
-#define MAX_VALUE_BIT 16
-#define FOUR_BIT 4
-using namespace std;
-
 class QInt
 {
 private:

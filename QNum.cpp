@@ -386,8 +386,13 @@ QInt BinToDec(bool* bin)
 //Xuất bin
 void OutputBin(bool* bin)	
 {
+	bool flag = false; //flag để xóa số 0 đầu
 	for (int i = 0; i < BIT_RANGE; i++)
 	{
+		if (bin[i] == 0 && flag == false)
+			continue;
+		if (bin[i])
+			flag = true;
 		cout << bin[i];
 	}
 }
@@ -395,6 +400,7 @@ void OutputBin(bool* bin)
 //Xuất hex
 void OutputHex(char* hex)
 {
+	bool flag = false; //flag để xóa sổ 0 đầu
 	int len = strlen(hex);
 	for (int i = 0; i < len; i++)
 	{
