@@ -404,6 +404,10 @@ void OutputHex(char* hex)
 	int len = strlen(hex);
 	for (int i = 0; i < len; i++)
 	{
+		if (hex[i] == '0' && flag == false)
+			continue;
+		if (hex[i] == '1')
+			flag = true;
 		cout << hex[i];
 	}
 

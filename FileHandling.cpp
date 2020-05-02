@@ -51,20 +51,20 @@ bool* StringToBin(string str)
 //Hàm để chuyển string về char* size 17 (16 + '\0')
 char* StringToChar(string str)
 {
-	char* newstr = new char[SIZE + 1];
+	char* newstr = new char[HEX_SIZE + 1];
 	
 	int i;
 	//Thêm 0 vào đầu
-	for (i = 0;i < SIZE - str.length();i++)
+	for (i = 0;i < HEX_SIZE - str.length();i++)
 		newstr[i] = '0';
 	int j = 0;
 	//Thêm dãy hex
-	for (;i < SIZE;i++)
+	for (;i < HEX_SIZE;i++)
 	{
 		newstr[i] = str[j];
 		j++;
 	}
-	newstr[SIZE] = '\0';
+	newstr[HEX_SIZE] = '\0';
 	return newstr;
 }
 

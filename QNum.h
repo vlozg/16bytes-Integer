@@ -3,6 +3,7 @@
 #include <string>
 
 #define SIZE 16
+#define HEX_SIZE 32
 #define BIT_RANGE 128
 #define MAX_VALUE_BIT 16
 #define FOUR_BIT 4
