@@ -5,6 +5,7 @@ Qfloat::Qfloat()
 	for (int i = 0; i < 16; i++) {
 		value[i] = 0;
 	}
+	length = -1;
 }
 
 Qfloat::~Qfloat()
@@ -268,68 +269,77 @@ void PrintQfloat(Qfloat input)
 	//Tính toán để ra E
 	Exponent = IntegerBinToDec(Exponent);
 	int E = stoi(Exponent);
-	E = E - KNUMBER;	
+	E = E - KNUMBER;
 
-	//Lấy lại phần nguyên ban đầu
-	string integerDigits;
-	if (E >= 0) {
-		integerDigits = "1";
-		for (int i = 0; i < E; i++) {
-			integerDigits += Significand[i];
-		}
-		if (integerDigits.length() > 1) {
-			Significand.erase(Significand.begin(), Significand.begin() + E);
-		}
+	if ((E > 112) || E < -112) {
+		cout << "Tran so!";
 	}
-	else if (E < -KNUMBER) {
-		return;
-	}
-	else if (E < 0) {
-		Significand = '1' + Significand;
-		for (int i = E + 1; i < 0; i++) {
-			Significand = '0' + Significand;	//thêm vào các bit 0
-		}
-		integerDigits = "0";
-	}
-	
-	integerDigits = IntegerBinToDec(integerDigits);
-	result = result + integerDigits;
+	else {
 
-	//lấy lại phần thập phân ban đầu
-	string fractionalDigits = FractionalBinToDec(Significand);
-	if (fractionalDigits.length() > 0) {
-		fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa số 0
-	}
-	result += fractionalDigits;
-	
-	//so sánh độ dài ban đầu và kết quả để làm tròn
-	int initialLength = input.GetLength();
-	if (initialLength < result.length()) {
-		//xóa các kí tự dư
-		while (result.length() > initialLength) {
-			result.pop_back();
-			fractionalDigits.pop_back();
+
+		//Lấy lại phần nguyên ban đầu
+		string integerDigits;
+		if (E >= 0) {
+			integerDigits = "1";
+			for (int i = 0; i < E; i++) {
+				integerDigits += Significand[i];
+			}
+			if (integerDigits.length() > 1) {
+				Significand.erase(Significand.begin(), Significand.begin() + E);
+			}
+		}
+		else if (E < -KNUMBER) {
+			return;
+		}
+		else if (E < 0) {
+			Significand = '1' + Significand;
+			for (int i = E + 1; i < 0; i++) {
+				Significand = '0' + Significand;	//thêm vào các bit 0
+			}
+			integerDigits = "0";
 		}
 
-		string addIn = "0."; //phần sẽ được cộng thêm vào kết quả
-		while (addIn.length() < fractionalDigits.length()) {
-			addIn += '0';//thêm số không
+		integerDigits = IntegerBinToDec(integerDigits);
+		result = result + integerDigits;
+
+		//lấy lại phần thập phân ban đầu
+		string fractionalDigits = FractionalBinToDec(Significand);
+		if (fractionalDigits.length() > 0) {
+			fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa số 0
 		}
-		addIn += '1';
-		fractionalDigits = '0' + fractionalDigits;
+		result += fractionalDigits;
 
-		fractionalDigits = SumFractionals(fractionalDigits, addIn); //lấy phần thập phân + 0.(0...00)1
-		DeleteExcessiveZero(fractionalDigits); //xóa số 0 dư
+		//so sánh độ dài ban đầu và kết quả để làm tròn
+		int initialLength = input.GetLength();
+		if (initialLength > 0) {
+			if (initialLength < result.length()) {
+				//xóa các kí tự dư
+				while (result.length() > initialLength) {
+					result.pop_back();
+					fractionalDigits.pop_back();
+				}
 
-		if (fractionalDigits[0] == '1') { //nếu kết quả lớn hơn 1
-			SumNumbers(integerDigits, "1"); //+ thêm 1 vào phần nguyên
+				string addIn = "0."; //phần sẽ được cộng thêm vào kết quả
+				while (addIn.length() < fractionalDigits.length()) {
+					addIn += '0';//thêm số không
+				}
+				addIn += '1';
+				fractionalDigits = '0' + fractionalDigits;
+
+				fractionalDigits = SumFractionals(fractionalDigits, addIn); //lấy phần thập phân + 0.(0...00)1
+				DeleteExcessiveZero(fractionalDigits); //xóa số 0 dư
+
+				if (fractionalDigits[0] == '1') { //nếu kết quả lớn hơn 1
+					SumNumbers(integerDigits, "1"); //+ thêm 1 vào phần nguyên
+				}
+				fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa dấu .
+
+				result = integerDigits + fractionalDigits;
+			}
 		}
-		fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa dấu .
 
-		result = integerDigits + fractionalDigits;
+		cout << result;
 	}
-
-	cout << result;
 }
 
 /*
@@ -341,7 +351,7 @@ Qfloat BinToDec(bool* bit) {
 	Qfloat res; //Lưu kết quả trả về
 
 	for (int i = 0; i < 128; i++) {
-		res.SetBit(i, bit[127 - i]);
+		res.SetBit(i, bit[i]);
 	}
 	return res;
 }
@@ -355,7 +365,7 @@ bool* DecToBin(Qfloat x) {
 	bool* res = new bool[128];  //Lưu kết quả trả về
 
 	for (int i = 0; i < 128; i++) {
-		res[127 - i] = x.GetBit(i);
+		res[i] = x.GetBit(i);
 	}
 
 	return res;
@@ -404,7 +414,7 @@ void ReadFile()
 				p2 += inputNumber[i];
 				e++;
 			}
-			inputNumber.erase(inputNumber.begin(), inputNumber.begin() + 2); //xóa p2 và dấu cách
+			inputNumber.erase(inputNumber.begin(), inputNumber.begin() + e + 1); //xóa p2 và dấu cách
 		}
 
 		//xử lý p1 p2 để scan
@@ -412,13 +422,15 @@ void ReadFile()
 			bool* binary = StringToBool(inputNumber);
 			if (p2 == "") { //nhập hệ 2 xuất hệ 2
 				freopen("OUTPUT.txt", "a", stdout);
-					//printbin
+				PrintBinary(binary);
+				cout << endl;
 				fclose(stdout);
 			}
 			else { //nhập hệ 2 xuất hệ 10
 				freopen("OUTPUT.txt", "a", stdout);
 				number = BinToDec(binary);
 				PrintQfloat(number);
+				cout << endl;
 				fclose(stdout);
 			}
 		}
@@ -427,12 +439,14 @@ void ReadFile()
 			if (p2 == "") { //nhập hệ 10 xuất hệ 10
 				freopen("OUTPUT.txt", "a", stdout);
 				PrintQfloat(number);
+				cout << endl;
 				fclose(stdout);
 			}
 			else { //nhập hệ 10 xuất hệ 2
 				freopen("OUTPUT.txt", "a", stdout);
 				bool* binary = DecToBin(number);
-				//printbin
+				PrintBinary(binary);
+				cout << endl;
 				fclose(stdout);
 			}
 		}
@@ -904,16 +918,17 @@ void DeleteExcessiveZero(string& input)
 	}
 }
 
-void PrintBinary(Qfloat x) {
-	cout << x.GetBit(0) << " ";
+//xuất ra binary từ mảng bool
+void PrintBinary(bool* bit) {
+	cout << bit[0] << " ";
 	
 	for (int i = 1; i < 16; i++) {
-		cout << x.GetBit(i);
+		cout << bit[i];
 	}
 	cout << " ";
 
 	for (int i = 16; i < 128; i++) {
-		cout << x.GetBit(i);
+		cout << bit[i];
 	}
 }
 
@@ -936,14 +951,19 @@ bool CheckAllChar(string input, char a)
 bool* StringToBool(string input)
 {
 	bool* res = new bool[128];  //Lưu kết quả trả về
+	int i = 0;
 
-	for (int i = 0; i < input.length(); i++) {
+	for (i = 0; i < input.length(); i++) {
 		if (input[i] == '1') {
 			res[i] = 1;
 		}
 		else {
 			res[i] = 0;
 		}
+	}
+	while (i < 128) {
+		res[i] = 0;
+		i++;
 	}
 	return res;
 }
