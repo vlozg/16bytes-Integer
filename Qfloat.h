@@ -47,6 +47,6 @@ void PowOfTwoMinus(string pow[128]);
 string SumNumbers(string n1, string n2);
 string SumFractionals(string n1, string n2);
 void DeleteExcessiveZero(string&);
-void PrintBinary(Qfloat x);
+void PrintBinary(bool*);
 bool CheckAllChar(string, char);
 bool* StringToBool(string);
