@@ -1,4 +1,4 @@
-
+﻿
 // CalculatorDlg.cpp : implementation file
 //
 
@@ -20,6 +20,7 @@ CCalculatorDlg::CCalculatorDlg(CWnd* pParent /*=nullptr*/)
 	, DecInput(_T(""))
 	, BinInput(_T(""))
 	, HexInput(_T(""))
+	, hisDecInput(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -69,6 +70,11 @@ void CCalculatorDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, BtnBin, b_Binary);
 	DDX_Control(pDX, BtnHex, b_Hex);
+	DDX_Text(pDX, IDC_EDIT4, hisDecInput);
+	DDX_Control(pDX, IDC_EDIT4, t_hisDecInput);
+	DDX_Control(pDX, IDC_EDIT1, t_DecInput);
+	DDX_Control(pDX, IDC_EDIT2, t_BinInput);
+	DDX_Control(pDX, IDC_EDIT3, t_HexInput);
 }
 
 BEGIN_MESSAGE_MAP(CCalculatorDlg, CDialogEx)
@@ -127,7 +133,8 @@ BOOL CCalculatorDlg::OnInitDialog()
 	ShowWindow(SW_NORMAL);
 
 	// TODO: Add extra initialization here
-	ActiveInput = &DecInput;
+	ChangeMode_Dec();
+	ActiveInput = &DecInput;	//Chuyển input stream vào chuỗi Dec
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -181,4 +188,76 @@ void CCalculatorDlg::OnEnChangeEdit1()
 void CCalculatorDlg::OnBnClickedBtnchangesign()
 {
 	// TODO: Add your control notification handler code here
+}
+
+
+//	Cập nhập tất cả display khi user nhấn nút số
+void CCalculatorDlg::UpdateInput() 
+{
+	UpdateData(0);
+}
+
+
+//Thiết lập nút bấm để nhận input thập phân
+void CCalculatorDlg::ChangeMode_Dec() 
+{
+	//Disable các nút input giá trị từ A - F
+	b_NumA.EnableWindow(0);
+	b_NumB.EnableWindow(0);
+	b_NumC.EnableWindow(0);
+	b_NumD.EnableWindow(0);
+	b_NumE.EnableWindow(0);
+	b_NumF.EnableWindow(0);
+
+	//Enable các nút input từ 2 - 9
+	b_Num2.EnableWindow(1);
+	b_Num3.EnableWindow(1);
+	b_Num4.EnableWindow(1);
+	b_Num5.EnableWindow(1);
+	b_Num6.EnableWindow(1);
+	b_Num7.EnableWindow(1);
+	b_Num8.EnableWindow(1);
+	b_Num9.EnableWindow(1);
+}
+
+
+//Thiết lập nút bấm để nhận input thập lục phân
+void CCalculatorDlg::ChangeMode_Hex() 
+{
+	//Enable tất cả các nút input
+	b_NumA.EnableWindow(1);
+	b_NumB.EnableWindow(1);
+	b_NumC.EnableWindow(1);
+	b_NumD.EnableWindow(1);
+	b_NumE.EnableWindow(1);
+	b_NumF.EnableWindow(1);
+	b_Num2.EnableWindow(1);
+	b_Num3.EnableWindow(1);
+	b_Num4.EnableWindow(1);
+	b_Num5.EnableWindow(1);
+	b_Num6.EnableWindow(1);
+	b_Num7.EnableWindow(1);
+	b_Num8.EnableWindow(1);
+	b_Num9.EnableWindow(1);
+}
+
+
+//Thiết lập nút bấm để nhận input nhị phân
+void CCalculatorDlg::ChangeMode_Bin() 
+{
+	//Disable các nút input trừ nút 0 và 1
+	b_NumA.EnableWindow(0);
+	b_NumB.EnableWindow(0);
+	b_NumC.EnableWindow(0);
+	b_NumD.EnableWindow(0);
+	b_NumE.EnableWindow(0);
+	b_NumF.EnableWindow(0);
+	b_Num2.EnableWindow(0);
+	b_Num3.EnableWindow(0);
+	b_Num4.EnableWindow(0);
+	b_Num5.EnableWindow(0);
+	b_Num6.EnableWindow(0);
+	b_Num7.EnableWindow(0);
+	b_Num8.EnableWindow(0);
+	b_Num9.EnableWindow(0);
 }

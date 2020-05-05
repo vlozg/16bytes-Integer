@@ -72,6 +72,11 @@ public:
 
 private:
 	CFont b_Font;
+	void UpdateInput();
+	void ChangeMode_Dec();
+	void ChangeMode_Hex();
+	void ChangeMode_Bin();
+	void ChangeMode_Float();
 
 	CString BinInput;
 	CString HexInput;
@@ -116,4 +121,10 @@ private:
 
 	CButton b_Binary;
 	CButton b_Hex;
+
+	CString hisDecInput;
+	CEdit t_hisDecInput;
+	CEdit t_DecInput;
+	CEdit t_BinInput;
+	CEdit t_HexInput;
 };

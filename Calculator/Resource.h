@@ -43,6 +43,7 @@
 #define BtnHex                          1035
 #define IDC_EDIT2                       1036
 #define IDC_EDIT3                       1037
+#define IDC_EDIT4                       1038
 
 // Next default values for new objects
 // 

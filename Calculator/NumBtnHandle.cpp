@@ -17,95 +17,110 @@
 
 void CCalculatorDlg::OnBnClickedBtnnum0()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "0";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum1()
 {
 	*ActiveInput += "1";
-	UpdateData(0);
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum2()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "2";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum3()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "3";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum4()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "4";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum5()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "5";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum6()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "6";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum7()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "7";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum8()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "8";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum9()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "9";
+	UpdateInput();
 }
 
 void CCalculatorDlg::OnBnClickedBtnnuma()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "A";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumb()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "B";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumc()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "C";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumd()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "D";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnume()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "E";
+	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumf()
 {
-	// TODO: Add your control notification handler code here
+	*ActiveInput += "F";
+	UpdateInput();
 }
