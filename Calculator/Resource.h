@@ -31,10 +31,10 @@
 #define BtnOr                           1024
 #define BtnXor                          1025
 #define BtnNot                          1026
-#define IDC_BUTTON27                    1027
 #define BtnBackspace                    1027
 #define BtnNumF                         1028
 #define BtnRightSihft                   1029
+#define BtnRightShift                   1029
 #define BtnLeftShift                    1030
 #define BtnRolRight                     1031
 #define BtnRolLeft                      1032
