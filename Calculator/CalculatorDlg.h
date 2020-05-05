@@ -76,6 +76,7 @@ private:
 	CString BinInput;
 	CString HexInput;
 	CString DecInput;
+	CString* ActiveInput;
 	CButton b_Num1;
 	CButton b_Num2;
 	CButton b_Num3;
