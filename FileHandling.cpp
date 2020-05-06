@@ -171,7 +171,7 @@ void ShiftOperation(QInt A, int num, string op, string base, string filename)
 
 
 //Hàm xử lý từng dòng input
-void ProcessLine(string line)
+void ProcessLine(string line, string output)
 {
 	vector<string> tokenArr; //mảng chứa các giá trị được tách
 	string token;
@@ -184,7 +184,7 @@ void ProcessLine(string line)
 	if (length == 3)
 	{
 		QInt number = StringToQInt(tokenArr[0], tokenArr[2]);
-		Conversion(number, tokenArr[1], "output.txt");
+		Conversion(number, tokenArr[1], output);
 	}
 	if (length == 4)
 	{
@@ -192,18 +192,18 @@ void ProcessLine(string line)
 		string op = tokenArr[2]; //toán tử
 		QInt firstNum = StringToQInt(base, tokenArr[1]);
 		if (op.compare("<<") == 0 || op.compare(">>") == 0)
-			ShiftOperation(firstNum, StringToInt(tokenArr[3]), op, base, "output.txt");
+			ShiftOperation(firstNum, StringToInt(tokenArr[3]), op, base, output);
 		else
 		{
 			QInt secondNum = StringToQInt(base, tokenArr[3]);
-			ArithmeticOperations(firstNum, secondNum, base, op, "output.txt");
+			ArithmeticOperations(firstNum, secondNum, base, op, output);
 		}
 	}
 	
 }
 
-//Hàm đọc và xử lý file input
-void ReadFile(string input)
+//Hàm đọc và xử lý file input, xuất ra file output
+void ReadFile(string input, string output)
 {
 	ifstream file(input);
 	string line; //biến lưu từng dòng

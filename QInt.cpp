@@ -299,6 +299,12 @@ QInt QInt::operator=(const QInt& number)
 	return *this;
 }
 
+QInt QInt::operator =(string number)
+{
+	QInt newnum(number);
+	return newnum;
+}
+
 /*
 ================================
 		CÁC TOÁN TỬ SO SÁNH
