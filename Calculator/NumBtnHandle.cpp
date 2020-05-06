@@ -38,6 +38,7 @@ void CCalculatorDlg::AddInput(char bInput)
 	{
 		ActiveInput += bInput;
 	}
+	isEmptyInput = false;	//Đánh dấu đã nhận input số
 }
 
 
