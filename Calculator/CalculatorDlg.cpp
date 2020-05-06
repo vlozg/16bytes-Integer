@@ -193,7 +193,7 @@ void CCalculatorDlg::OnBnClickedBtnchangesign()
 
 
 //	Cập nhập tất cả display khi user nhấn nút số
-void CCalculatorDlg::UpdateInput() 
+void CCalculatorDlg::UpdateAllData() 
 {
 	UpdateData(0);
 }
@@ -235,17 +235,27 @@ void CCalculatorDlg::ChangeMode_Dec()
 	b_Num9.EnableWindow(1);
 
 	//Swap active input với dec input
-	CString temp = ActiveInput;
+	CString temp;
 	if (mode == 2)
 	{
+		temp = ActiveInput;
 		ActiveInput = PassiveInput1;
 		PassiveInput1 = temp;
+
+		temp = hisActiveInput;
+		hisActiveInput = hisPassiveInput1;
+		hisPassiveInput1 = temp;
 		b_Passive1.SetWindowText(_T("Binary"));
 	}
 	else
 	{
+		temp = ActiveInput;
 		ActiveInput = PassiveInput2;
 		PassiveInput2 = temp;
+		
+		temp = hisActiveInput;
+		hisActiveInput = hisPassiveInput2;
+		hisPassiveInput2 = temp;
 		b_Passive2.SetWindowText(_T("Hexadecimal"));
 	}
 
@@ -281,6 +291,10 @@ void CCalculatorDlg::ChangeMode_Hex()
 		temp = ActiveInput;
 		ActiveInput = PassiveInput1;
 		PassiveInput1 = temp;
+
+		temp = hisActiveInput;
+		hisActiveInput = hisPassiveInput1;
+		hisPassiveInput1 = temp;
 		b_Passive1.SetWindowText(_T("Binary"));
 	}
 
@@ -288,6 +302,10 @@ void CCalculatorDlg::ChangeMode_Hex()
 	temp = ActiveInput;
 	ActiveInput = PassiveInput2;
 	PassiveInput2 = temp;
+
+	temp = hisActiveInput;
+	hisActiveInput = hisPassiveInput2;
+	hisPassiveInput2 = temp;
 	b_Passive2.SetWindowText(_T("Decimal"));
 	
 	UpdateData(0);
@@ -322,6 +340,10 @@ void CCalculatorDlg::ChangeMode_Bin()
 		temp = ActiveInput;
 		ActiveInput = PassiveInput2;
 		PassiveInput2 = temp;
+
+		temp = hisActiveInput;
+		hisActiveInput = hisPassiveInput2;
+		hisPassiveInput2 = temp;
 		b_Passive2.SetWindowText(_T("Hexadecimal"));
 	}
 
@@ -329,6 +351,10 @@ void CCalculatorDlg::ChangeMode_Bin()
 	temp = ActiveInput;
 	ActiveInput = PassiveInput1;
 	PassiveInput1 = temp;
+	
+	temp = hisActiveInput;
+	hisActiveInput = hisPassiveInput1;
+	hisPassiveInput1 = temp;
 	b_Passive1.SetWindowText(_T("Decimal"));
 	
 	UpdateData(0);

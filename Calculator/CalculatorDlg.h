@@ -73,7 +73,7 @@ public:
 private:
 	CFont b_Font;
 	byte mode = 10;	//Đánh số chế độ: 2=bin 10=dec 16=hex
-	void UpdateInput();
+	void UpdateAllData();
 	void ChangeMode_Dec();
 	void ChangeMode_Hex();
 	void ChangeMode_Bin();
