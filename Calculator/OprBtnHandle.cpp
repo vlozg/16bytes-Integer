@@ -33,15 +33,70 @@ void CCalculatorDlg::ResetInput()
 	PassiveInput2 = "0";
 }
 
+//Đưa active input vào history và tính toán
+//Parameter:
+//- Opr: ký tự dấu được đưa vào
+void CCalculatorDlg::PushHistoryInput(char Opr)
+{
+	//Đưa input vào history
+	hisActiveInput += ActiveInput;
+	hisPassiveInput1 += PassiveInput1;
+	hisPassiveInput2 += PassiveInput2;
+
+	//Đưa dấu vào history
+	hisActiveInput += Opr;
+	hisPassiveInput1 += Opr;
+	hisPassiveInput2 += Opr;
+}
+
+//Lấy active input ra và thực hiện tính toán
+void CCalculatorDlg::PreCalc(char Opr)
+{
+	switch (Opr)
+	{
+	case '+':	//Plus
+		break;
+	case '-':	//Minus
+		break;
+	case '*':	//Multiply
+		break;
+	case '/':	//Division
+		break;
+	case '&':	//And
+		break;
+	case '|':	//Or
+		break;
+	case '^':	//Xor
+		break;
+	case '~':	//Not
+		break;
+	case '<':	//Left Shift
+		break;
+	case '>':	//Right Shift
+		break;
+	case '[':	//Left Rotate
+		break;
+	case ']':	//Right Rotate
+		break;
+	default:
+		break;
+	}
+}
+
 void CCalculatorDlg::OnBnClickedBtndot()
 {
 	// TODO: Add your control notification handler code here
 }
 
-
+//Xử lý khi nhấn nút +
 void CCalculatorDlg::OnBnClickedBtnplus()
 {
-	// TODO: Add your control notification handler code here
+	PushHistoryInput('+');	//Cập nhật history
+
+	PreCalc(prevOpr);	//Tính toán các opr có trước (nếu có)
+	prevOpr = '+';	//Đưa dấu vào hàng đợi
+	ResetInput();
+	UpdateData(0);
 }
 
 
