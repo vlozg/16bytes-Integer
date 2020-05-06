@@ -31,6 +31,148 @@ void CCalculatorDlg::ResetInput()
 	ActiveInput = "0";
 	PassiveInput1 = "0";
 	PassiveInput2 = "0";
+}
+
+//Lấy ký hiệu dấu
+//Parameter
+//- Opr: dấu cần lấy chuỗi ký hiệu
+CString CCalculatorDlg::GetOprSymbol(char Opr)
+{
+	CString symbol;
+	switch (Opr)
+	{
+	case '+':	//Plus
+		symbol = '+';
+		break;
+	case '-':	//Minus
+		symbol = '-';
+		break;
+	case '*':	//Multiply
+		symbol = '×';
+		break;
+	case '/':	//Division
+		symbol = '÷';
+		break;
+	case '&':	//And
+		symbol = '&';
+		break;
+	case '|':	//Or
+		symbol = '|';
+		break;
+	case '^':	//Xor
+		symbol = '^';
+		break;
+	case '~':	//Not
+		symbol = '~';
+		break;
+	case '<':	//Left Shift
+		symbol = "<<";
+		break;
+	case '>':	//Right Shift
+		symbol = ">>";
+		break;
+	case '[':	//Left Rotate
+		symbol = "RolL";
+		break;
+	case ']':	//Right Rotate
+		symbol = "RolR";
+		break;
+	default:
+		break;
+	}
+	return symbol;
+}
+
+//Đưa active input vào history và tính toán
+//Parameter:
+//- Opr: ký tự dấu được đưa vào
+void CCalculatorDlg::PushHistoryInput(char Opr)
+{
+	//Tạo dấu để đưa vào màn hình
+	CString symbol, prevSymbol;
+	symbol = GetOprSymbol(Opr);
+	int prevSymbolLength = GetOprSymbol(prevOpr).GetLength();
+
+	if (isEmptyInput == true)
+	{
+		//Nếu không input số thì chỉ sửa dấu
+		hisActiveInput.Delete(hisActiveInput.GetLength() - prevSymbolLength, prevSymbolLength);
+		hisPassiveInput1.Delete(hisPassiveInput1.GetLength() - prevSymbolLength, prevSymbolLength);
+		hisPassiveInput2.Delete(hisPassiveInput2.GetLength() - prevSymbolLength, prevSymbolLength);
+	}
+	else
+	{
+		hisActiveInput += " ";
+		hisPassiveInput1 += " ";
+		hisPassiveInput2 += " ";
+
+		//Đưa input vào history
+		hisActiveInput += ActiveInput;
+		hisPassiveInput1 += PassiveInput1;
+		hisPassiveInput2 += PassiveInput2;
+
+		hisActiveInput += " ";
+		hisPassiveInput1 += " ";
+		hisPassiveInput2 += " ";
+	}
+
+	//Đưa dấu vào history
+	hisActiveInput += symbol;
+	hisPassiveInput1 += symbol;
+	hisPassiveInput2 += symbol;
+}
+
+//Lấy active input ra và thực hiện tính toán
+//Parameter
+//- Opr: ký tự dấu được đưa vào
+void CCalculatorDlg::PreCalc(char Opr)
+{
+	switch (Opr)
+	{
+	case '+':	//Plus
+		break;
+	case '-':	//Minus
+		break;
+	case '*':	//Multiply
+		break;
+	case '/':	//Division
+		break;
+	case '&':	//And
+		break;
+	case '|':	//Or
+		break;
+	case '^':	//Xor
+		break;
+	case '~':	//Not
+		break;
+	case '<':	//Left Shift
+		break;
+	case '>':	//Right Shift
+		break;
+	case '[':	//Left Rotate
+		break;
+	case ']':	//Right Rotate
+		break;
+	default:
+		break;
+	}
+}
+
+//Handle chung cho các event nhấn nút Operator
+//Parameter:
+//- Opr: ký tự dấu được đưa vào
+void CCalculatorDlg::HandleOprButton(char Opr)
+{
+	PushHistoryInput(Opr);	//Cập nhật history
+
+	if (isEmptyInput == false)
+	{
+		PreCalc(prevOpr);	//Tính toán các opr có trước (nếu có)
+		ResetInput();
+	}
+
+	prevOpr = Opr;	//Đưa dấu vào hàng đợi
+	isEmptyInput = true;
 	UpdateData(0);
 }
 
@@ -39,74 +181,74 @@ void CCalculatorDlg::OnBnClickedBtndot()
 	// TODO: Add your control notification handler code here
 }
 
-
+//Xử lý khi nhấn nút +
 void CCalculatorDlg::OnBnClickedBtnplus()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('+');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnminus()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('-');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnmultiply()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('*');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtndivision()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('/');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnand()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('&');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnor()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('|');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnxor()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('^');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnot()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('~');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnrightsihft()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('>');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnleftshift()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('<');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnrolright()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton(']');
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnrolleft()
 {
-	// TODO: Add your control notification handler code here
+	HandleOprButton('[');
 }

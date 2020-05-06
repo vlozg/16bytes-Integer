@@ -38,115 +38,116 @@ void CCalculatorDlg::AddInput(char bInput)
 	{
 		ActiveInput += bInput;
 	}
+	isEmptyInput = false;	//Đánh dấu đã nhận input số
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum0()
 {
 	AddInput('0');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum1()
 {
 	AddInput('1');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum2()
 {
 	AddInput('2'); 
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum3()
 {
 	AddInput('3');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum4()
 {
 	AddInput('4');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum5()
 {
 	AddInput('5');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum6()
 {
 	AddInput('6');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum7()
 {
 	AddInput('7');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum8()
 {
 	AddInput('8');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum9()
 {
 	AddInput('9');
-	UpdateInput();
+	UpdateAllData();
 }
 
 void CCalculatorDlg::OnBnClickedBtnnuma()
 {
 	AddInput('A');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumb()
 {
 	AddInput('B');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumc()
 {
 	AddInput('C');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumd()
 {
 	AddInput('D');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnume()
 {
 	AddInput('E');
-	UpdateInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumf()
 {
 	AddInput('F');
-	UpdateInput();
+	UpdateAllData();
 }
