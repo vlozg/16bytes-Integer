@@ -32,6 +32,7 @@ public:
 
 
 	QInt operator=(const QInt&);
+	QInt operator=(string number);
 	
 	//các hàm so sánh
 	bool operator<(const QInt&);
