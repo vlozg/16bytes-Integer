@@ -417,6 +417,10 @@ void ReadFile()
 			inputNumber.erase(inputNumber.begin(), inputNumber.begin() + e + 1); //xóa p2 và dấu cách
 		}
 
+		//tạo file txt mới
+		freopen("OUTPUT.txt", "w", stdout);
+		fclose(stdout);
+
 		//xử lý p1 p2 để scan
 		if (p1 == "2") { 
 			bool* binary = StringToBool(inputNumber);
