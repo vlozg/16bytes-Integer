@@ -80,6 +80,7 @@ private:
 	void ChangeMode_Float();
 	void ResetInput();
 	void AddInput(char bInput);
+	void PopInput();
 
 	CString PassiveInput1;
 	CString PassiveInput2;

@@ -19,16 +19,35 @@ void CCalculatorDlg::OnBnClickedBtnequal()
 {
 }
 
+//Xóa 1 số bên phải ra khỏi active input
+void CCalculatorDlg::PopInput()
+{
+	if (ActiveInput.GetLength() > 1)
+	{
+		//Nếu active input nhiều hơn 1 số thì xóa bên phải
+		ActiveInput.Delete(ActiveInput.GetLength()-1);
+	}
+	else
+	{
+		//Còn 1 số thì reset về 0, không để chuỗi input rỗng
+		ActiveInput = "0";
+	}
+}
 
 void CCalculatorDlg::OnBnClickedBtnbackspace()
 {
-	// TODO: Add your control notification handler code here
+	PopInput();
+	UpdateAllData();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnclear()
 {
-	// TODO: Add your control notification handler code here
+	hisActiveInput = "";
+	hisPassiveInput1 = "";
+	hisPassiveInput2 = "";
+	ResetInput();
+	UpdateData(0);
 }
 
 

@@ -31,7 +31,6 @@ void CCalculatorDlg::ResetInput()
 	ActiveInput = "0";
 	PassiveInput1 = "0";
 	PassiveInput2 = "0";
-	UpdateData(0);
 }
 
 void CCalculatorDlg::OnBnClickedBtndot()

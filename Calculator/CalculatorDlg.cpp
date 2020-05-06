@@ -135,6 +135,7 @@ BOOL CCalculatorDlg::OnInitDialog()
 	// TODO: Add extra initialization here
 	ChangeMode_Dec();
 	ResetInput();
+	UpdateData(0);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
