@@ -17,9 +17,9 @@
 
 CCalculatorDlg::CCalculatorDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CALCULATOR_DIALOG, pParent)
-	, DecInput(_T(""))
-	, BinInput(_T(""))
-	, HexInput(_T(""))
+	, ActiveInput(_T(""))
+	, PassiveInput1(_T(""))
+	, PassiveInput2(_T(""))
 	, hisDecInput(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -28,9 +28,9 @@ CCalculatorDlg::CCalculatorDlg(CWnd* pParent /*=nullptr*/)
 void CCalculatorDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT1, DecInput);
-	DDX_Text(pDX, IDC_EDIT2, BinInput);
-	DDX_Text(pDX, IDC_EDIT3, HexInput);
+	DDX_Text(pDX, IDC_EDIT1, ActiveInput);
+	DDX_Text(pDX, IDC_EDIT2, PassiveInput1);
+	DDX_Text(pDX, IDC_EDIT3, PassiveInput2);
 	DDX_Control(pDX, BtnNum1, b_Num1);
 	DDX_Control(pDX, BtnNum2, b_Num2);
 	DDX_Control(pDX, BtnNum3, b_Num3);
@@ -68,13 +68,13 @@ void CCalculatorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, BtnRolLeft, b_oprLeftRol);
 	DDX_Control(pDX, BtnRolRight, b_oprRightRol);
 
-	DDX_Control(pDX, BtnBin, b_Binary);
-	DDX_Control(pDX, BtnHex, b_Hex);
+	DDX_Control(pDX, BtnBin, b_Passive1);
+	DDX_Control(pDX, BtnHex, b_Passive2);
 	DDX_Text(pDX, IDC_EDIT4, hisDecInput);
-	DDX_Control(pDX, IDC_EDIT4, t_hisDecInput);
-	DDX_Control(pDX, IDC_EDIT1, t_DecInput);
-	DDX_Control(pDX, IDC_EDIT2, t_BinInput);
-	DDX_Control(pDX, IDC_EDIT3, t_HexInput);
+	DDX_Control(pDX, IDC_EDIT4, t_hisInput);
+	DDX_Control(pDX, IDC_EDIT1, t_ActiveInput);
+	DDX_Control(pDX, IDC_EDIT2, t_PassiveInput1);
+	DDX_Control(pDX, IDC_EDIT3, t_PassiveInput2);
 }
 
 BEGIN_MESSAGE_MAP(CCalculatorDlg, CDialogEx)
@@ -114,8 +114,8 @@ BEGIN_MESSAGE_MAP(CCalculatorDlg, CDialogEx)
 	ON_BN_CLICKED(BtnRolLeft, &CCalculatorDlg::OnBnClickedBtnrolleft)
 	ON_BN_CLICKED(BtnBackspace, &CCalculatorDlg::OnBnClickedBtnbackspace)
 	ON_BN_CLICKED(BtnClear, &CCalculatorDlg::OnBnClickedBtnclear)
-	ON_BN_CLICKED(BtnHex, &CCalculatorDlg::OnBnClickedBtnhex)
-	ON_BN_CLICKED(BtnBin, &CCalculatorDlg::OnBnClickedBtnbin)
+	ON_BN_CLICKED(BtnHex, &CCalculatorDlg::OnBnClickedBtnPassive2)
+	ON_BN_CLICKED(BtnBin, &CCalculatorDlg::OnBnClickedBtnPassive1)
 END_MESSAGE_MAP()
 
 
@@ -134,7 +134,6 @@ BOOL CCalculatorDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 	ChangeMode_Dec();
-	ActiveInput = &DecInput;	//Chuyển input stream vào chuỗi Dec
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -197,8 +196,22 @@ void CCalculatorDlg::UpdateInput()
 	UpdateData(0);
 }
 
+//////////////////////////////////////////////////
+//
+//	Cách change mode hoạt động
+//
+//	Có 3 mode với 3 input được xếp thứ tự như sau
+//	Dec: 10 -> 2 -> 16
+//	Bin: 2 -> 10 -> 16
+//	Hex: 16 -> 2 -> 10
+//
+//	Change mode sẽ activate/deactivate các nút bấm cho phù hợp 
+//
+//	và sắp xếp lại các input screen
+//
+///////////////////////////////////////////////////
 
-//Thiết lập nút bấm để nhận input thập phân
+//Thiết lập input thập phân
 void CCalculatorDlg::ChangeMode_Dec() 
 {
 	//Disable các nút input giá trị từ A - F
@@ -218,10 +231,28 @@ void CCalculatorDlg::ChangeMode_Dec()
 	b_Num7.EnableWindow(1);
 	b_Num8.EnableWindow(1);
 	b_Num9.EnableWindow(1);
+
+	//Swap active input với dec input
+	CString temp = ActiveInput;
+	if (mode == 2)
+	{
+		ActiveInput = PassiveInput1;
+		PassiveInput1 = temp;
+		b_Passive1.SetWindowText(_T("Binary"));
+	}
+	else
+	{
+		ActiveInput = PassiveInput2;
+		PassiveInput2 = temp;
+		b_Passive2.SetWindowText(_T("Hexadecimal"));
+	}
+
+	UpdateData(0);
+	mode = 10;
 }
 
 
-//Thiết lập nút bấm để nhận input thập lục phân
+//Thiết lập input thập lục phân
 void CCalculatorDlg::ChangeMode_Hex() 
 {
 	//Enable tất cả các nút input
@@ -239,10 +270,30 @@ void CCalculatorDlg::ChangeMode_Hex()
 	b_Num7.EnableWindow(1);
 	b_Num8.EnableWindow(1);
 	b_Num9.EnableWindow(1);
+
+	//Swap active input với hex input
+	CString temp;
+	if (mode == 2)
+	{
+		//Nếu đang ở bin mode chuyển về dec mode
+		temp = ActiveInput;
+		ActiveInput = PassiveInput1;
+		PassiveInput1 = temp;
+		b_Passive1.SetWindowText(_T("Binary"));
+	}
+
+	//Từ dec chuyển về hex
+	temp = ActiveInput;
+	ActiveInput = PassiveInput2;
+	PassiveInput2 = temp;
+	b_Passive2.SetWindowText(_T("Decimal"));
+	
+	UpdateData(0);
+	mode = 16;
 }
 
 
-//Thiết lập nút bấm để nhận input nhị phân
+//Thiết lập input nhị phân
 void CCalculatorDlg::ChangeMode_Bin() 
 {
 	//Disable các nút input trừ nút 0 và 1
@@ -260,4 +311,24 @@ void CCalculatorDlg::ChangeMode_Bin()
 	b_Num7.EnableWindow(0);
 	b_Num8.EnableWindow(0);
 	b_Num9.EnableWindow(0);
+	
+	//Swap active input với bin input
+	CString temp;
+	if (mode == 16)
+	{
+		//Nếu đang ở hex mode chuyển về dec mode
+		temp = ActiveInput;
+		ActiveInput = PassiveInput2;
+		PassiveInput2 = temp;
+		b_Passive2.SetWindowText(_T("Hexadecimal"));
+	}
+
+	//Từ dec chuyển về bin
+	temp = ActiveInput;
+	ActiveInput = PassiveInput1;
+	PassiveInput1 = temp;
+	b_Passive1.SetWindowText(_T("Decimal"));
+	
+	UpdateData(0);
+	mode = 2;
 }

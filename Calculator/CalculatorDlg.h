@@ -1,4 +1,4 @@
-
+﻿
 // CalculatorDlg.h : header file
 //
 
@@ -67,21 +67,28 @@ public:
 	afx_msg void OnBnClickedBtnrolleft();
 	afx_msg void OnBnClickedBtnbackspace();
 	afx_msg void OnBnClickedBtnclear();
-	afx_msg void OnBnClickedBtnhex();
-	afx_msg void OnBnClickedBtnbin();
+	afx_msg void OnBnClickedBtnPassive2();
+	afx_msg void OnBnClickedBtnPassive1();
 
 private:
 	CFont b_Font;
+	byte mode = 10;	//Đánh số chế độ: 2=bin 10=dec 16=hex
 	void UpdateInput();
 	void ChangeMode_Dec();
 	void ChangeMode_Hex();
 	void ChangeMode_Bin();
 	void ChangeMode_Float();
 
-	CString BinInput;
-	CString HexInput;
-	CString DecInput;
-	CString* ActiveInput;
+	CString PassiveInput1;
+	CString PassiveInput2;
+	CString ActiveInput;
+	CString hisDecInput;
+
+	CEdit t_hisInput;
+	CEdit t_ActiveInput;
+	CEdit t_PassiveInput1;
+	CEdit t_PassiveInput2;
+
 	CButton b_Num1;
 	CButton b_Num2;
 	CButton b_Num3;
@@ -119,12 +126,6 @@ private:
 	CButton b_oprMultiply;
 	CButton b_oprDivision;
 
-	CButton b_Binary;
-	CButton b_Hex;
-
-	CString hisDecInput;
-	CEdit t_hisDecInput;
-	CEdit t_DecInput;
-	CEdit t_BinInput;
-	CEdit t_HexInput;
+	CButton b_Passive1;
+	CButton b_Passive2;
 };

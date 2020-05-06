@@ -17,110 +17,110 @@
 
 void CCalculatorDlg::OnBnClickedBtnnum0()
 {
-	*ActiveInput += "0";
+	ActiveInput += "0";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum1()
 {
-	*ActiveInput += "1";
+	ActiveInput += "1";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum2()
 {
-	*ActiveInput += "2";
+	ActiveInput += "2";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum3()
 {
-	*ActiveInput += "3";
+	ActiveInput += "3";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum4()
 {
-	*ActiveInput += "4";
+	ActiveInput += "4";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum5()
 {
-	*ActiveInput += "5";
+	ActiveInput += "5";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum6()
 {
-	*ActiveInput += "6";
+	ActiveInput += "6";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum7()
 {
-	*ActiveInput += "7";
+	ActiveInput += "7";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum8()
 {
-	*ActiveInput += "8";
+	ActiveInput += "8";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum9()
 {
-	*ActiveInput += "9";
+	ActiveInput += "9";
 	UpdateInput();
 }
 
 void CCalculatorDlg::OnBnClickedBtnnuma()
 {
-	*ActiveInput += "A";
+	ActiveInput += "A";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumb()
 {
-	*ActiveInput += "B";
+	ActiveInput += "B";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumc()
 {
-	*ActiveInput += "C";
+	ActiveInput += "C";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumd()
 {
-	*ActiveInput += "D";
+	ActiveInput += "D";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnume()
 {
-	*ActiveInput += "E";
+	ActiveInput += "E";
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumf()
 {
-	*ActiveInput += "F";
+	ActiveInput += "F";
 	UpdateInput();
 }

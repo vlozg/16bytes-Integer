@@ -40,6 +40,7 @@
 #define BtnRolLeft                      1032
 #define BtnClear                        1033
 #define BtnBin                          1034
+#define BtnDec                          1034
 #define BtnHex                          1035
 #define IDC_EDIT2                       1036
 #define IDC_EDIT3                       1037

@@ -17,7 +17,6 @@
 
 void CCalculatorDlg::OnBnClickedBtnequal()
 {
-	// TODO: Add your control notification handler code here
 }
 
 
@@ -33,13 +32,27 @@ void CCalculatorDlg::OnBnClickedBtnclear()
 }
 
 
-void CCalculatorDlg::OnBnClickedBtnhex()
+void CCalculatorDlg::OnBnClickedBtnPassive2()
 {
-	ActiveInput = &HexInput;
+	if (mode == 16)
+	{
+		ChangeMode_Dec();
+	}
+	else
+	{
+		ChangeMode_Hex();
+	}
 }
 
 
-void CCalculatorDlg::OnBnClickedBtnbin()
+void CCalculatorDlg::OnBnClickedBtnPassive1()
 {
-	ActiveInput = &BinInput;
+	if (mode == 2)
+	{
+		ChangeMode_Dec();
+	}
+	else
+	{
+		ChangeMode_Bin();
+	}
 }
