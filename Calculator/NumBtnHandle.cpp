@@ -15,112 +15,138 @@
 #define new DEBUG_NEW
 #endif
 
+////////////////////////////////////////
+//
+//	CÁCH THỨC NUM BUTTON HOẠT ĐỘNG
+//
+//	Nếu active input = 0 thì xóa số 0 đi và thêm số mới
+//
+//	(không để đầu số bằng 0)
+//
+/////////////////////////////////////////
+
+//Thêm một số vào đuôi active input
+//Parameter:
+//- bInput: ký tự muốn thêm vào active input
+void CCalculatorDlg::AddInput(char bInput)
+{
+	if (ActiveInput == "0")
+	{
+		ActiveInput = bInput;
+	}
+	else
+	{
+		ActiveInput += bInput;
+	}
+}
+
+
 void CCalculatorDlg::OnBnClickedBtnnum0()
 {
-	ActiveInput += "0";
+	AddInput('0');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum1()
 {
-	ActiveInput += "1";
+	AddInput('1');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum2()
 {
-	ActiveInput += "2";
+	AddInput('2'); 
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum3()
 {
-	ActiveInput += "3";
+	AddInput('3');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum4()
 {
-	ActiveInput += "4";
+	AddInput('4');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum5()
 {
-	ActiveInput += "5";
+	AddInput('5');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum6()
 {
-	ActiveInput += "6";
+	AddInput('6');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum7()
 {
-	ActiveInput += "7";
+	AddInput('7');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum8()
 {
-	ActiveInput += "8";
+	AddInput('8');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnum9()
 {
-	ActiveInput += "9";
+	AddInput('9');
 	UpdateInput();
 }
 
 void CCalculatorDlg::OnBnClickedBtnnuma()
 {
-	ActiveInput += "A";
+	AddInput('A');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumb()
 {
-	ActiveInput += "B";
+	AddInput('B');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumc()
 {
-	ActiveInput += "C";
+	AddInput('C');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumd()
 {
-	ActiveInput += "D";
+	AddInput('D');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnume()
 {
-	ActiveInput += "E";
+	AddInput('E');
 	UpdateInput();
 }
 
 
 void CCalculatorDlg::OnBnClickedBtnnumf()
 {
-	ActiveInput += "F";
+	AddInput('F');
 	UpdateInput();
 }

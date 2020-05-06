@@ -78,11 +78,15 @@ private:
 	void ChangeMode_Hex();
 	void ChangeMode_Bin();
 	void ChangeMode_Float();
+	void ResetInput();
+	void AddInput(char bInput);
 
 	CString PassiveInput1;
 	CString PassiveInput2;
 	CString ActiveInput;
-	CString hisDecInput;
+	CString hisActiveInput;
+	CString hisPassiveInput1;
+	CString hisPassiveInput2;
 
 	CEdit t_hisInput;
 	CEdit t_ActiveInput;

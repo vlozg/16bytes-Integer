@@ -4,8 +4,8 @@
   OprBtnHandle.cpp
   UltilityBtnHandle.cpp
   Generating code
-  4 of 296 functions ( 1.4%) were compiled, the rest were copied from previous compilation.
-    2 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+  30 of 301 functions (10.0%) were compiled, the rest were copied from previous compilation.
+    10 functions were new in current compilation
+    12 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Calculator.vcxproj -> C:\Users\Admin\Desktop\16bytes-Number\Calculator\Release\Calculator.exe

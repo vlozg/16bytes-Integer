@@ -20,7 +20,7 @@ CCalculatorDlg::CCalculatorDlg(CWnd* pParent /*=nullptr*/)
 	, ActiveInput(_T(""))
 	, PassiveInput1(_T(""))
 	, PassiveInput2(_T(""))
-	, hisDecInput(_T(""))
+	, hisActiveInput(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -70,7 +70,7 @@ void CCalculatorDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, BtnBin, b_Passive1);
 	DDX_Control(pDX, BtnHex, b_Passive2);
-	DDX_Text(pDX, IDC_EDIT4, hisDecInput);
+	DDX_Text(pDX, IDC_EDIT4, hisActiveInput);
 	DDX_Control(pDX, IDC_EDIT4, t_hisInput);
 	DDX_Control(pDX, IDC_EDIT1, t_ActiveInput);
 	DDX_Control(pDX, IDC_EDIT2, t_PassiveInput1);
@@ -134,6 +134,7 @@ BOOL CCalculatorDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 	ChangeMode_Dec();
+	ResetInput();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }

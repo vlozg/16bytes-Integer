@@ -15,6 +15,25 @@
 #define new DEBUG_NEW
 #endif
 
+////////////////////////////////////////////////
+//
+//	CÁCH THỨC HOẠT ĐỘNG
+//
+//	Khi người dùng nhấn nút dấu, active input sẽ được
+//
+//	đưa vào history và active input sẽ được reset về 0
+//
+////////////////////////////////////////////////
+
+//Reset input screen
+void CCalculatorDlg::ResetInput() 
+{
+	ActiveInput = "0";
+	PassiveInput1 = "0";
+	PassiveInput2 = "0";
+	UpdateData(0);
+}
+
 void CCalculatorDlg::OnBnClickedBtndot()
 {
 	// TODO: Add your control notification handler code here
