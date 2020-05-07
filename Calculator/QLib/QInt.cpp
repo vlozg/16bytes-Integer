@@ -532,3 +532,18 @@ bool QInt::IsNegative()
 {
 	return this->GetBit(0);
 }
+
+string QInt::DecStr()
+{
+	return string();
+}
+
+string QInt::BinStr()
+{
+	return string();
+}
+
+string QInt::HexStr()
+{
+	return string();
+}

@@ -199,6 +199,10 @@
     <ClCompile Include="CalculatorDlg.cpp" />
     <ClCompile Include="NumBtnHandle.cpp" />
     <ClCompile Include="OprBtnHandle.cpp" />
+    <ClCompile Include="QLib\FileHandling.cpp" />
+    <ClCompile Include="QLib\Qfloat.cpp" />
+    <ClCompile Include="QLib\QInt.cpp" />
+    <ClCompile Include="QLib\QNum.cpp" />
     <ClCompile Include="UltilityBtnHandle.cpp" />
   </ItemGroup>
   <ItemGroup>

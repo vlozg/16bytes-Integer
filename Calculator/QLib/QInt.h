@@ -44,6 +44,11 @@ public:
 	bool IsNegative();
 	int MostSignificantBit();
 
+	//Hàm xuất ra chuỗi các hệ số của số
+	string DecStr();
+	string BinStr();
+	string HexStr();
+
 	QInt();
 	QInt(string);
 };

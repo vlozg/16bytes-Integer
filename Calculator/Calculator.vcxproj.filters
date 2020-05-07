@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\QLib">
+      <UniqueIdentifier>{da47ae36-e860-45ae-bf9d-7b7364dfaace}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calculator.h">
@@ -61,6 +64,18 @@
     </ClCompile>
     <ClCompile Include="UltilityBtnHandle.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QLib\QNum.cpp">
+      <Filter>Source Files\QLib</Filter>
+    </ClCompile>
+    <ClCompile Include="QLib\Qfloat.cpp">
+      <Filter>Source Files\QLib</Filter>
+    </ClCompile>
+    <ClCompile Include="QLib\QInt.cpp">
+      <Filter>Source Files\QLib</Filter>
+    </ClCompile>
+    <ClCompile Include="QLib\FileHandling.cpp">
+      <Filter>Source Files\QLib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
