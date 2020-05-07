@@ -43,9 +43,6 @@ void CCalculatorDlg::OnBnClickedBtnbackspace()
 
 void CCalculatorDlg::OnBnClickedBtnclear()
 {
-	hisActiveInput = "";
-	hisPassiveInput1 = "";
-	hisPassiveInput2 = "";
 	ResetInput();
 	UpdateData(0);
 }

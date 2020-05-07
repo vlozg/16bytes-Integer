@@ -82,7 +82,7 @@ CString CCalculatorDlg::GetOprSymbol(char Opr)
 	}
 	return symbol;
 }
-
+/*
 //Đưa active input vào history và tính toán
 //Parameter:
 //- Opr: ký tự dấu được đưa vào
@@ -121,7 +121,7 @@ void CCalculatorDlg::PushHistoryInput(char Opr)
 	hisPassiveInput1 += symbol;
 	hisPassiveInput2 += symbol;
 }
-
+*/
 //Lấy active input ra và thực hiện tính toán
 //Parameter
 //- Opr: ký tự dấu được đưa vào
@@ -163,7 +163,7 @@ void CCalculatorDlg::PreCalc(char Opr)
 //- Opr: ký tự dấu được đưa vào
 void CCalculatorDlg::HandleOprButton(char Opr)
 {
-	PushHistoryInput(Opr);	//Cập nhật history
+	//PushHistoryInput(Opr);	//Cập nhật history
 
 	if (isEmptyInput == false)
 	{

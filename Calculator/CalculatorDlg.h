@@ -85,7 +85,6 @@ private:
 	void ResetInput();
 	void AddInput(char bInput);
 	void PopInput();
-	void PushHistoryInput(char Opr);
 	void PreCalc(char Opr);
 	void HandleOprButton(char Opr);
 	CString GetOprSymbol(char Opr);
@@ -93,11 +92,7 @@ private:
 	CString PassiveInput1;
 	CString PassiveInput2;
 	CString ActiveInput;
-	CString hisActiveInput;
-	CString hisPassiveInput1;
-	CString hisPassiveInput2;
 
-	CEdit t_hisInput;
 	CEdit t_ActiveInput;
 	CEdit t_PassiveInput1;
 	CEdit t_PassiveInput2;
