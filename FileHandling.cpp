@@ -48,7 +48,7 @@ bool* StringToBin(string str)
 	return bin;
 }
 
-//Hàm để chuyển string về char* size 17 (16 + '\0')
+//Hàm để chuyển string về char* size 32 (32 + '\0')
 char* StringToChar(string str)
 {
 	char* newstr = new char[HEX_SIZE + 1];
