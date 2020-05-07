@@ -130,7 +130,7 @@ bool ReadDecString(string input, Qfloat& output)
 	char tempBit;	//lưu bit chuyển
 	if (integerDigits == "") {	//nếu phần nguyên = 0 thì dời sang phải
 		//nếu temp không có gì luôn => input là số 0
-		if (temp.length() == 0) {
+		if (CheckAllChar(temp, '0')) {
 			return true;
 		}
 		for (int i = 0;; i++) {
@@ -291,13 +291,13 @@ void PrintQfloat(Qfloat input)
 			}
 			while (i < E) { // E > 112 nên thêm 0 vào integerDigits
 				integerDigits += '0';
+				i++;
 			}
 			Significand.erase(Significand.begin(), Significand.end());
 		}
 	}
-	else if (E < -KNUMBER) {
-		cout << "Tran so!";
-		return;
+	else if (E <= -KNUMBER) { //TH Exponent toàn 0 và Significand khác 0 => đưa về 0....Fx2^-126
+		integerDigits = "0"; //set integer = 0, phần thập phân là significand
 	}
 	else if (E < 0) {
 		Significand = '1' + Significand;
@@ -382,13 +382,17 @@ bool* DecToBin(Qfloat x) {
 //Hàm đọc file 
 void ReadFile()
 {
-	string p1 = ""; //chứa số đầu tiên để xác định hệ để xử lý
-	string p2 = ""; //chứa số thứ 2 để xác định hệ chuyển
-	string inputNumber;
 	Qfloat number;
+
+	//tạo file txt output mới
+	freopen("OUTPUT.txt", "w", stdout);
+	fclose(stdout);
 
 	freopen("INPUT.txt", "rt", stdin);
 	while (!cin.eof()) {
+		string p1 = ""; //chứa số đầu tiên để xác định hệ để xử lý
+		string p2 = ""; //chứa số thứ 2 để xác định hệ chuyển
+		string inputNumber;
 		getline(cin, inputNumber); //lấy cả dòng 
 
 		int space = 0; //biến dùng để đếm số dấu cách trong dòng
@@ -423,10 +427,6 @@ void ReadFile()
 			}
 			inputNumber.erase(inputNumber.begin(), inputNumber.begin() + e + 1); //xóa p2 và dấu cách
 		}
-
-		//tạo file txt mới
-		freopen("OUTPUT.txt", "w", stdout);
-		fclose(stdout);
 
 		//xử lý p1 p2 để scan
 		if (p1 == "2") { 
@@ -664,14 +664,26 @@ string IntegerBinToDec(string bin) {
 	string pow[128];
 	PowOfTwo(pow);	//khởi tạo chuỗi có các số 2 mũ n
 
-	for (int i = 0; i < bin.length(); i++)
-	{
-		if (bin[bin.length() - 1 - i] == '1')
+	if (bin.length() < 128) {
+		for (int i = 0; i < bin.length(); i++)
 		{
-			number = SumNumbers(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
+			if (bin[bin.length() - 1 - i] == '1')
+			{
+				number = SumNumbers(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
+			}
 		}
 	}
-
+	else
+	{
+		for (int i = 0; i < 128; i++)
+		{
+			if (bin[128 - 1 - i] == '1')
+			{
+				number = SumNumbers(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
+			}
+		}
+	}
+	
 	return number;
 }
 
