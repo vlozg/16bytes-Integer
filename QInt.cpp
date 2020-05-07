@@ -327,43 +327,24 @@ bool QInt::operator<(const QInt& number)
 		B = B.ComplementTwo();
 	}
 
-	int msb1 = A.MostSignificantBit(); //most significant bit(msb) của số hiện tại
-	int msb2 = B.MostSignificantBit(); //most significant bit(msb) của number
-
-	if (msb1 > msb2) //nếu số hiện tại < number 
+	
+	for (int i = 1; i < BIT_RANGE; i++)
 	{
-		if (!negative1) //nếu cả 2 số dương
-			return true;
-		else
-			return false;
-	}
-	else if (msb1 < msb2)
-	{
-		if (!negative1) //nếu cả 2 số dương
-			return false;
-		else
-			return true;
-	}
-	else
-	{
-		for (int i = msb1; i < BIT_RANGE; i++)
+		//nếu bit tại vị trí i của số này = 1 còn number = 0
+		if (A.GetBit(i) && !B.GetBit(i))
 		{
-			//nếu bit tại vị trí i của số này = 1 còn number = 0
-			if (A.GetBit(i) && !B.GetBit(i))
-			{
-				if (!negative1) //nếu cả 2 số dương
-					return false;
-				else
-					return true;
-			}
-			//ngược lại
-			else if (!A.GetBit(i) && B.GetBit(i))
-			{
-				if (!negative1) //nếu cả 2 số dương
-					return true;
-				else
-					return false;
-			}
+			if (!negative1) //nếu cả 2 số dương
+				return false;
+			else
+				return true;
+		}
+		//ngược lại
+		else if (!A.GetBit(i) && B.GetBit(i))
+		{
+			if (!negative1) //nếu cả 2 số dương
+				return true;
+			else
+				return false;
 		}
 	}
 	return false;
@@ -390,43 +371,23 @@ bool QInt::operator>(const QInt& number)
 		B = B.ComplementTwo();
 	}
 
-	int msb1 = A.MostSignificantBit(); //most significant bit(msb) của số hiện tại
-	int msb2 = B.MostSignificantBit(); //most significant bit(msb) của number
-
-	if (msb1 < msb2) //nếu số hiện tại > number 
+	for (int i = 1; i < BIT_RANGE; i++)
 	{
-		if (!negative1) //nếu cả 2 số dương
-			return true;
-		else
-			return false;
-	}
-	else if (msb1 > msb2)
-	{
-		if (!negative1) //nếu cả 2 số dương
-			return false;
-		else
-			return true;
-	}
-	else
-	{
-		for (int i = msb1; i < BIT_RANGE; i++)
+		//nếu bit tại vị trí i của số này = 1 còn number = 0
+		if (A.GetBit(i) && !B.GetBit(i))
 		{
-			//nếu bit tại vị trí i của số này = 1 còn number = 0
-			if (A.GetBit(i) && !B.GetBit(i))
-			{
-				if (!negative1) //nếu cả 2 số dương
-					return true;
-				else
-					return false;
-			}
-			//ngược lại
-			else if (!A.GetBit(i) && B.GetBit(i))
-			{
-				if (!negative1) //nếu cả 2 số dương
-					return false;
-				else
-					return true;
-			}
+			if (!negative1) //nếu cả 2 số dương
+				return true;
+			else
+				return false;
+		}
+		//ngược lại
+		else if (!A.GetBit(i) && B.GetBit(i))
+		{
+			if (!negative1) //nếu cả 2 số dương
+				return false;
+			else
+				return true;
 		}
 	}
 	return false;
@@ -570,27 +531,4 @@ Output: là số âm thì True, ngược lại False*/
 bool QInt::IsNegative()
 {
 	return this->GetBit(0);
-}
-
-
-//Hàm trả về vị trí bit có giá trị lớn nhất.
-int QInt::MostSignificantBit()
-{
-	for (int i = 0; i < SIZE; i++)
-	{
-		if (value[i] != 0)
-		{
-			int j;
-			if (i == 0)
-				j = 1;
-			else
-				j = 0; //nếu block 0 thì check từ bit 1, còn lại thì check từ bit 0
-			for (; j < 8; j++)
-			{
-				if (this->GetBit(i * 8 + j)) //trả về vị trí bit 1 đầu tiên
-					return i * 8 + j;
-			}
-		}
-	}
-	return 0; //số 0
 }

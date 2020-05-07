@@ -48,7 +48,7 @@ bool* StringToBin(string str)
 	return bin;
 }
 
-//Hàm để chuyển string về char* size 17 (16 + '\0')
+//Hàm để chuyển string về char* size 32 (32 + '\0')
 char* StringToChar(string str)
 {
 	char* newstr = new char[HEX_SIZE + 1];
@@ -181,12 +181,12 @@ void ProcessLine(string line, string output)
 		tokenArr.push_back(token);
 	}
 	int length = tokenArr.size();
-	if (length == 3)
+	if (length == 3) //nếu là chuyển đổi từ base này sang base kia
 	{
 		QInt number = StringToQInt(tokenArr[0], tokenArr[2]);
 		Conversion(number, tokenArr[1], output);
 	}
-	if (length == 4)
+	if (length == 4) //xử lý các phép toán
 	{
 		string base = tokenArr[0]; //base xử lý
 		string op = tokenArr[2]; //toán tử
@@ -205,13 +205,16 @@ void ProcessLine(string line, string output)
 //Hàm đọc và xử lý file input, xuất ra file output
 void ReadFile(string input, string output)
 {
+	ofstream out(output, ios::trunc); //xóa file để rewrite
+	if (out.is_open())
+		out.close();
 	ifstream file(input);
 	string line; //biến lưu từng dòng
 	if (file.is_open())
 	{
 		while (getline(file, line)) //lưu từng dòng trong file vào line
 		{
-			ProcessLine(line);
+			ProcessLine(line, output);
 		}
 		file.close();
 	}
