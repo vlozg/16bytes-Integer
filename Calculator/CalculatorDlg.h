@@ -71,8 +71,8 @@ public:
 	afx_msg void OnBnClickedBtnPassive1();
 
 private:
-	//QInt iOutput, iInput;
-	//Qfloat fOutput, iOutput;
+	QInt iOutput, iInput;
+	Qfloat fOutput, fOutput;
 	char prevOpr = NULL;	//Operator được đưa vào hàng đợi, sẽ được thay thế và tính toán khi input operator mới
 	bool isEmptyInput = false;	//Đánh dấu đã input số chưa
 	CFont b_Font;

@@ -187,6 +187,10 @@
     <ClInclude Include="CalculatorDlg.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="QLib\FileHandling.h" />
+    <ClInclude Include="QLib\Qfloat.h" />
+    <ClInclude Include="QLib\QInt.h" />
+    <ClInclude Include="QLib\QNum.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -195,12 +199,6 @@
     <ClCompile Include="CalculatorDlg.cpp" />
     <ClCompile Include="NumBtnHandle.cpp" />
     <ClCompile Include="OprBtnHandle.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="UltilityBtnHandle.cpp" />
   </ItemGroup>
   <ItemGroup>

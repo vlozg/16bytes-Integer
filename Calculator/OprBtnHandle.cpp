@@ -25,12 +25,13 @@
 //
 ////////////////////////////////////////////////
 
-//Reset input screen
+//Reset input screen & input memory
 void CCalculatorDlg::ResetInput() 
 {
 	ActiveInput = "0";
 	PassiveInput1 = "0";
 	PassiveInput2 = "0";
+	iInput = "0";
 }
 
 //Lấy ký hiệu dấu
@@ -122,6 +123,7 @@ void CCalculatorDlg::PushHistoryInput(char Opr)
 	hisPassiveInput2 += symbol;
 }
 */
+
 //Lấy active input ra và thực hiện tính toán
 //Parameter
 //- Opr: ký tự dấu được đưa vào
@@ -130,24 +132,34 @@ void CCalculatorDlg::PreCalc(char Opr)
 	switch (Opr)
 	{
 	case '+':	//Plus
+		iOutput = iOutput + iInput;
 		break;
 	case '-':	//Minus
+		iOutput = iOutput - iInput;
 		break;
 	case '*':	//Multiply
+		iOutput = iOutput * iInput;
 		break;
 	case '/':	//Division
+		iOutput = iOutput / iInput;
 		break;
 	case '&':	//And
+		iOutput = iOutput & iInput;
 		break;
 	case '|':	//Or
+		iOutput = iOutput | iInput;
 		break;
 	case '^':	//Xor
+		iOutput = iOutput ^ iInput;
 		break;
 	case '~':	//Not
+		iOutput = ~iOutput;
 		break;
 	case '<':	//Left Shift
+		//iOutput = iOutput << iInput;
 		break;
 	case '>':	//Right Shift
+		//iOutput = iOutput >> iInput;
 		break;
 	case '[':	//Left Rotate
 		break;
