@@ -42,8 +42,7 @@ public:
 	bool operator==(const QInt&);
 
 	bool IsNegative();
-	int MostSignificantBit();
-
+	
 	QInt();
 	QInt(string);
 };
