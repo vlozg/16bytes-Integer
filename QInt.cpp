@@ -532,3 +532,81 @@ bool QInt::IsNegative()
 {
 	return this->GetBit(0);
 }
+
+/*
+====================================
+		HỖ TRỢ GIAO DIỆN
+====================================
+*/
+
+string QInt::DecStr()	//Copy từ output, nhưng trả về string
+{
+	bool* bin = new bool[BIT_RANGE];
+	string result = "0";
+	QInt temp = *this;	//Biến tạm lưu dãy bit (để không làm thay đổi *this) 
+
+	bool negative = GetBit(0);	//Xét bit dấu
+	if (negative == true)
+	{
+		temp = this->ComplementTwo();	//Nếu là số âm thì khi lấy bù 2 sẽ trả lại số dương
+	}
+
+	for (int i = 0; i < BIT_RANGE; i++)	// QInt --> mảng Bin
+	{
+		bin[i] = temp.GetBit(i);
+	}
+
+	string pow[BIT_RANGE] = { "" };
+	PowOfTwo(pow);					//	Lập thành các lũy thừa của số 2
+
+	for (int i = 0; i < BIT_RANGE; i++)
+	{
+		if (bin[BIT_RANGE - 1 - i])
+		{
+			result = SumNumbers(result, pow[i]);	//	Cộng theo công thức: 2^x1 + 2^x2 + 2^x3 +...
+		}
+	}
+
+	//Kết quả trả về số thập phân ở dạng chuỗi
+	if (negative)
+	{
+		result = "-" + result;
+	}
+	return result;
+}
+
+string QInt::HexStr()
+{
+	char* hex = DecToHex(*this);
+	string result = "";
+	bool flag = false;
+	for (int i = 0; i < strlen(hex); i++)
+	{
+		if (flag == false && hex[i] == '0')
+		{
+			continue;
+		}
+		else
+		{
+			flag = true;
+		}
+		result += hex[i];
+	}
+	return result;
+}
+
+string QInt::BinStr()
+{
+	bool* bin = DecToBin(*this);
+	string result = "";
+	bool flag = false; //flag để xóa số 0 đầu
+	for (int i = 0; i < BIT_RANGE; i++)
+	{
+		if (bin[i] == 0 && flag == false)
+			continue;
+		if (bin[i])
+			flag = true;
+		result += (bin[i] + '0');
+	}
+	return result;
+}
