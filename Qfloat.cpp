@@ -41,6 +41,167 @@ void Qfloat::SetLength(int l)
 	length = l;
 }
 
+string Qfloat::BinStr()
+{
+	string result;
+	result = GetBit(0) + ' ';	//lấy bit dấu
+	for (int i = 1; i < 16; i++) {
+		result += GetBit(i);	//lấy 15 bit Exponent
+	}
+	result += ' ';
+	for (int i = 16; i < 127; i++) {
+		result += GetBit(i);	//lấy cái bit Significand
+	}
+	return result;
+}
+
+string Qfloat::DecStr()
+{
+	string result = "";
+	string Exponent, Significand;
+
+	//xét bit đầu tiên để xét dấu
+	if (GetBit(0) == 1) {
+		result += '-';
+	}
+
+	//lấy 15 bit tiếp theo ra làm phần exponent
+	for (int i = 1; i < 16; i++) {
+		if (GetBit(i) == 1) {
+			Exponent += '1';
+		}
+		else {
+			Exponent += '0';
+		}
+	}
+
+	//lấy các bit còn lại để xét significand
+	for (int i = 16; i < 128; i++) {
+		if (GetBit(i) == 1) {
+			Significand += '1';
+		}
+		else {
+			Significand += '0';
+		}
+	}
+
+	/*Kiểm tra Exponent và Significand để check các số đặc biệt*/
+	if (CheckAllChar(Exponent, '0')) {
+		if (CheckAllChar(Significand, '0')) { //nếu Ex và Si đều toàn 0 => số 0
+			result = "0";
+			return result;
+		}
+		else { //nếu Ex toàn 0 và Sig khác 0 thì là số không thể chuẩn hóa
+			//Exponent toàn bộ bit  0
+			for (int i = 0; i < Exponent.length(); i++) {
+				Exponent[i] = '0';
+			}
+
+			//Significand toàn 1
+			for (int i = 0; i < Significand.length(); i++) {
+				Significand[i] = '1';
+			}
+		}
+	}
+	if (CheckAllChar(Exponent, '1')) {
+		if (CheckAllChar(Significand, '0')) { //nếu Ex và Si toàn 1 => số vô cùng
+			//Exponent toàn bộ bit 1 bit cuối 0
+			result = "infinity";
+			return result;
+		}
+		else { //nếu Ex toàn 1 và Si khác 1 => số báo lỗi
+			result = "NaN";
+			return result;
+		}
+	}
+
+	//Tính toán để ra E
+	Exponent = IntegerBinToDec(Exponent);
+	int E = stoi(Exponent);
+	E = E - KNUMBER;
+
+	//Lấy lại phần nguyên ban đầu
+	string integerDigits;
+	if (E >= 0) {
+		integerDigits = "1";
+		int i = 0;
+		if (E < 112) {
+			for (i = 0; i < E; i++) { //chạy 112 bit của Significand
+				integerDigits += Significand[i];
+			}
+			if (integerDigits.length() > 1) {
+				Significand.erase(Significand.begin(), Significand.begin() + E);
+			}
+		}
+		else {
+			for (i = 0; i < 112; i++) { //chạy 112 bit của Significand
+				integerDigits += Significand[i];
+			}
+			while (i < E) { // E > 112 nên thêm 0 vào integerDigits
+				integerDigits += '0';
+				i++;
+			}
+			Significand.erase(Significand.begin(), Significand.end());
+		}
+	}
+	else if (E <= -KNUMBER) { //TH Exponent toàn 0 và Significand khác 0 => đưa về 0....Fx2^-126
+		result = "0.";
+		for (int i = 0; i < 23; i++) {
+			result += '0'; //thêm 23 số 0
+		}
+		result += "*2^(-126)";
+		return result;
+	}
+	else if (E < 0) {
+		Significand = '1' + Significand;
+		int i = 0;
+		for (i = E + 1; i < 0; i++) {
+			Significand = '0' + Significand;	//thêm vào các bit 0
+		}
+		integerDigits = "0";
+	}
+
+	integerDigits = IntegerBinToDec(integerDigits);
+	result = result + integerDigits;
+
+	//lấy lại phần thập phân ban đầu
+	string fractionalDigits = FractionalBinToDec(Significand);
+	if (fractionalDigits.length() > 0) {
+		fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa số 0
+	}
+	result += fractionalDigits;
+
+	//so sánh độ dài ban đầu và kết quả để làm tròn
+	int initialLength = length;
+	if (initialLength > 0) {
+		if (initialLength < result.length()) {
+			//xóa các kí tự dư
+			while (result.length() > initialLength) {
+				result.pop_back();
+				fractionalDigits.pop_back();
+			}
+
+			string addIn = "0."; //phần sẽ được cộng thêm vào kết quả
+			while (addIn.length() < fractionalDigits.length()) {
+				addIn += '0';//thêm số không
+			}
+			addIn += '1';
+			fractionalDigits = '0' + fractionalDigits;
+
+			fractionalDigits = SumFractionals(fractionalDigits, addIn); //lấy phần thập phân + 0.(0...00)1
+			DeleteExcessiveZero(fractionalDigits); //xóa số 0 dư
+
+			if (fractionalDigits[0] == '1') { //nếu kết quả lớn hơn 1
+				SumNumbers(integerDigits, "1"); //+ thêm 1 vào phần nguyên
+			}
+			fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa dấu .
+
+			result = integerDigits + fractionalDigits;
+		}
+	}
+	return result;
+}
+
 /*
 Lấy giá trị bit tại vị trí bất kì
 Parameter:
@@ -251,15 +412,8 @@ void PrintQfloat(Qfloat input)
 	if (CheckAllChar(Exponent, '1')) {
 		if (CheckAllChar(Significand, '0')) { //nếu Ex và Si toàn 1 => số vô cùng
 			//Exponent toàn bộ bit 1 bit cuối 0
-			for (int i = 0; i < Exponent.length() - 1; i++) {
-				Exponent[i] = '1';
-			}
-			Exponent[Exponent.length() - 1] = '0';
-
-			//Significand toàn 1
-			for (int i = 0; i < Significand.length(); i++) {
-				Significand[i] = '1';
-			}
+			cout << "infinity";
+			return;
 		}
 		else { //nếu Ex toàn 1 và Si khác 1 => số báo lỗi
 			cout << "NaN";
@@ -297,7 +451,13 @@ void PrintQfloat(Qfloat input)
 		}
 	}
 	else if (E <= -KNUMBER) { //TH Exponent toàn 0 và Significand khác 0 => đưa về 0....Fx2^-126
-		integerDigits = "0"; //set integer = 0, phần thập phân là significand
+		result = "0.";
+		for (int i = 0; i < 23; i++) {
+			result += '0'; //thêm 23 số 0
+		}
+		result += "*2^(-126)";
+		cout << result;
+		return;
 	}
 	else if (E < 0) {
 		Significand = '1' + Significand;
