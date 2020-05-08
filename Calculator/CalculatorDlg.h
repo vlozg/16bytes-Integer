@@ -71,8 +71,8 @@ public:
 	afx_msg void OnBnClickedBtnPassive1();
 
 private:
-	//QInt iOutput, iInput;
-	//Qfloat fOutput, iOutput;
+	QInt iOutput, iInput;
+	Qfloat fOutput, fOutput;
 	char prevOpr = NULL;	//Operator được đưa vào hàng đợi, sẽ được thay thế và tính toán khi input operator mới
 	bool isEmptyInput = false;	//Đánh dấu đã input số chưa
 	CFont b_Font;
@@ -85,7 +85,6 @@ private:
 	void ResetInput();
 	void AddInput(char bInput);
 	void PopInput();
-	void PushHistoryInput(char Opr);
 	void PreCalc(char Opr);
 	void HandleOprButton(char Opr);
 	CString GetOprSymbol(char Opr);
@@ -93,11 +92,7 @@ private:
 	CString PassiveInput1;
 	CString PassiveInput2;
 	CString ActiveInput;
-	CString hisActiveInput;
-	CString hisPassiveInput1;
-	CString hisPassiveInput2;
 
-	CEdit t_hisInput;
 	CEdit t_ActiveInput;
 	CEdit t_PassiveInput1;
 	CEdit t_PassiveInput2;

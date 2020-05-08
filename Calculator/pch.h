@@ -9,5 +9,8 @@
 
 // add headers that you want to pre-compile here
 #include "framework.h"
+#include "QLib/QInt.h"
+#include "QLib/Qfloat.h"
+#include "QLib/FileHandling.h"
 
 #endif //PCH_H

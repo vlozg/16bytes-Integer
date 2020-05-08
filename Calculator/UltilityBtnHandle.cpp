@@ -17,6 +17,27 @@
 
 void CCalculatorDlg::OnBnClickedBtnequal()
 {
+	//Xuất kết quả ra screen
+	if (mode == 2)
+	{
+		ActiveInput = iOutput.BinStr().c_str();
+		PassiveInput1 = iOutput.DecStr().c_str();
+		PassiveInput2 = iOutput.HexStr().c_str();
+	}
+	else if (mode == 10)
+	{
+		ActiveInput = iOutput.DecStr().c_str();
+		PassiveInput1 = iOutput.BinStr().c_str();
+		PassiveInput2 = iOutput.HexStr().c_str();
+	}
+	else
+	{
+		ActiveInput = iOutput.HexStr().c_str();
+		PassiveInput1 = iOutput.BinStr().c_str();
+		PassiveInput2 = iOutput.DecStr().c_str();
+	}
+
+	prevOpr = NULL;
 }
 
 //Xóa 1 số bên phải ra khỏi active input
@@ -43,9 +64,6 @@ void CCalculatorDlg::OnBnClickedBtnbackspace()
 
 void CCalculatorDlg::OnBnClickedBtnclear()
 {
-	hisActiveInput = "";
-	hisPassiveInput1 = "";
-	hisPassiveInput2 = "";
 	ResetInput();
 	UpdateData(0);
 }

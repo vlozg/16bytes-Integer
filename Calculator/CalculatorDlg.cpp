@@ -20,7 +20,6 @@ CCalculatorDlg::CCalculatorDlg(CWnd* pParent /*=nullptr*/)
 	, ActiveInput(_T(""))
 	, PassiveInput1(_T(""))
 	, PassiveInput2(_T(""))
-	, hisActiveInput(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -70,8 +69,6 @@ void CCalculatorDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, BtnBin, b_Passive1);
 	DDX_Control(pDX, BtnHex, b_Passive2);
-	DDX_Text(pDX, IDC_EDIT4, hisActiveInput);
-	DDX_Control(pDX, IDC_EDIT4, t_hisInput);
 	DDX_Control(pDX, IDC_EDIT1, t_ActiveInput);
 	DDX_Control(pDX, IDC_EDIT2, t_PassiveInput1);
 	DDX_Control(pDX, IDC_EDIT3, t_PassiveInput2);
@@ -243,9 +240,6 @@ void CCalculatorDlg::ChangeMode_Dec()
 		ActiveInput = PassiveInput1;
 		PassiveInput1 = temp;
 
-		temp = hisActiveInput;
-		hisActiveInput = hisPassiveInput1;
-		hisPassiveInput1 = temp;
 		b_Passive1.SetWindowText(_T("Binary"));
 	}
 	else
@@ -253,10 +247,7 @@ void CCalculatorDlg::ChangeMode_Dec()
 		temp = ActiveInput;
 		ActiveInput = PassiveInput2;
 		PassiveInput2 = temp;
-		
-		temp = hisActiveInput;
-		hisActiveInput = hisPassiveInput2;
-		hisPassiveInput2 = temp;
+
 		b_Passive2.SetWindowText(_T("Hexadecimal"));
 	}
 
@@ -296,9 +287,6 @@ void CCalculatorDlg::ChangeMode_Hex()
 		ActiveInput = PassiveInput1;
 		PassiveInput1 = temp;
 
-		temp = hisActiveInput;
-		hisActiveInput = hisPassiveInput1;
-		hisPassiveInput1 = temp;
 		b_Passive1.SetWindowText(_T("Binary"));
 	}
 
@@ -307,9 +295,6 @@ void CCalculatorDlg::ChangeMode_Hex()
 	ActiveInput = PassiveInput2;
 	PassiveInput2 = temp;
 
-	temp = hisActiveInput;
-	hisActiveInput = hisPassiveInput2;
-	hisPassiveInput2 = temp;
 	b_Passive2.SetWindowText(_T("Decimal"));
 	
 	UpdateData(0);
@@ -346,9 +331,6 @@ void CCalculatorDlg::ChangeMode_Bin()
 		ActiveInput = PassiveInput2;
 		PassiveInput2 = temp;
 
-		temp = hisActiveInput;
-		hisActiveInput = hisPassiveInput2;
-		hisPassiveInput2 = temp;
 		b_Passive2.SetWindowText(_T("Hexadecimal"));
 	}
 
@@ -357,9 +339,6 @@ void CCalculatorDlg::ChangeMode_Bin()
 	ActiveInput = PassiveInput1;
 	PassiveInput1 = temp;
 	
-	temp = hisActiveInput;
-	hisActiveInput = hisPassiveInput1;
-	hisPassiveInput1 = temp;
 	b_Passive1.SetWindowText(_T("Decimal"));
 	
 	UpdateData(0);

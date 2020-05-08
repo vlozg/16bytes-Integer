@@ -406,7 +406,7 @@ void OutputHex(char* hex)
 	{
 		if (hex[i] == '0' && flag == false)
 			continue;
-		if (hex[i] == '1')
+		if (hex[i] != '0')
 			flag = true;
 		cout << hex[i];
 	}
