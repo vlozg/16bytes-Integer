@@ -301,8 +301,8 @@ QInt QInt::operator=(const QInt& number)
 
 QInt QInt::operator =(string number)
 {
-	QInt newnum(number);
-	return newnum;
+	(*this).Input(number);
+	return *this;
 }
 
 /*
