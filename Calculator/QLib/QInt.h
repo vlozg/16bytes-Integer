@@ -42,12 +42,11 @@ public:
 	bool operator==(const QInt&);
 
 	bool IsNegative();
-	int MostSignificantBit();
-
+	
 	QInt();
 	QInt(string);
 
-	//Hàm hỗ trợ giao diện, chuyển đổi về chuỗi để in ra
+	//Hàm hỗ trợ giao diện
 	string DecStr();
 	string HexStr();
 	string BinStr();

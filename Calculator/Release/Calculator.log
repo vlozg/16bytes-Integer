@@ -2,10 +2,12 @@
   CalculatorDlg.cpp
   NumBtnHandle.cpp
   OprBtnHandle.cpp
+  FileHandling.cpp
+C:\Users\Admin\Desktop\16bytes-Number\Calculator\QLib\FileHandling.cpp(222,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  Qfloat.cpp
+C:\Users\Admin\Desktop\16bytes-Number\Calculator\QLib\Qfloat.cpp(60,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  QInt.cpp
+C:\Users\Admin\Desktop\16bytes-Number\Calculator\QLib\QInt.cpp(613,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  QNum.cpp
+C:\Users\Admin\Desktop\16bytes-Number\Calculator\QLib\QNum.cpp(445,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
   UltilityBtnHandle.cpp
-  Generating code
-  42 of 309 functions (13.6%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    26 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  Calculator.vcxproj -> C:\Users\Admin\Desktop\16bytes-Number\Calculator\Release\Calculator.exe

@@ -3,7 +3,9 @@
 //
 
 #pragma once
-
+#include "QLib/QInt.h"
+//#include "QLib/Qfloat.h"
+#include "QLib/FileHandling.h"
 
 // CCalculatorDlg dialog
 class CCalculatorDlg : public CDialogEx
@@ -72,7 +74,7 @@ public:
 
 private:
 	QInt iOutput, iInput;
-	Qfloat fOutput, fOutput;
+	//Qfloat fOutput, fOutput;
 	char prevOpr = NULL;	//Operator được đưa vào hàng đợi, sẽ được thay thế và tính toán khi input operator mới
 	bool isEmptyInput = false;	//Đánh dấu đã input số chưa
 	CFont b_Font;

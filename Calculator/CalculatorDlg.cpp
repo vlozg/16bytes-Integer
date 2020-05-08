@@ -192,6 +192,21 @@ void CCalculatorDlg::OnBnClickedBtnchangesign()
 //	Cập nhập tất cả display khi user nhấn nút số
 void CCalculatorDlg::UpdateAllData() 
 {
+	if (mode == 2)
+	{
+		iInput = (string)(CW2A(PassiveInput1.GetString()));
+		//PassiveInput2
+	}
+	else if (mode == 10)
+	{
+		iInput = (string)(CW2A(ActiveInput.GetString()));
+		PassiveInput1 = iInput.BinStr().c_str();
+		PassiveInput2 = iInput.HexStr().c_str();
+	}
+	else
+	{
+		iInput = (string)(CW2A(PassiveInput2.GetString()));
+	}
 	UpdateData(0);
 }
 
