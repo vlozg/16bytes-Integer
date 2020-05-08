@@ -44,13 +44,13 @@ public:
 	bool IsNegative();
 	int MostSignificantBit();
 
-	//Hàm xuất ra chuỗi các hệ số của số
-	string DecStr();
-	string BinStr();
-	string HexStr();
-
 	QInt();
 	QInt(string);
+
+	//Hàm hỗ trợ giao diện, chuyển đổi về chuỗi để in ra
+	string DecStr();
+	string HexStr();
+	string BinStr();
 };
 
 void ScanQInt(QInt& x);		//Cau a
