@@ -18,6 +18,8 @@ public:
 	void SetBit(int, bool);
 	int GetLength();
 	void SetLength(int);
+	string BinStr();
+	string DecStr();
 };
 
 bool ReadDecString(string, Qfloat&);
