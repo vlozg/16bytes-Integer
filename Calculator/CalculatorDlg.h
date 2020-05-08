@@ -3,9 +3,6 @@
 //
 
 #pragma once
-#include "QLib/QInt.h"
-//#include "QLib/Qfloat.h"
-#include "QLib/FileHandling.h"
 
 // CCalculatorDlg dialog
 class CCalculatorDlg : public CDialogEx

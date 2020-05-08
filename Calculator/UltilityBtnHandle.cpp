@@ -17,6 +17,8 @@
 
 void CCalculatorDlg::OnBnClickedBtnequal()
 {
+	PreCalc(prevOpr);	//Tính toán lần cuối
+
 	//Xuất kết quả ra screen
 	if (mode == 2)
 	{
@@ -38,6 +40,7 @@ void CCalculatorDlg::OnBnClickedBtnequal()
 	}
 
 	prevOpr = NULL;
+	UpdateData(0);
 }
 
 //Xóa 1 số bên phải ra khỏi active input

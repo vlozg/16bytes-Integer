@@ -16,6 +16,9 @@
     <Filter Include="Source Files\QLib">
       <UniqueIdentifier>{da47ae36-e860-45ae-bf9d-7b7364dfaace}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\QLib">
+      <UniqueIdentifier>{b579477d-7031-423c-831d-2eb3bb389246}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calculator.h">
@@ -37,16 +40,16 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QLib\FileHandling.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\QLib</Filter>
     </ClInclude>
     <ClInclude Include="QLib\Qfloat.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\QLib</Filter>
     </ClInclude>
     <ClInclude Include="QLib\QInt.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\QLib</Filter>
     </ClInclude>
     <ClInclude Include="QLib\QNum.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\QLib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 
 using namespace std;
@@ -14,5 +15,5 @@ public:
 
 void ScanQfloat(Qfloat&);
 void PrintQfloat(Qfloat);
-Qfloat BinToDec(bool* bit);
+Qfloat BinToDecF(bool* bit);
 bool* DecToBin(Qfloat x);

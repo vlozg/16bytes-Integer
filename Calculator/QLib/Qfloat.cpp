@@ -34,7 +34,7 @@ bool Qfloat::GetBit(int pos){
 Parameter:
 - bit: dãy nhị phân 128bit 
 */
-Qfloat BinToDec(bool* bit){
+Qfloat BinToDecF(bool* bit){
     Qfloat res; //Lưu kết quả trả về
 
     for (int i = 0; i < 128; i++){
