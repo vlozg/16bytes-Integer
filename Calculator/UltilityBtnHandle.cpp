@@ -70,10 +70,14 @@ void CCalculatorDlg::OnBnClickedBtnbackspace()
 	UpdateAllData();
 }
 
-
+//Xóa sạch mọi dữ liệu
 void CCalculatorDlg::OnBnClickedBtnclear()
 {
 	ResetInput(1);
+	iInput = "0";
+	iOutput = "0";
+	prevOpr = NULL;
+	isEmptyInput = false;
 	UpdateData(0);
 }
 
