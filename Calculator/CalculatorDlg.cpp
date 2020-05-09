@@ -230,12 +230,6 @@ void CCalculatorDlg::OnEnChangeEdit1()
 	// TODO:  Add your control notification handler code here
 }
 
-void CCalculatorDlg::OnBnClickedBtnchangesign()
-{
-	// TODO: Add your control notification handler code here
-}
-
-
 //	Cập nhập tất cả display khi user nhấn nút số
 void CCalculatorDlg::UpdateAllData() 
 {

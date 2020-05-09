@@ -106,3 +106,44 @@ void CCalculatorDlg::OnBnClickedBtnPassive1()
 		ChangeMode_Bin();
 	}
 }
+
+//Hoạt động tương tự như nút số
+//đảo dấu số đang hiện trên input màn hình
+//số preCalc không bị ảnh hưởng
+void CCalculatorDlg::OnBnClickedBtnchangesign()
+{
+	//Nếu mới bấm calc xong thì sẽ reset lại về trạng thái đầu tiên 
+	if (prevOpr == '=' && isEmptyInput)
+	{
+		prevOpr = NULL;
+		iInput = iOutput;
+		iOutput = "0";
+	}
+	
+	//Đảo dấu input
+	iInput = iInput.ComplementTwo();
+	
+	//Xuất input ra màn hình
+	if (mode == 2)
+	{
+		ActiveInput = iInput.BinStr().c_str();
+		PassiveInput1 = iInput.DecStr().c_str();
+		PassiveInput2 = iInput.HexStr().c_str();
+	}
+	else if (mode == 10)
+	{
+		ActiveInput = iInput.DecStr().c_str();
+		PassiveInput1 = iInput.BinStr().c_str();
+		PassiveInput2 = iInput.HexStr().c_str();
+	}
+	else
+	{
+		ActiveInput = iInput.HexStr().c_str();
+		PassiveInput1 = iInput.BinStr().c_str();
+		PassiveInput2 = iInput.DecStr().c_str();
+	}
+
+	isEmptyInput = false;	//Đánh dấu đã nhận input số
+
+	UpdateData(0);
+}
