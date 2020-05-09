@@ -192,18 +192,18 @@ string SumNumbers(string n1, string n2)
 {
 	string result = "";
 	string longer = "", shorter = "";	//longer se luu chuoi so co nhieu chu so hon, shorter nguoc lai
-	int smallLen = 0, large = 0;	//smallLen se luu do dai chuoi ngan hon, large luu do dai cua chuoi dai hon
+	int smallLen = 0, largeLen = 0;	//smallLen se luu do dai chuoi ngan hon, largeLen luu do dai cua chuoi dai hon
 	if (n1.length() > n2.length())
 	{
 		smallLen = n2.length();
-		large = n1.length();
+		largeLen = n1.length();
 		longer = n1;
 		shorter = n2;
 	}
 	else
 	{
 		smallLen = n1.length();
-		large = n2.length();
+		largeLen = n2.length();
 		longer = n2;
 		shorter = n1;
 	}
@@ -214,7 +214,7 @@ string SumNumbers(string n1, string n2)
 
 	int i = 0, j = 0;
 
-	for (i = smallLen - 1, j = large - 1; i >= 0; i--, j--)
+	for (i = smallLen - 1, j = largeLen - 1; i >= 0; i--, j--)
 	{
 		int s = (shorter[i] - '0') + (longer[j] - '0') + carry; //Lay 2 ki tu cung don vi cong voi nhau va cong them bien nho
 
