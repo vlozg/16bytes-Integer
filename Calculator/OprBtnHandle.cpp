@@ -176,6 +176,9 @@ void CCalculatorDlg::PreCalc(char Opr)
 	case ']':	//Right Rotate
 		iOutput = iOutput.RotateRight(iInput);
 		break;
+	case '=':	//Calc
+		//Bấm calc thì có kết quả rồi nên không cần làm gì
+		break;
 	default:	//Không phát hiện dấu trước đó (aka số đầu tiên)
 		iOutput = iInput;
 		break;

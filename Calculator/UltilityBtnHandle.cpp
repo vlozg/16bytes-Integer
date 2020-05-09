@@ -44,7 +44,8 @@ void CCalculatorDlg::OnBnClickedBtnequal()
 
 	GetResultOutput();
 
-	prevOpr = NULL;
+	prevOpr = '=';
+	isEmptyInput = true;
 	UpdateData(0);
 }
 
