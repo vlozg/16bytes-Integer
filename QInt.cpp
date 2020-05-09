@@ -708,6 +708,7 @@ string QInt::HexStr()
 		}
 		result += hex[i];
 	}
+	if (result == "") result = "0";
 	return result;
 }
 
@@ -724,6 +725,7 @@ string QInt::BinStr()
 			flag = true;
 		result += (bin[i] + '0');
 	}
+	if (result == "") result = "0";
 	return result;
 }
 
