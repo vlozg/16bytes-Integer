@@ -70,11 +70,12 @@ public:
 	afx_msg void OnBnClickedBtnPassive1();
 
 private:
+	CFont b_NumFont, b_SymbolFont, b_TextOprFont, t_ActiveFont, t_PassiveFont;
+
 	QInt iOutput, iInput;
 	//Qfloat fOutput, fOutput;
 	char prevOpr = NULL;	//Operator được đưa vào hàng đợi, sẽ được thay thế và tính toán khi input operator mới
 	bool isEmptyInput = false;	//Đánh dấu đã input số chưa
-	CFont b_Font;
 	byte mode = 10;	//Đánh số chế độ: 2=bin 10=dec 16=hex
 	void UpdateAllData();
 	void ChangeMode_Dec();

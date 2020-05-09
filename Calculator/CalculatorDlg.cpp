@@ -130,6 +130,53 @@ BOOL CCalculatorDlg::OnInitDialog()
 	ShowWindow(SW_NORMAL);
 
 	// TODO: Add extra initialization here
+	b_NumFont.CreateFont(32, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Montserrat"));
+
+	b_Num1.SetFont(&b_NumFont);
+	b_Num2.SetFont(&b_NumFont);
+	b_Num3.SetFont(&b_NumFont);
+	b_Num4.SetFont(&b_NumFont);
+	b_Num5.SetFont(&b_NumFont);
+	b_Num6.SetFont(&b_NumFont);
+	b_Num7.SetFont(&b_NumFont);
+	b_Num8.SetFont(&b_NumFont);
+	b_Num9.SetFont(&b_NumFont);
+	b_Num0.SetFont(&b_NumFont);
+	b_NumA.SetFont(&b_NumFont);
+	b_NumB.SetFont(&b_NumFont);
+	b_NumC.SetFont(&b_NumFont);
+	b_NumD.SetFont(&b_NumFont);
+	b_NumE.SetFont(&b_NumFont);
+	b_NumF.SetFont(&b_NumFont);
+
+	b_SymbolFont.CreateFont(36, 0, 0, 0, FW_LIGHT, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Times New Roman"));
+	b_Equal.SetFont(&b_SymbolFont);
+	b_ChangeSign.SetFont(&b_SymbolFont);
+	b_Dot.SetFont(&b_SymbolFont);
+	b_oprPlus.SetFont(&b_SymbolFont);
+	b_oprMinus.SetFont(&b_SymbolFont);
+	b_oprMultiply.SetFont(&b_SymbolFont);
+	b_oprDivision.SetFont(&b_SymbolFont);
+
+	b_TextOprFont.CreateFont(24, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Montserrat"));
+	b_oprAnd.SetFont(&b_TextOprFont);
+	b_oprOr.SetFont(&b_TextOprFont);
+	b_oprXor.SetFont(&b_TextOprFont);
+	b_oprNot.SetFont(&b_TextOprFont);
+	b_oprLeftShift.SetFont(&b_TextOprFont);
+	b_oprRightShift.SetFont(&b_TextOprFont);
+	b_oprLeftRol.SetFont(&b_TextOprFont);
+	b_oprRightRol.SetFont(&b_TextOprFont);
+	b_Del.SetFont(&b_TextOprFont);
+	b_Clear.SetFont(&b_TextOprFont);
+
+	t_ActiveFont.CreateFont(96, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Montserrat"));
+	t_PassiveFont.CreateFont(34, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Montserrat"));
+
+	t_ActiveInput.SetFont(&t_ActiveFont);
+	t_PassiveInput1.SetFont(&t_PassiveFont);
+	t_PassiveInput2.SetFont(&t_PassiveFont);
+
 	ChangeMode_Dec();
 	ResetInput(1);
 	UpdateData(0);
@@ -192,20 +239,24 @@ void CCalculatorDlg::OnBnClickedBtnchangesign()
 //	Cập nhập tất cả display khi user nhấn nút số
 void CCalculatorDlg::UpdateAllData() 
 {
+	string ActiveInputString = (string)(CW2A(ActiveInput.GetString()));
 	if (mode == 2)
 	{
-		iInput = (string)(CW2A(PassiveInput1.GetString()));
-		//PassiveInput2
+		iInput = BinStrToDec(ActiveInputString);
+		PassiveInput1 = iInput.DecStr().c_str();
+		PassiveInput2 = iInput.HexStr().c_str();
 	}
 	else if (mode == 10)
 	{
-		iInput = (string)(CW2A(ActiveInput.GetString()));
+		iInput = ActiveInputString;
 		PassiveInput1 = iInput.BinStr().c_str();
 		PassiveInput2 = iInput.HexStr().c_str();
 	}
 	else
 	{
-		iInput = (string)(CW2A(PassiveInput2.GetString()));
+		iInput = HexToDec((char *)ActiveInputString.c_str());
+		PassiveInput1 = iInput.BinStr().c_str();
+		PassiveInput2 = iInput.DecStr().c_str();
 	}
 	UpdateData(0);
 }
