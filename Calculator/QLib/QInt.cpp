@@ -726,3 +726,15 @@ string QInt::BinStr()
 	}
 	return result;
 }
+
+QInt BinStrToDec(string binStr){
+	bool bin[128] = {0};
+	for (int i = binStr.length() - 1, j = BIT_RANGE -1; i >=0; i--, j--)
+	{
+		if (binStr[i] == '1') 
+			bin[j] = 1;
+		else if (binStr[i] != '0')
+			return QInt("0");	//Xuất hiện ký tự lạ -> nhập thất bại
+	}
+	return BinToDec(bin);
+}
