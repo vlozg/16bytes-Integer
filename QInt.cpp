@@ -275,17 +275,34 @@ QInt QInt::operator/(QInt number)
 	if (negative2)
 		number = number.ComplementTwo();
 
-	QInt result("-1"); //kết quả là số lần trừ
-	while (!(divisor.IsNegative())) //lặp khi số bị chia >= 0
+	QInt remainder("0"); //kết quả là số dư
+	for (int i = 0; i < BIT_RANGE; i++)
 	{
-		divisor = divisor - number;
-		result = result + QInt("1");
+		//Đưa 1 số hạng xuống xét
+		remainder = remainder << 1;
+		remainder.SetBit(BIT_RANGE - 1, divisor.GetBit(0));
+		divisor = divisor << 1;
+
+		//Lấy những số hạng đang xét trừ cho số bị chia
+		remainder = remainder - number;
+
+		if (remainder.IsNegative())
+		{
+			//Nếu số hạng đang xét không đủ lớn thì bỏ qua
+			remainder = remainder + number;
+		}
+		else
+		{
+			//Nếu đúng thì tăng số hạng của kết quả tại vị trí chia lên 1
+			divisor.SetBit(BIT_RANGE - 1, 1);
+		}
+		
 	}
 
 	if (negative1 ^ negative2) //2 số trái dấu
-		result = result.ComplementTwo();
+		divisor = divisor.ComplementTwo();
 
-	return result;
+	return divisor;
 }
 
 QInt QInt::operator=(const QInt& number)
