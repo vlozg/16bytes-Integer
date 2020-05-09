@@ -73,6 +73,7 @@ string HexToBinChar(char hex);
 
 void OutputBin(bool* bin);
 void OutputHex(char* hex);
+QInt BinStrToDec(string binStr);
 
 bool* HexToBin(char* hex);
 QInt HexToDec(char* hex);
