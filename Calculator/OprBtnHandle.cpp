@@ -156,14 +156,16 @@ void CCalculatorDlg::PreCalc(char Opr)
 		iOutput = ~iOutput;
 		break;
 	case '<':	//Left Shift
-		//iOutput = iOutput << iInput;
+		iOutput = iOutput << iInput;
 		break;
 	case '>':	//Right Shift
-		//iOutput = iOutput >> iInput;
+		iOutput = iOutput >> iInput;
 		break;
 	case '[':	//Left Rotate
+		iOutput = iOutput.RotateLeft(iInput);
 		break;
 	case ']':	//Right Rotate
+		iOutput = iOutput.RotateRight(iInput);
 		break;
 	default:	//Không phát hiện dấu trước đó (aka số đầu tiên)
 		iOutput = iInput;
