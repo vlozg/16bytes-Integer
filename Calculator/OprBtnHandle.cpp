@@ -165,7 +165,8 @@ void CCalculatorDlg::PreCalc(char Opr)
 		break;
 	case ']':	//Right Rotate
 		break;
-	default:
+	default:	//Không phát hiện dấu trước đó (aka số đầu tiên)
+		iOutput = iInput;
 		break;
 	}
 }

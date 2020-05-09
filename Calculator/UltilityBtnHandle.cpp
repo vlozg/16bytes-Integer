@@ -15,11 +15,9 @@
 #define new DEBUG_NEW
 #endif
 
-void CCalculatorDlg::OnBnClickedBtnequal()
+//Xuất kết quả ra screen
+void CCalculatorDlg::GetResultOutput()
 {
-	PreCalc(prevOpr);	//Tính toán lần cuối
-
-	//Xuất kết quả ra screen
 	if (mode == 2)
 	{
 		ActiveInput = iOutput.BinStr().c_str();
@@ -38,6 +36,13 @@ void CCalculatorDlg::OnBnClickedBtnequal()
 		PassiveInput1 = iOutput.BinStr().c_str();
 		PassiveInput2 = iOutput.DecStr().c_str();
 	}
+}
+
+void CCalculatorDlg::OnBnClickedBtnequal()
+{
+	PreCalc(prevOpr);	//Tính toán lần cuối
+
+	GetResultOutput();
 
 	prevOpr = NULL;
 	UpdateData(0);

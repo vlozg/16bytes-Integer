@@ -84,6 +84,7 @@ private:
 	void ResetInput();
 	void AddInput(char bInput);
 	void PopInput();
+	void GetResultOutput();
 	void PreCalc(char Opr);
 	void HandleOprButton(char Opr);
 	CString GetOprSymbol(char Opr);
