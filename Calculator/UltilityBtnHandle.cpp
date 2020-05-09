@@ -72,7 +72,7 @@ void CCalculatorDlg::OnBnClickedBtnbackspace()
 
 void CCalculatorDlg::OnBnClickedBtnclear()
 {
-	ResetInput();
+	ResetInput(1);
 	UpdateData(0);
 }
 

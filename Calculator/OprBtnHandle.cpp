@@ -26,11 +26,20 @@
 ////////////////////////////////////////////////
 
 //Reset input screen & input memory
-void CCalculatorDlg::ResetInput() 
+//Parameter:
+//	- fullReset: reset về 0 hay hiện kết quả preCalc
+void CCalculatorDlg::ResetInput(bool fullReset) 
 {
-	ActiveInput = "0";
-	PassiveInput1 = "0";
-	PassiveInput2 = "0";
+	if (fullReset)
+	{
+		ActiveInput = "0";
+		PassiveInput1 = "0";
+		PassiveInput2 = "0";
+	}
+	else
+	{
+		GetResultOutput();
+	}
 	iInput = "0";
 }
 
@@ -183,7 +192,7 @@ void CCalculatorDlg::HandleOprButton(char Opr)
 	if (isEmptyInput == false)
 	{
 		PreCalc(prevOpr);	//Tính toán các opr có trước (nếu có)
-		ResetInput();
+		ResetInput(0);
 	}
 
 	prevOpr = Opr;	//Đưa dấu vào hàng đợi
