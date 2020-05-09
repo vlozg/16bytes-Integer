@@ -417,17 +417,17 @@ void OutputHex(char* hex)
 bool* HexToBin(char* hex)
 {
 	string bin_str = "";
-	bool* bin = new bool[128];
-
+	bool* bin = new bool[BIT_RANGE];
+	memset(bin, 0, BIT_RANGE*sizeof(*bin));
 
 	int len = strlen(hex);
 	for (int i = 0; i < len; i++)
 	{
 		bin_str += HexToBinChar(hex[i]);
 	}
-	for (int i = 0; i < bin_str.length(); i++)
+	for (int i = bin_str.length() - 1, j = BIT_RANGE - 1; i >= 0; i--, j--)
 	{
-		bin[i] = bin_str[i] - '0';
+		bin[j] = bin_str[i] - '0';
 	}
 
 	return bin;
