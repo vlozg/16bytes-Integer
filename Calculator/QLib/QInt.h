@@ -20,6 +20,7 @@ public:
 	QInt operator-(QInt);
 	QInt operator*(QInt);
 	QInt operator/(QInt);
+	QInt operator%(QInt);
 
 	//các hàm bitwise
 	QInt RotateLeft(int number);
@@ -30,6 +31,10 @@ public:
 	QInt operator~();
 	QInt operator>>(int number);
 	QInt operator<<(int number);
+	QInt operator>>(QInt number);
+	QInt operator<<(QInt number);
+	QInt RotateLeft(QInt number);
+	QInt RotateRight(QInt number);
 
 
 	QInt operator=(const QInt&);
@@ -44,6 +49,8 @@ public:
 
 	bool IsNegative();
 	
+	int ModBy128();	//Hỗ trợ shift bit với qint
+
 	QInt();
 	QInt(string);
 
