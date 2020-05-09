@@ -44,6 +44,8 @@ public:
 
 	bool IsNegative();
 	
+	int ModBy128();	//Hỗ trợ shift bit với qint
+
 	QInt();
 	QInt(string);
 

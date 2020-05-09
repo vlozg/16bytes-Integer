@@ -593,6 +593,30 @@ bool QInt::IsNegative()
 	return this->GetBit(0);
 }
 
+//Hàm trả về kết quả int của số QInt khi mod với 128
+//Hỗ trợ dùng trong toán tử shift bit giữa 2 số QInt
+int QInt::ModBy128()
+{
+	QInt remainder = *this % QInt("128");	//Lấy số dư
+	int result = 0;
+
+	//Đổi về số dương
+	bool isNegative = remainder.IsNegative();
+	if (isNegative)
+		remainder = remainder.ComplementTwo();
+
+	//Áp dụng công thức số hạng tổng quát
+	for (int i = 0; i < 9; i++)
+	{
+		if (remainder.GetBit(BIT_RANGE - 1 - i))
+			result += pow(2,i);
+	}
+	
+	if (isNegative) result *= -1;	//Nếu số âm thì trả kết quả âm
+
+	return result;
+}
+
 /*
 ====================================
 		HỖ TRỢ GIAO DIỆN
