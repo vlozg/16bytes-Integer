@@ -19,6 +19,7 @@ public:
 	QInt operator-(QInt);
 	QInt operator*(QInt);
 	QInt operator/(QInt);
+	QInt operator%(QInt);
 
 	//các hàm bitwise
 	QInt RotateLeft(int number);

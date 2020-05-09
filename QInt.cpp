@@ -305,6 +305,49 @@ QInt QInt::operator/(QInt number)
 	return divisor;
 }
 
+QInt QInt::operator%(QInt number)
+{
+	if (number == QInt("0"))
+		return QInt("0");	//Chia cho 0
+	QInt divisor = *this;
+	bool negative1 = divisor.IsNegative();
+	bool negative2 = number.IsNegative();
+	//chuyển 2 số về dương
+	if (negative1)
+		divisor = divisor.ComplementTwo();
+	if (negative2)
+		number = number.ComplementTwo();
+
+	QInt remainder("0"); //kết quả là số dư
+	for (int i = 0; i < BIT_RANGE; i++)
+	{
+		//Đưa 1 số hạng xuống xét
+		remainder = remainder << 1;
+		remainder.SetBit(BIT_RANGE - 1, divisor.GetBit(0));
+		divisor = divisor << 1;
+
+		//Lấy những số hạng đang xét trừ cho số bị chia
+		remainder = remainder - number;
+
+		if (remainder.IsNegative())
+		{
+			//Nếu số hạng đang xét không đủ lớn thì bỏ qua
+			remainder = remainder + number;
+		}
+		else
+		{
+			//Nếu đúng thì tăng số hạng của kết quả tại vị trí chia lên 1
+			divisor.SetBit(BIT_RANGE - 1, 1);
+		}
+		
+	}
+
+	if (negative1) //Nếu số bị chia âm thì số dư âm
+		remainder = remainder.ComplementTwo();
+
+	return remainder;
+}
+
 QInt QInt::operator=(const QInt& number)
 {
 	if (this == &number) //nếu gán cho chính nó
