@@ -137,6 +137,17 @@ QInt QInt::operator>>(int number) {
 	}
 }
 
+QInt QInt::operator>>(QInt number) 
+{
+	//Nếu number lớn hơn 127 thì kết quả luôn là 0
+	if (number >= QInt("128"))
+	{
+		return QInt("0");
+	}
+
+	QInt res = *this >> number.ModBy128();
+	return res;
+}
 
 // Hàm dịch trái n bit
 QInt QInt::operator<<(int number) {
@@ -160,6 +171,17 @@ QInt QInt::operator<<(int number) {
 		
 		return res;
 	}
+}
+
+QInt QInt::operator<<(QInt number) {
+	//Nếu number lớn hơn 127 thì kết quả luôn là 0
+	if (number >= QInt("128"))
+	{
+		return QInt("0");
+	}
+	
+	QInt res = *this << number.ModBy128();
+	return res;
 }
 
 
@@ -503,6 +525,11 @@ QInt QInt::RotateLeft(int number) {
 	return res;
 }
 
+QInt QInt::RotateLeft(QInt number) {
+	QInt res = this->RotateLeft(number.ModBy128());
+	return res;
+}
+
 /*
 	Xoay phải n bit cách làm như trên
 */
@@ -528,6 +555,11 @@ QInt QInt::RotateRight(int number) {
 			j++;
 		}
 	}
+	return res;
+}
+
+QInt QInt::RotateRight(QInt number) {
+	QInt res = this->RotateRight(number.ModBy128());
 	return res;
 }
 

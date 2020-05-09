@@ -30,6 +30,10 @@ public:
 	QInt operator~();
 	QInt operator>>(int number);
 	QInt operator<<(int number);
+	QInt operator>>(QInt number);
+	QInt operator<<(QInt number);
+	QInt RotateLeft(QInt number);
+	QInt RotateRight(QInt number);
 
 
 	QInt operator=(const QInt&);
