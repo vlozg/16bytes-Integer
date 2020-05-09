@@ -46,11 +46,21 @@ string Qfloat::BinStr()
 	string result;
 	result = GetBit(0) + ' ';	//lấy bit dấu
 	for (int i = 1; i < 16; i++) {
-		result += GetBit(i);	//lấy 15 bit Exponent
+		if (GetBit(i) == 0) {
+			result += '0';
+		}
+		else {
+			result += '1';
+		}	//lấy 15 bit Exponent
 	}
 	result += ' ';
 	for (int i = 16; i < 127; i++) {
-		result += GetBit(i);	//lấy cái bit Significand
+		if (GetBit(i) == 0) {
+			result += '0';
+		}
+		else {
+			result += '1';
+		}	//lấy cái bit Significand
 	}
 	return result;
 }
