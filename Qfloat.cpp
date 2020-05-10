@@ -202,7 +202,7 @@ string Qfloat::DecStr()
 			DeleteExcessiveZero(fractionalDigits); //xóa số 0 dư
 
 			if (fractionalDigits[0] == '1') { //nếu kết quả lớn hơn 1
-				SumNumbers(integerDigits, "1"); //+ thêm 1 vào phần nguyên
+				SumNumbersF(integerDigits, "1"); //+ thêm 1 vào phần nguyên
 			}
 			fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa dấu .
 
@@ -235,7 +235,7 @@ bool ReadDecString(string input, Qfloat& output)
 	
 	//khởi tạo mảng gồm các số 2 mũ n
 	string pow2[128], powminus2[128];	
-	PowOfTwo(pow2);
+	PowOfTwoF(pow2);
 	PowOfFive(powminus2);
 		
 	//nếu string không có gì thì stop
@@ -509,7 +509,7 @@ void PrintQfloat(Qfloat input)
 			DeleteExcessiveZero(fractionalDigits); //xóa số 0 dư
 
 			if (fractionalDigits[0] == '1') { //nếu kết quả lớn hơn 1
-				SumNumbers(integerDigits, "1"); //+ thêm 1 vào phần nguyên
+				SumNumbersF(integerDigits, "1"); //+ thêm 1 vào phần nguyên
 			}
 			fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa dấu .
 
@@ -524,7 +524,7 @@ void PrintQfloat(Qfloat input)
 Parameter:
 - bit: dãy nhị phân 128bit
 */
-Qfloat BinToDec(bool* bit) {
+Qfloat BinToDecF(bool* bit) {
 	Qfloat res; //Lưu kết quả trả về
 
 	for (int i = 0; i < 128; i++) {
@@ -550,15 +550,15 @@ bool* DecToBin(Qfloat x) {
 
 
 //Hàm đọc file 
-void ReadFile()
+void ReadFileF(string input, string output)
 {
 	Qfloat number;
 
 	//tạo file txt output mới
-	freopen("OUTPUT.txt", "w", stdout);
+	freopen(output.c_str(), "w", stdout);
 	fclose(stdout);
 
-	freopen("INPUT.txt", "rt", stdin);
+	freopen(input.c_str(), "rt", stdin);
 	while (!cin.eof()) {
 		string p1 = ""; //chứa số đầu tiên để xác định hệ để xử lý
 		string p2 = ""; //chứa số thứ 2 để xác định hệ chuyển
@@ -602,14 +602,14 @@ void ReadFile()
 		if (p1 == "2") { 
 			bool* binary = StringToBool(inputNumber);
 			if (p2 == "") { //nhập hệ 2 xuất hệ 2
-				freopen("OUTPUT.txt", "a", stdout);
+				freopen(output.c_str(), "a", stdout);
 				PrintBinary(binary);
 				cout << endl;
 				fclose(stdout);
 			}
 			else { //nhập hệ 2 xuất hệ 10
-				freopen("OUTPUT.txt", "a", stdout);
-				number = BinToDec(binary);
+				freopen(output.c_str(), "a", stdout);
+				number = BinToDecF(binary);
 				PrintQfloat(number);
 				cout << endl;
 				fclose(stdout);
@@ -618,13 +618,13 @@ void ReadFile()
 		else {
 			ReadDecString(inputNumber, number); //đọc và lưu vào Qfloat
 			if (p2 == "") { //nhập hệ 10 xuất hệ 10
-				freopen("OUTPUT.txt", "a", stdout);
+				freopen(output.c_str(), "a", stdout);
 				PrintQfloat(number);
 				cout << endl;
 				fclose(stdout);
 			}
 			else { //nhập hệ 10 xuất hệ 2
-				freopen("OUTPUT.txt", "a", stdout);
+				freopen(output.c_str(), "a", stdout);
 				bool* binary = DecToBin(number);
 				PrintBinary(binary);
 				cout << endl;
@@ -667,7 +667,7 @@ bool CheckDecimalPoint(char input) {
 }
 
 //Xóa các số 0 đứng đầu chuỗi
-void NormalizeNumber(string& number)
+void NormalizeNumberF(string& number)
 {
 	/*
 		- Detecting those are not number
@@ -684,7 +684,7 @@ void NormalizeNumber(string& number)
 }
 
 //Lấy string chia 2
-string DivideByTwo(string number)	//Chia chuoi dec cho 2
+string DivideByTwoF(string number)	//Chia chuoi dec cho 2
 {
 	// Thuc hien nhu phep chia o cap 1
 
@@ -734,7 +734,7 @@ string DivideByTwo(string number)	//Chia chuoi dec cho 2
 			}
 		}
 	}
-	NormalizeNumber(result);	//Co nhiem vu xoa cac so 0 o phia truoc 
+	NormalizeNumberF(result);	//Co nhiem vu xoa cac so 0 o phia truoc 
 	return result;
 }
 
@@ -783,7 +783,7 @@ string IntegerDecToBin(string number)
 	{
 		lastIndex = temp.length() - 1;			//Trich chu so cuoi cung de xem so do chia co du hay khong
 		int r = (temp[lastIndex] - '0') % 2;	//r se la so du (0 hoac 1)
-		temp = DivideByTwo(temp);				//temp mang ket qua sau khi chia 2
+		temp = DivideByTwoF(temp);				//temp mang ket qua sau khi chia 2
 		char c = r + '0';
 		bin = c + bin;							//Them so du do vao truoc ket qua da co
 	}
@@ -806,7 +806,7 @@ string FractionalDecToBin(string number) {
 
 	while (bin.length()<112)
 	{
-		temp = MultiplyByTwo(temp);	//temp mang kết quả sau khi nhân 2
+		temp = MultiplyByTwoF(temp);	//temp mang kết quả sau khi nhân 2
 		if (temp[0] == '1') {
 			if (CheckOne(temp)) {
 				bin = bin + '1';
@@ -832,14 +832,14 @@ string IntegerBinToDec(string bin) {
 	int binLength = bin.length();
 
 	string pow[128];
-	PowOfTwo(pow);	//khởi tạo chuỗi có các số 2 mũ n
+	PowOfTwoF(pow);	//khởi tạo chuỗi có các số 2 mũ n
 
 	if (bin.length() < 128) {
 		for (int i = 0; i < bin.length(); i++)
 		{
 			if (bin[bin.length() - 1 - i] == '1')
 			{
-				number = SumNumbers(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
+				number = SumNumbersF(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
 			}
 		}
 	}
@@ -849,7 +849,7 @@ string IntegerBinToDec(string bin) {
 		{
 			if (bin[128 - 1 - i] == '1')
 			{
-				number = SumNumbers(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
+				number = SumNumbersF(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
 			}
 		}
 	}
@@ -877,7 +877,7 @@ string FractionalBinToDec(string bin) {
 }
 
 //Lấy chuỗi nhân 2
-string MultiplyByTwo(string number)
+string MultiplyByTwoF(string number)
 {
 	string result = "";
 	int number_len = number.length();
@@ -939,12 +939,12 @@ string MultiplyByFive(string number)
 }
 
 //Tạo mảng 2 mũ n
-void PowOfTwo(string pow[128])
+void PowOfTwoF(string pow[128])
 {
 	pow[0] = "1";	
 	for (int i = 1; i < 128; i++)
 	{
-		pow[i] = MultiplyByTwo(pow[i - 1]);
+		pow[i] = MultiplyByTwoF(pow[i - 1]);
 	}
 }
 
@@ -980,7 +980,7 @@ void PowOfTwoMinus(string pow[128])
 }
 
 //Cộng 2 chuỗi số thập phân
-string SumNumbers(string n1, string n2)
+string SumNumbersF(string n1, string n2)
 {
 	string result = "";
 	string longer = "", shorter = "";	//longer se luu chuoi so co nhieu chu so hon, shorter nguoc lai
@@ -1159,4 +1159,27 @@ bool* StringToBool(string input)
 		i++;
 	}
 	return res;
+}
+
+//Chuyển chuỗi nhị phân chuẩn IEEE về Qfloat
+//(có khả năng tự chuẩn hóa nếu chuỗi không đủ độ dài)
+Qfloat BinStrToDecF(string bin)
+{
+	int len = bin.length();
+	while (len < 128)
+	{
+		bin = "0" + bin;
+		len++;
+	}
+	while (len > 128)
+	{
+		bin.erase(0);
+		len--;
+	}
+	bool* binArr = StringToBool(bin);
+	Qfloat result;
+	result = BinToDecF(binArr);
+	if(binArr != NULL) 
+		delete[] binArr;
+	return result;
 }

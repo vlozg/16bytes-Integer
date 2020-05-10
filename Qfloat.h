@@ -25,30 +25,31 @@ public:
 bool ReadDecString(string, Qfloat&);
 void ScanQfloat(Qfloat&);
 void PrintQfloat(Qfloat);
-Qfloat BinToDec(bool* bit);
+Qfloat BinToDecF(bool* bit);
 bool* DecToBin(Qfloat x);
 
-void ReadFile();
+void ReadFileF(string input, string output);
 
 bool CheckMinus(char first);
 bool CheckNumber(char input);
 bool CheckOne(string input);
 bool CheckDecimalPoint(char input);
-void NormalizeNumber(string& number);
-string DivideByTwo(string number);
+void NormalizeNumberF(string& number);
+string DivideByTwoF(string number);
 string DivideOne(string number);
 string IntegerDecToBin(string number);
 string FractionalDecToBin(string number);
 string FractionalBinToDec(string bin);
 string IntegerBinToDec(string bin);
-string MultiplyByTwo(string number);
+string MultiplyByTwoF(string number);
 string MultiplyByFive(string number);
-void PowOfTwo(string pow[128]);
+void PowOfTwoF(string pow[128]);
 void PowOfFive(string pow[128]);
 void PowOfTwoMinus(string pow[128]);
-string SumNumbers(string n1, string n2);
+string SumNumbersF(string n1, string n2);
 string SumFractionals(string n1, string n2);
 void DeleteExcessiveZero(string&);
 void PrintBinary(bool*);
 bool CheckAllChar(string, char);
 bool* StringToBool(string);
+Qfloat BinStrToDecF(string bin);
