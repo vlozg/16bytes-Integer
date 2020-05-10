@@ -96,7 +96,7 @@ QInt StringToQInt(string base, string input)
 }
 
 //Chuyển QInt theo base và xuất ra file
-void Conversion(QInt number, string base, string filename)
+void ConvertAndPrint(QInt number, string base, string filename)
 {
 	ofstream output(filename, ios::app); //mở file để ghi
 	streambuf* coutbuf = CoutRedirect(output); //lưu buffer của cout
@@ -123,36 +123,70 @@ void Conversion(QInt number, string base, string filename)
 		output.close();
 }
 
+//Làm các phép so sánh 
+bool ComparisonOperations(QInt A, QInt B, string op)
+{
+	if (op.compare(">") == 0)
+	{
+		return A > B;
+	}
+	else if (op.compare("<") == 0)
+	{
+		return A < B;
+	}
+	else if (op.compare(">=") == 0)
+	{
+		return A >= B;
+	}
+	else if (op.compare("<=") == 0)
+	{
+		return A <= B;
+	}
+	else if (op.compare("==") == 0)
+	{
+		return A == B;
+	}
+}
+
 //Làm các phép toán + - * / ^ | & trên QInt và xuất ra file
 void ArithmeticOperations(QInt A, QInt B, string base, string op, string filename)
 {
 	if (op.compare("+") == 0)
 	{
-		Conversion(A + B, base, filename);
+		ConvertAndPrint(A + B, base, filename);
 	}
 	else if (op.compare("-") == 0)
 	{
-		Conversion(A - B, base, filename);
+		ConvertAndPrint(A - B, base, filename);
 	}
 	else if (op.compare("*") == 0)
 	{
-		Conversion(A * B, base, filename);
+		ConvertAndPrint(A * B, base, filename);
 	}
 	else if (op.compare("/") == 0)
 	{
-		Conversion(A / B, base, filename);
+		ConvertAndPrint(A / B, base, filename);
 	}
 	else if (op.compare("|") == 0)
 	{
-		Conversion(A | B, base, filename);
+		ConvertAndPrint(A | B, base, filename);
 	}
 	else if (op.compare("&") == 0)
 	{
-		Conversion(A & B, base, filename);
+		ConvertAndPrint(A & B, base, filename);
 	}
 	else if (op.compare("^") == 0)
 	{
-		Conversion(A ^ B, base, filename);
+		ConvertAndPrint(A ^ B, base, filename);
+	}
+	else
+	{
+		ofstream output(filename, ios::app); //mở file để ghi
+		streambuf* coutbuf = CoutRedirect(output); //lưu buffer của cout
+		cout << ComparisonOperations(A, B, op) << endl;
+		NormalizeCout(coutbuf); //chuyển về cout bình thường
+		if (output.is_open())
+			output.close();
 	}
 }
 
@@ -161,14 +195,26 @@ void ShiftOperation(QInt A, int num, string op, string base, string filename)
 {
 	if (op.compare("<<") == 0)
 	{
-		Conversion(A << num, base, filename);
+		ConvertAndPrint(A << num, base, filename);
 	}
 	else if (op.compare(">>") == 0)
 	{
-		Conversion(A >> num, base, filename);
+		ConvertAndPrint(A >> num, base, filename);
 	}
 }
 
+//Làm các phép ror rol 
+void RotateOperation(QInt A, int num, string op, string base, string filename)
+{
+	if (op.compare("rol") == 0)
+	{
+		ConvertAndPrint(A.RotateLeft(num), base, filename);
+	}
+	else if (op.compare("ror") == 0)
+	{
+		ConvertAndPrint(A.RotateRight(num), base, filename);
+	}
+}
 
 //Hàm xử lý từng dòng input
 void ProcessLine(string line, string output)
@@ -181,26 +227,39 @@ void ProcessLine(string line, string output)
 		tokenArr.push_back(token);
 	}
 	int length = tokenArr.size();
-	if (length == 3) //nếu là chuyển đổi từ base này sang base kia
+	if (length == 3)
 	{
 		QInt number = StringToQInt(tokenArr[0], tokenArr[2]);
-		Conversion(number, tokenArr[1], output);
+		if (tokenArr[1].compare("~") != 0)
+		{
+			ConvertAndPrint(number, tokenArr[1], output);
+		}
+		else //nếu là dấu ~
+		{
+			ConvertAndPrint(~number, tokenArr[0], output);
+		}
+
 	}
-	if (length == 4) //xử lý các phép toán
+	if (length == 4)
 	{
 		string base = tokenArr[0]; //base xử lý
 		string op = tokenArr[2]; //toán tử
 		QInt firstNum = StringToQInt(base, tokenArr[1]);
+		firstNum.Output();
 		if (op.compare("<<") == 0 || op.compare(">>") == 0)
 			ShiftOperation(firstNum, StringToInt(tokenArr[3]), op, base, output);
+		else if (op.compare("ror") == 0 || op.compare("rol") == 0)
+			RotateOperation(firstNum, StringToInt(tokenArr[3]), op, base, output);
 		else
 		{
 			QInt secondNum = StringToQInt(base, tokenArr[3]);
+			secondNum.Output();
 			ArithmeticOperations(firstNum, secondNum, base, op, output);
 		}
 	}
-	
+
 }
+
 
 //Hàm đọc và xử lý file input, xuất ra file output
 void ReadFile(string input, string output)
