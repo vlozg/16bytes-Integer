@@ -72,6 +72,9 @@ void CCalculatorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT1, t_ActiveInput);
 	DDX_Control(pDX, IDC_EDIT2, t_PassiveInput1);
 	DDX_Control(pDX, IDC_EDIT3, t_PassiveInput2);
+	DDX_Control(pDX, IDC_EDIT4, t_SignWarning);
+	DDX_Control(pDX, IDC_RADIO1, r_IntMode);
+	DDX_Control(pDX, IDC_RADIO2, r_FloatMode);
 }
 
 BEGIN_MESSAGE_MAP(CCalculatorDlg, CDialogEx)
@@ -113,6 +116,10 @@ BEGIN_MESSAGE_MAP(CCalculatorDlg, CDialogEx)
 	ON_BN_CLICKED(BtnClear, &CCalculatorDlg::OnBnClickedBtnclear)
 	ON_BN_CLICKED(BtnHex, &CCalculatorDlg::OnBnClickedBtnPassive2)
 	ON_BN_CLICKED(BtnBin, &CCalculatorDlg::OnBnClickedBtnPassive1)
+	ON_EN_CHANGE(IDC_EDIT4, &CCalculatorDlg::OnEnChangeEdit4)
+	ON_BN_CLICKED(IDC_RADIO1, &CCalculatorDlg::OnBnClickedRadio1)
+	ON_BN_CLICKED(IDC_RADIO2, &CCalculatorDlg::OnBnClickedRadio2)
+	ON_WM_DROPFILES()
 END_MESSAGE_MAP()
 
 
@@ -130,6 +137,8 @@ BOOL CCalculatorDlg::OnInitDialog()
 	ShowWindow(SW_NORMAL);
 
 	// TODO: Add extra initialization here
+	b_Dot.EnableWindow(0);
+
 	b_NumFont.CreateFont(32, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Montserrat"));
 
 	b_Num1.SetFont(&b_NumFont);
@@ -170,16 +179,21 @@ BOOL CCalculatorDlg::OnInitDialog()
 	b_Del.SetFont(&b_TextOprFont);
 	b_Clear.SetFont(&b_TextOprFont);
 
-	t_ActiveFont.CreateFont(96, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Montserrat"));
+	t_ActiveFont.CreateFont(65, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Montserrat"));
 	t_PassiveFont.CreateFont(34, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Montserrat"));
 
 	t_ActiveInput.SetFont(&t_ActiveFont);
 	t_PassiveInput1.SetFont(&t_PassiveFont);
 	t_PassiveInput2.SetFont(&t_PassiveFont);
 
+	t_SignFont.CreateFont(24, 0, 0, 0, FW_LIGHT, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Montserrat"));
+
+	t_SignWarning.SetFont(&t_SignFont);
+
+	r_IntMode.SetCheck(1);
 	ChangeMode_Dec();
 	ResetInput(1);
-	UpdateData(0);
+	UpdateDisplay();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -252,7 +266,27 @@ void CCalculatorDlg::UpdateAllData()
 		PassiveInput1 = iInput.BinStr().c_str();
 		PassiveInput2 = iInput.DecStr().c_str();
 	}
+	UpdateDisplay();
+}
+
+//Cập nhật output hiển thị trên app
+void CCalculatorDlg::UpdateDisplay()
+{
 	UpdateData(0);
+	t_ActiveInput.SetSel(-1);
+	t_PassiveInput1.SetSel(-1);
+	t_PassiveInput2.SetSel(-1);
+	//t_SignWarning.SetMargins(17, 0);
+	
+	//Nếu có thông báo lỗi thì in ra, không thì in dấu
+	if (errorMessage == "")
+		t_SignWarning.SetWindowText(GetOprSymbol(prevOpr));
+	else
+		t_SignWarning.SetWindowText(errorMessage);
+
+	//Reset lỗi, nếu người dùng ignore và hết lỗi thì không báo nữa
+	//Nhưng nếu vẫn lỗi thì hàm khác vẫn sẽ trả thông báo mới
+	errorMessage = "";
 }
 
 //////////////////////////////////////////////////
@@ -273,6 +307,10 @@ void CCalculatorDlg::UpdateAllData()
 //Thiết lập input thập phân
 void CCalculatorDlg::ChangeMode_Dec() 
 {
+	if (r_FloatMode.GetCheck() == 1)
+		b_Dot.EnableWindow(1);
+	else
+		b_Dot.EnableWindow(0);
 	//Disable các nút input giá trị từ A - F và dot
 	b_NumA.EnableWindow(0);
 	b_NumB.EnableWindow(0);
@@ -280,7 +318,6 @@ void CCalculatorDlg::ChangeMode_Dec()
 	b_NumD.EnableWindow(0);
 	b_NumE.EnableWindow(0);
 	b_NumF.EnableWindow(0);
-	b_Dot.EnableWindow(0);
 
 	//Enable các nút input từ 2 - 9
 	b_Num2.EnableWindow(1);
@@ -311,7 +348,7 @@ void CCalculatorDlg::ChangeMode_Dec()
 		b_Passive2.SetWindowText(_T("Hexadecimal"));
 	}
 
-	UpdateData(0);
+	UpdateDisplay();
 	mode = 10;
 }
 
@@ -319,7 +356,6 @@ void CCalculatorDlg::ChangeMode_Dec()
 //Thiết lập input thập lục phân
 void CCalculatorDlg::ChangeMode_Hex() 
 {
-	//Disable nút dot
 	b_Dot.EnableWindow(0);
 
 	//Enable tất cả các nút input
@@ -357,7 +393,7 @@ void CCalculatorDlg::ChangeMode_Hex()
 
 	b_Passive2.SetWindowText(_T("Decimal"));
 	
-	UpdateData(0);
+	UpdateDisplay();
 	mode = 16;
 }
 
@@ -365,6 +401,8 @@ void CCalculatorDlg::ChangeMode_Hex()
 //Thiết lập input nhị phân
 void CCalculatorDlg::ChangeMode_Bin() 
 {
+	b_Dot.EnableWindow(0);
+
 	//Disable các nút input trừ nút 0 và 1
 	b_NumA.EnableWindow(0);
 	b_NumB.EnableWindow(0);
@@ -380,7 +418,6 @@ void CCalculatorDlg::ChangeMode_Bin()
 	b_Num7.EnableWindow(0);
 	b_Num8.EnableWindow(0);
 	b_Num9.EnableWindow(0);
-	b_Dot.EnableWindow(0);
 
 	//Swap active input với bin input
 	CString temp;
@@ -401,6 +438,96 @@ void CCalculatorDlg::ChangeMode_Bin()
 	
 	b_Passive1.SetWindowText(_T("Decimal"));
 	
-	UpdateData(0);
+	UpdateDisplay();
 	mode = 2;
+}
+
+
+void CCalculatorDlg::OnEnChangeEdit4()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+}
+
+
+void CCalculatorDlg::OnBnClickedRadio1()
+{
+	ChangeMode_Dec();
+	b_Passive2.EnableWindow(1);
+	t_PassiveInput2.EnableWindow(1);
+	b_oprAnd.EnableWindow(1);
+	b_oprOr.EnableWindow(1);
+	b_oprXor.EnableWindow(1);
+	b_oprNot.EnableWindow(1);
+	b_oprLeftShift.EnableWindow(1);
+	b_oprRightShift.EnableWindow(1);
+	b_oprLeftRol.EnableWindow(1);
+	b_oprRightRol.EnableWindow(1);
+
+	b_oprPlus.EnableWindow(1);
+	b_oprMinus.EnableWindow(1);
+	b_oprMultiply.EnableWindow(1);
+	b_oprDivision.EnableWindow(1);
+	OnBnClickedBtnclear();
+}
+
+
+void CCalculatorDlg::OnBnClickedRadio2()
+{
+	ChangeMode_Dec();
+	b_Passive2.EnableWindow(0);
+	t_PassiveInput2.EnableWindow(0);
+	b_oprAnd.EnableWindow(0);
+	b_oprOr.EnableWindow(0);
+	b_oprXor.EnableWindow(0);
+	b_oprNot.EnableWindow(0);
+	b_oprLeftShift.EnableWindow(0);
+	b_oprRightShift.EnableWindow(0);
+	b_oprLeftRol.EnableWindow(0);
+	b_oprRightRol.EnableWindow(0);
+
+	b_oprPlus.EnableWindow(0);
+	b_oprMinus.EnableWindow(0);
+	b_oprMultiply.EnableWindow(0);
+	b_oprDivision.EnableWindow(0);
+}
+
+
+void CCalculatorDlg::OnDropFiles(HDROP hDropInfo)
+{
+	CString sInputFile;	//Đường dẫn của file được kéo thả vào
+	CString sOutputFile;	//Đường dẫn của file output
+
+	DWORD nBuffer = 0;
+
+	//Lấy số lượng file được kéo thả vào
+	UINT nFilesDropped = DragQueryFile(hDropInfo, 0xFFFFFFFF, NULL, 0);
+	
+	//Nếu nhiều hơn 1 file thì chỉ lấy file đầu
+	if (nFilesDropped > 0)
+	{
+		//Get the buffer size for the first filename
+		nBuffer = DragQueryFile(hDropInfo, 0, NULL, 0);
+		
+		//Lấy đường dẫn
+		DragQueryFile(hDropInfo, 0, sInputFile.GetBuffer(nBuffer + 1), nBuffer + 1);
+		sInputFile.ReleaseBuffer();
+		sOutputFile = sInputFile.Left(0) + _T("output.txt");
+
+		//Tách riêng đường dẫn thư mục
+		int len = sInputFile.GetLength() - 1;
+		while (sInputFile[len] != '\\')
+			len--;
+		
+		//Xử lý file input
+		ReadFile((string)(CW2A(sInputFile)), (string)(CW2A(sOutputFile)));
+		ShellExecute(0, 0, sOutputFile, 0, 0, SW_SHOW);	//Mở file output
+	}
+
+	// Free the memory block containing the dropped-file information
+	DragFinish(hDropInfo);
 }

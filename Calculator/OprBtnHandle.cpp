@@ -35,12 +35,13 @@ void CCalculatorDlg::ResetInput(bool fullReset)
 		ActiveInput = "0";
 		PassiveInput1 = "0";
 		PassiveInput2 = "0";
+		iInput = "0";
 	}
 	else
 	{
 		GetResultOutput();
+		iInput = iOutput;
 	}
-	iInput = "0";
 }
 
 //Lấy ký hiệu dấu
@@ -64,29 +65,31 @@ CString CCalculatorDlg::GetOprSymbol(char Opr)
 		symbol = '÷';
 		break;
 	case '&':	//And
-		symbol = '&';
+		symbol = "AND";
 		break;
 	case '|':	//Or
-		symbol = '|';
+		symbol = "OR";
 		break;
 	case '^':	//Xor
-		symbol = '^';
+		symbol = "XOR";
 		break;
 	case '~':	//Not
-		symbol = '~';
+		symbol = "NOT";
 		break;
 	case '<':	//Left Shift
-		symbol = "<<";
+		symbol = "ShiftL";
 		break;
 	case '>':	//Right Shift
-		symbol = ">>";
+		symbol = "ShiftR";
 		break;
 	case '[':	//Left Rotate
-		symbol = "RolL";
+		symbol = "RotateL";
 		break;
 	case ']':	//Right Rotate
-		symbol = "RolR";
+		symbol = "RotateR";
 		break;
+	case '=':
+		symbol = "=";
 	default:
 		break;
 	}
@@ -162,7 +165,7 @@ void CCalculatorDlg::PreCalc(char Opr)
 		iOutput = iOutput ^ iInput;
 		break;
 	case '~':	//Not
-		iOutput = ~iOutput;
+		//Có hàm xử lý riêng
 		break;
 	case '<':	//Left Shift
 		iOutput = iOutput << iInput;
@@ -200,7 +203,7 @@ void CCalculatorDlg::HandleOprButton(char Opr)
 
 	prevOpr = Opr;	//Đưa dấu vào hàng đợi
 	isEmptyInput = true;
-	UpdateData(0);
+	UpdateDisplay();
 }
 
 void CCalculatorDlg::OnBnClickedBtndot()
@@ -253,7 +256,46 @@ void CCalculatorDlg::OnBnClickedBtnxor()
 
 void CCalculatorDlg::OnBnClickedBtnnot()
 {
-	HandleOprButton('~');
+	//Nếu mới bấm calc xong thì sẽ reset lại về trạng thái đầu tiên 
+	if (prevOpr == '=' && isEmptyInput)
+	{
+		prevOpr = NULL;
+		iInput = iOutput;
+		iOutput = "0";
+	}
+
+	//Phép not
+	iInput = ~iInput;
+
+	CString DecOutput;
+	CString HexOutput;
+
+	DecOutput = iInput.DecStr().c_str();
+	HexOutput = iInput.HexStr().c_str();
+	
+	//Xuất input ra màn hình
+	if (mode == 2)
+	{
+		ActiveInput = iInput.BinStr().c_str();
+		PassiveInput1 = DecOutput;
+		PassiveInput2 = HexOutput;
+	}
+	else if (mode == 10)
+	{
+		ActiveInput = DecOutput;
+		PassiveInput1 = iInput.BinStr().c_str();
+		PassiveInput2 = HexOutput;
+	}
+	else
+	{
+		ActiveInput = HexOutput;
+		PassiveInput1 = iInput.BinStr().c_str();
+		PassiveInput2 = DecOutput;
+	}
+
+	isEmptyInput = false;	//Đánh dấu đã nhận input số
+
+	UpdateDisplay();
 }
 
 

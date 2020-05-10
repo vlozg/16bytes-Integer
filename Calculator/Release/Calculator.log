@@ -1,7 +1,11 @@
-﻿  OprBtnHandle.cpp
+﻿  Calculator.cpp
+  CalculatorDlg.cpp
+  NumBtnHandle.cpp
+  OprBtnHandle.cpp
+  UltilityBtnHandle.cpp
   Generating code
-  15 of 807 functions ( 1.9%) were compiled, the rest were copied from previous compilation.
+  50 of 971 functions ( 5.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    16 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Calculator.vcxproj -> C:\Users\Admin\Desktop\16bytes-Number\Calculator\Release\Calculator.exe

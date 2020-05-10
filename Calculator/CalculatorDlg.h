@@ -70,14 +70,16 @@ public:
 	afx_msg void OnBnClickedBtnPassive1();
 
 private:
-	CFont b_NumFont, b_SymbolFont, b_TextOprFont, t_ActiveFont, t_PassiveFont;
+	CFont b_NumFont, b_SymbolFont, b_TextOprFont, t_ActiveFont, t_PassiveFont, t_SignFont;
 
 	QInt iOutput, iInput;
 	//Qfloat fOutput, fOutput;
 	char prevOpr = NULL;	//Operator được đưa vào hàng đợi, sẽ được thay thế và tính toán khi input operator mới
+	CString errorMessage = _T("");	//Lỗi hiển thị ra
 	bool isEmptyInput = false;	//Đánh dấu đã input số chưa
 	byte mode = 10;	//Đánh số chế độ: 2=bin 10=dec 16=hex
 	void UpdateAllData();
+	void UpdateDisplay();
 	void ChangeMode_Dec();
 	void ChangeMode_Hex();
 	void ChangeMode_Bin();
@@ -137,4 +139,14 @@ private:
 
 	CButton b_Passive1;
 	CButton b_Passive2;
+	CEdit t_SignWarning;
+public:
+	afx_msg void OnEnChangeEdit4();
+private:
+	CButton r_IntMode;
+	CButton r_FloatMode;
+public:
+	afx_msg void OnBnClickedRadio1();
+	afx_msg void OnBnClickedRadio2();
+	afx_msg void OnDropFiles(HDROP hDropInfo);
 };

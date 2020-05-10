@@ -42,31 +42,36 @@ void CCalculatorDlg::OnBnClickedBtnequal()
 {
 	PreCalc(prevOpr);	//Tính toán lần cuối
 
-	GetResultOutput();
+	ResetInput(0);
 
 	prevOpr = '=';
 	isEmptyInput = true;
-	UpdateData(0);
+	UpdateDisplay();
 }
 
 //Xóa 1 số bên phải ra khỏi active input
 void CCalculatorDlg::PopInput()
 {
-	if (ActiveInput.GetLength() > 1)
-	{
-		//Nếu active input nhiều hơn 1 số thì xóa bên phải
-		ActiveInput.Delete(ActiveInput.GetLength()-1);
-	}
-	else
+	if (ActiveInput.GetLength() <= 1 || isEmptyInput)
 	{
 		//Còn 1 số thì reset về 0, không để chuỗi input rỗng
 		ActiveInput = "0";
+	}
+	else
+	{
+		//Nếu active input nhiều hơn 1 số thì xóa bên phải
+		ActiveInput.Delete(ActiveInput.GetLength() - 1);
 	}
 }
 
 void CCalculatorDlg::OnBnClickedBtnbackspace()
 {
 	PopInput();
+
+	//Dù có input hay không
+	//sửa số tức là muốn thêm input mới
+	isEmptyInput = false;
+
 	UpdateAllData();
 }
 
@@ -78,7 +83,7 @@ void CCalculatorDlg::OnBnClickedBtnclear()
 	iOutput = "0";
 	prevOpr = NULL;
 	isEmptyInput = false;
-	UpdateData(0);
+	UpdateDisplay();
 }
 
 
@@ -123,27 +128,45 @@ void CCalculatorDlg::OnBnClickedBtnchangesign()
 	//Đảo dấu input
 	iInput = iInput.ComplementTwo();
 	
+	CString DecOutput; 
+	CString HexOutput;
+
+	DecOutput = iInput.DecStr().c_str();
+	HexOutput = iInput.HexStr().c_str();
+	/*
+	//Hot fix for unexplainable error occur
+	if (DecOutput[0] == '-')
+	{
+		DecOutput.Remove('-');
+		DecOutput += '-';
+	}
+	if (HexOutput[0] == '-')
+	{
+		HexOutput.Remove('-');
+		HexOutput += '-';
+	}
+	*/
 	//Xuất input ra màn hình
 	if (mode == 2)
 	{
 		ActiveInput = iInput.BinStr().c_str();
-		PassiveInput1 = iInput.DecStr().c_str();
-		PassiveInput2 = iInput.HexStr().c_str();
+		PassiveInput1 = DecOutput;
+		PassiveInput2 = HexOutput;
 	}
 	else if (mode == 10)
 	{
-		ActiveInput = iInput.DecStr().c_str();
+		ActiveInput = DecOutput;
 		PassiveInput1 = iInput.BinStr().c_str();
-		PassiveInput2 = iInput.HexStr().c_str();
+		PassiveInput2 = HexOutput;
 	}
 	else
 	{
-		ActiveInput = iInput.HexStr().c_str();
+		ActiveInput = HexOutput;
 		PassiveInput1 = iInput.BinStr().c_str();
-		PassiveInput2 = iInput.DecStr().c_str();
+		PassiveInput2 = DecOutput;
 	}
 
 	isEmptyInput = false;	//Đánh dấu đã nhận input số
 
-	UpdateData(0);
+	UpdateDisplay();
 }

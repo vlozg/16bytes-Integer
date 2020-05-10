@@ -33,6 +33,13 @@ void CCalculatorDlg::AddInput(char bInput)
 	if (ActiveInput == "0" || isEmptyInput)
 	{
 		ActiveInput = bInput;
+		
+		//Nếu mới bấm dấu = thì sẽ reset về lại input mới
+		if (prevOpr == '=')
+		{
+			prevOpr = NULL;
+			iOutput = "0";
+		}
 	}
 	else
 	{
