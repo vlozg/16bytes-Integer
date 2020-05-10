@@ -1189,7 +1189,7 @@ Qfloat BinStrToDecF(string bin)
 	}
 	while (len > 128)
 	{
-		bin.erase(0);
+		bin.erase(0,1);
 		len--;
 	}
 	bool* binArr = StringToBool(bin);
