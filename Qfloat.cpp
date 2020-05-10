@@ -63,6 +63,7 @@ string Qfloat::BinStr()
 	else {
 		result += '1';
 	}	//lấy bit dấu
+	result += " ";
 	for (int i = 1; i < 16; i++) {
 		if (GetBit(i) == 0) {
 			result += '0';
