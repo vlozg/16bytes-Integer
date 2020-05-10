@@ -123,6 +123,31 @@ void ConvertAndPrint(QInt number, string base, string filename)
 		output.close();
 }
 
+//Làm các phép so sánh 
+bool ComparisonOperations(QInt A, QInt B, string op)
+{
+	if (op.compare(">") == 0)
+	{
+		return A > B;
+	}
+	else if (op.compare("<") == 0)
+	{
+		return A < B;
+	}
+	else if (op.compare(">=") == 0)
+	{
+		return A >= B;
+	}
+	else if (op.compare("<=") == 0)
+	{
+		return A <= B;
+	}
+	else if (op.compare("==") == 0)
+	{
+		return A == B;
+	}
+}
+
 //Làm các phép toán + - * / ^ | & trên QInt và xuất ra file
 void ArithmeticOperations(QInt A, QInt B, string base, string op, string filename)
 {
@@ -154,6 +179,15 @@ void ArithmeticOperations(QInt A, QInt B, string base, string op, string filenam
 	{
 		ConvertAndPrint(A ^ B, base, filename);
 	}
+	else
+	{
+		ofstream output(filename, ios::app); //mở file để ghi
+		streambuf* coutbuf = CoutRedirect(output); //lưu buffer của cout
+		cout << ComparisonOperations(A, B, op) << endl;
+		NormalizeCout(coutbuf); //chuyển về cout bình thường
+		if (output.is_open())
+			output.close();
+	}
 }
 
 //Làm các phép << >> 
@@ -174,11 +208,11 @@ void RotateOperation(QInt A, int num, string op, string base, string filename)
 {
 	if (op.compare("rol") == 0)
 	{
-		Conversion(A.RotateLeft(num), base, filename);
+		ConvertAndPrint(A.RotateLeft(num), base, filename);
 	}
 	else if (op.compare("ror") == 0)
 	{
-		Conversion(A.RotateRight(num), base, filename);
+		ConvertAndPrint(A.RotateRight(num), base, filename);
 	}
 }
 
@@ -198,11 +232,11 @@ void ProcessLine(string line, string output)
 		QInt number = StringToQInt(tokenArr[0], tokenArr[2]);
 		if (tokenArr[1].compare("~") != 0)
 		{
-			Conversion(number, tokenArr[1], output);
+			ConvertAndPrint(number, tokenArr[1], output);
 		}
 		else //nếu là dấu ~
 		{
-			Conversion(~number, tokenArr[0], output);
+			ConvertAndPrint(~number, tokenArr[0], output);
 		}
 
 	}
