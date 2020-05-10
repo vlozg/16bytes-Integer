@@ -73,7 +73,7 @@ string Qfloat::BinStr()
 		}	//lấy 15 bit Exponent
 	}
 	result += ' ';
-	for (int i = 16; i < 127; i++) {
+	for (int i = 16; i < 128; i++) {
 		if (GetBit(i) == 0) {
 			result += '0';
 		}
