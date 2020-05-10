@@ -655,7 +655,8 @@ int QInt::ModBy128()
 ====================================
 */
 
-string QInt::DecStr()	//Copy từ output, nhưng trả về string
+//Chuyển về chuỗi thập phân (phục vụ in ra màn hình)
+string QInt::DecStr()
 {
 	bool* bin = new bool[BIT_RANGE];
 	string result = "0";
@@ -691,6 +692,7 @@ string QInt::DecStr()	//Copy từ output, nhưng trả về string
 	return result;
 }
 
+//Chuyển về chuỗi thập lục phân (phục vụ in ra màn hình)
 string QInt::HexStr()
 {
 	char* hex = DecToHex(*this);
@@ -712,6 +714,7 @@ string QInt::HexStr()
 	return result;
 }
 
+//Chuyển về chuỗi nhị phân (phục vụ in ra màn hình)
 string QInt::BinStr()
 {
 	bool* bin = DecToBin(*this);

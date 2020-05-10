@@ -433,7 +433,7 @@ bool* HexToBin(char* hex)
 	return bin;
 }
 
-
+//Chuyển đổi chuỗi thập lục phân sang thập phân QInt lưu trữ
 QInt HexToDec(char* hex)
 {
 	bool* bin = HexToBin(hex);

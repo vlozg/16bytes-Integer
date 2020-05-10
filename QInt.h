@@ -54,7 +54,6 @@ public:
 	QInt();
 	QInt(string);
 
-	//Hàm hỗ trợ giao diện
 	string DecStr();
 	string HexStr();
 	string BinStr();
