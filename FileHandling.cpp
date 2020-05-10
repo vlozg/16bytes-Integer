@@ -96,7 +96,7 @@ QInt StringToQInt(string base, string input)
 }
 
 //Chuyển QInt theo base và xuất ra file
-void Conversion(QInt number, string base, string filename)
+void ConvertAndPrint(QInt number, string base, string filename)
 {
 	ofstream output(filename, ios::app); //mở file để ghi
 	streambuf* coutbuf = CoutRedirect(output); //lưu buffer của cout
@@ -128,31 +128,31 @@ void ArithmeticOperations(QInt A, QInt B, string base, string op, string filenam
 {
 	if (op.compare("+") == 0)
 	{
-		Conversion(A + B, base, filename);
+		ConvertAndPrint(A + B, base, filename);
 	}
 	else if (op.compare("-") == 0)
 	{
-		Conversion(A - B, base, filename);
+		ConvertAndPrint(A - B, base, filename);
 	}
 	else if (op.compare("*") == 0)
 	{
-		Conversion(A * B, base, filename);
+		ConvertAndPrint(A * B, base, filename);
 	}
 	else if (op.compare("/") == 0)
 	{
-		Conversion(A / B, base, filename);
+		ConvertAndPrint(A / B, base, filename);
 	}
 	else if (op.compare("|") == 0)
 	{
-		Conversion(A | B, base, filename);
+		ConvertAndPrint(A | B, base, filename);
 	}
 	else if (op.compare("&") == 0)
 	{
-		Conversion(A & B, base, filename);
+		ConvertAndPrint(A & B, base, filename);
 	}
 	else if (op.compare("^") == 0)
 	{
-		Conversion(A ^ B, base, filename);
+		ConvertAndPrint(A ^ B, base, filename);
 	}
 }
 
@@ -161,17 +161,29 @@ void ShiftOperation(QInt A, int num, string op, string base, string filename)
 {
 	if (op.compare("<<") == 0)
 	{
-		Conversion(A << num, base, filename);
+		ConvertAndPrint(A << num, base, filename);
 	}
 	else if (op.compare(">>") == 0)
 	{
-		Conversion(A >> num, base, filename);
+		ConvertAndPrint(A >> num, base, filename);
 	}
 }
 
+//Làm các phép ror rol 
+void RotateOperation(QInt A, int num, string op, string base, string filename)
+{
+	if (op.compare("rol") == 0)
+	{
+		Conversion(A.RotateLeft(num), base, filename);
+	}
+	else if (op.compare("ror") == 0)
+	{
+		Conversion(A.RotateRight(num), base, filename);
+	}
+}
 
 //Hàm xử lý từng dòng input
-void ProcessLine(string line, string output)
+void ProcessLine(string line)
 {
 	vector<string> tokenArr; //mảng chứa các giá trị được tách
 	string token;
@@ -181,26 +193,39 @@ void ProcessLine(string line, string output)
 		tokenArr.push_back(token);
 	}
 	int length = tokenArr.size();
-	if (length == 3) //nếu là chuyển đổi từ base này sang base kia
+	if (length == 3)
 	{
 		QInt number = StringToQInt(tokenArr[0], tokenArr[2]);
-		Conversion(number, tokenArr[1], output);
+		if (tokenArr[1].compare("~") != 0)
+		{
+			Conversion(number, tokenArr[1], "output.txt");
+		}
+		else //nếu là dấu ~
+		{
+			Conversion(~number, tokenArr[0], "output.txt");
+		}
+
 	}
-	if (length == 4) //xử lý các phép toán
+	if (length == 4)
 	{
 		string base = tokenArr[0]; //base xử lý
 		string op = tokenArr[2]; //toán tử
 		QInt firstNum = StringToQInt(base, tokenArr[1]);
+		firstNum.Output();
 		if (op.compare("<<") == 0 || op.compare(">>") == 0)
-			ShiftOperation(firstNum, StringToInt(tokenArr[3]), op, base, output);
+			ShiftOperation(firstNum, StringToInt(tokenArr[3]), op, base, "output.txt");
+		else if (op.compare("ror") == 0 || op.compare("rol") == 0)
+			RotateOperation(firstNum, StringToInt(tokenArr[3]), op, base, "output.txt");
 		else
 		{
 			QInt secondNum = StringToQInt(base, tokenArr[3]);
-			ArithmeticOperations(firstNum, secondNum, base, op, output);
+			secondNum.Output();
+			ArithmeticOperations(firstNum, secondNum, base, op, "output.txt");
 		}
 	}
-	
+
 }
+
 
 //Hàm đọc và xử lý file input, xuất ra file output
 void ReadFile(string input, string output)
