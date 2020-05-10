@@ -1,29 +1,80 @@
-#pragma once
-#include <iostream>
-#include <string>
+﻿#pragma once
 
-using namespace std;
-
+#define _CRT_SECURE_NO_WARNINGS
+#include "QNum.h"
 class QInt
 {
 private:
-	char val[16] = { 0 };
+	char value[SIZE] = { 0 };
 public:
 	bool GetBit(int i);
-	void SetBit(int i);	//Ham chi bat bit tu 0 -> 1, muon set bit 0 thi no phai la 0 truoc do
+	void SetBit(int i, bool bit);
 
 	void Input(string);
 	void Output();
 
-	bool* DecToInt();
-	void BinToDec(bool* bit);
+	QInt ComplementTwo();
+
+	//các hàm số học
+	QInt operator+(QInt);
+	QInt operator-(QInt);
+	QInt operator*(QInt);
+	QInt operator/(QInt);
+	QInt operator%(QInt);
+
+	//các hàm bitwise
+	QInt RotateLeft(int number);
+	QInt RotateRight(int number);
+	QInt operator&(QInt number);
+	QInt operator|(QInt number);
+	QInt operator^(QInt number);
+	QInt operator~();
+	QInt operator>>(int number);
+	QInt operator<<(int number);
+	QInt operator>>(QInt number);
+	QInt operator<<(QInt number);
+	QInt RotateLeft(QInt number);
+	QInt RotateRight(QInt number);
+
+
+	QInt operator=(const QInt&);
+	QInt operator=(string number);
+	
+	//các hàm so sánh
+	bool operator<(const QInt&);
+	bool operator>(const QInt&);
+	bool operator<=(const QInt&);
+	bool operator>=(const QInt&);
+	bool operator==(const QInt&);
+
+	bool IsNegative();
+	
+	int ModBy128();	//Hỗ trợ shift bit với qint
+
 	QInt();
+	QInt(string);
+
+	//Hàm hỗ trợ giao diện
+	string DecStr();
+	string HexStr();
+	string BinStr();
 };
 
-bool GetBitAll(char data, int i, int size);		
-void SetBitAll(char& data, int i, int size);	
-string DivideByTwo(string number);
-string DecToBin(string number);
-string MultiplyWithTwo(string number);
-void PowOfTwo(string pow[128]);
-string PlusNumber(string n1, string n2);
+void ScanQInt(QInt& x);		//Cau a
+void PrintQInt(QInt x);		//Cau b
+bool* DecToBin(QInt x);		//Cau c
+QInt BinToDec(bool* bit);	//Cau d
+char* BinToHex(bool* bit);	//Cau e
+char* DecToHex(QInt x);		//Cau f
+
+
+char BinToHexChar(string num);
+string HexToBinChar(char hex);
+
+void OutputBin(bool* bin);
+void OutputHex(char* hex);
+QInt BinStrToDec(string binStr);
+
+bool* HexToBin(char* hex);
+QInt HexToDec(char* hex);
+
