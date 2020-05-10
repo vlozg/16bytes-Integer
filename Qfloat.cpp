@@ -55,8 +55,14 @@ Chuyển các bit trong Qfloat thành string
 */
 string Qfloat::BinStr()
 {
-	string result;
-	result = GetBit(0) + ' ';	//lấy bit dấu
+	string result = "";
+
+	if (GetBit(0) == 0) {
+		result += '0';
+	}
+	else {
+		result += '1';
+	}	//lấy bit dấu
 	for (int i = 1; i < 16; i++) {
 		if (GetBit(i) == 0) {
 			result += '0';
