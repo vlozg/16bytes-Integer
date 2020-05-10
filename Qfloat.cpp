@@ -1,5 +1,8 @@
 #include "Qfloat.h"
 
+/*
+Khởi tạo Qfloat với toàn bộ bit = 0 và độ dài -1
+*/
 Qfloat::Qfloat()
 {
 	for (int i = 0; i < 16; i++) {
@@ -31,16 +34,25 @@ void Qfloat::SetBit(int pos, bool bit) {
 	}
 }
 
+/*
+Lấy độ dài của Qfloat
+*/
 int Qfloat::GetLength()
 {
 	return length;
 }
 
+/*
+Lưu độ dài của Qfloat từ số nguyên l
+*/
 void Qfloat::SetLength(int l)
 {
 	length = l;
 }
 
+/*
+Chuyển các bit trong Qfloat thành string
+*/
 string Qfloat::BinStr()
 {
 	string result;
@@ -65,6 +77,9 @@ string Qfloat::BinStr()
 	return result;
 }
 
+/*
+Chuyển Qfloat dưới dạng thập phân thành string
+*/
 string Qfloat::DecStr()
 {
 	string result = "";
@@ -232,12 +247,12 @@ bool ReadDecString(string input, Qfloat& output)
 	}
 
 	string temp = input;
-	
+
 	//khởi tạo mảng gồm các số 2 mũ n
-	string pow2[128], powminus2[128];	
+	string pow2[128], powminus2[128];
 	PowOfTwoF(pow2);
 	PowOfFive(powminus2);
-		
+
 	//nếu string không có gì thì stop
 	if (temp.length() == 0) {
 		return false;
@@ -262,7 +277,7 @@ bool ReadDecString(string input, Qfloat& output)
 			integerDigits += temp[k];	//nếu là số thì đưa vô string integerDigits
 		}
 		else {
-			if (CheckDecimalPoint(temp[k]))	{
+			if (CheckDecimalPoint(temp[k])) {
 				break;	//nếu là dấu . thì break
 			}
 			else {
@@ -311,7 +326,7 @@ bool ReadDecString(string input, Qfloat& output)
 				e--;
 				break;
 			}
-			else {	
+			else {
 				tempBit = temp[i];
 				integerDigits += tempBit;
 			}
@@ -371,6 +386,7 @@ void ScanQfloat(Qfloat& input) {
 	ReadDecString(temp, input);
 }
 
+//hàm xuất Qfloat dưới dạng thập phân
 void PrintQfloat(Qfloat input)
 {
 	string result = "";
@@ -584,7 +600,7 @@ void ReadFileF(string input, string output)
 			e++;
 		}
 		inputNumber.erase(inputNumber.begin(), inputNumber.begin() + e + 1); //xóa p1 và dấu cách
-		
+
 		//lấy p2
 		if (space == 2) { //có 2 dấu cách
 			e = 0;
@@ -599,7 +615,7 @@ void ReadFileF(string input, string output)
 		}
 
 		//xử lý p1 p2 để scan
-		if (p1 == "2") { 
+		if (p1 == "2") {
 			bool* binary = StringToBool(inputNumber);
 			if (p2 == "") { //nhập hệ 2 xuất hệ 2
 				freopen(output.c_str(), "a", stdout);
@@ -749,7 +765,7 @@ string DivideOne(string number) {
 	int s = 1;	//số dư
 
 	q = stoi(number);	//chuyển chuỗi về dạng số
-	while(s != 0) {
+	while (s != 0) {
 		p = r / q;
 		if (p == 0) {
 			result += '0';
@@ -766,7 +782,7 @@ string DivideOne(string number) {
 }
 
 //Chuyển chuỗi số nguyên sang binary
-string IntegerDecToBin(string number)	
+string IntegerDecToBin(string number)
 {
 	if (number.length() == 0) {
 		return "";
@@ -792,7 +808,7 @@ string IntegerDecToBin(string number)
 
 //Chuyển chuỗi số thập phân sang binary
 string FractionalDecToBin(string number) {
-	
+
 	if (number.length() == 0) {
 		return "";
 	}
@@ -804,7 +820,7 @@ string FractionalDecToBin(string number) {
 	/*	Nhân 2 đến khi kết quả = 1 thì dừng lại
 		Nếu kết quả > 1 lấy 1, < 1 lấy 0 */
 
-	while (bin.length()<112)
+	while (bin.length() < 112)
 	{
 		temp = MultiplyByTwoF(temp);	//temp mang kết quả sau khi nhân 2
 		if (temp[0] == '1') {
@@ -853,7 +869,7 @@ string IntegerBinToDec(string bin) {
 			}
 		}
 	}
-	
+
 	return number;
 }
 
@@ -869,7 +885,7 @@ string FractionalBinToDec(string bin) {
 	{
 		if (bin[i] == '1')
 		{
-			number = SumFractionals(number, pow[i+1]);	//	Cộng theo kiểu 2^-1 + 2^-2 + ...
+			number = SumFractionals(number, pow[i + 1]);	//	Cộng theo kiểu 2^-1 + 2^-2 + ...
 		}
 	}
 
@@ -890,12 +906,12 @@ string MultiplyByTwoF(string number)
 			result = number[i] + result;
 		}
 		else {
-		int m = (number[i] - '0') * 2 + mem;
+			int m = (number[i] - '0') * 2 + mem;
 
-		mem = m / 10;
+			mem = m / 10;
 
-		char c = m % 10 + '0';
-		result = c + result;
+			char c = m % 10 + '0';
+			result = c + result;
 		}
 	}
 
@@ -941,7 +957,7 @@ string MultiplyByFive(string number)
 //Tạo mảng 2 mũ n
 void PowOfTwoF(string pow[128])
 {
-	pow[0] = "1";	
+	pow[0] = "1";
 	for (int i = 1; i < 128; i++)
 	{
 		pow[i] = MultiplyByTwoF(pow[i - 1]);
@@ -1114,7 +1130,7 @@ void DeleteExcessiveZero(string& input)
 //xuất ra binary từ mảng bool
 void PrintBinary(bool* bit) {
 	cout << bit[0] << " ";
-	
+
 	for (int i = 1; i < 16; i++) {
 		cout << bit[i];
 	}
@@ -1179,7 +1195,7 @@ Qfloat BinStrToDecF(string bin)
 	bool* binArr = StringToBool(bin);
 	Qfloat result;
 	result = BinToDecF(binArr);
-	if(binArr != NULL) 
+	if (binArr != NULL)
 		delete[] binArr;
 	return result;
 }
