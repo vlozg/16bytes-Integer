@@ -73,7 +73,7 @@ private:
 	CFont b_NumFont, b_SymbolFont, b_TextOprFont, t_ActiveFont, t_PassiveFont, t_SignFont;
 
 	QInt iOutput, iInput;
-	//Qfloat fOutput, fOutput;
+	Qfloat fInput;
 	char prevOpr = NULL;	//Operator được đưa vào hàng đợi, sẽ được thay thế và tính toán khi input operator mới
 	CString errorMessage = _T("");	//Lỗi hiển thị ra
 	bool isEmptyInput = false;	//Đánh dấu đã input số chưa

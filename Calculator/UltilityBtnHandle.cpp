@@ -81,6 +81,7 @@ void CCalculatorDlg::OnBnClickedBtnclear()
 	ResetInput(1);
 	iInput = "0";
 	iOutput = "0";
+	ReadDecString("0", fInput);
 	prevOpr = NULL;
 	isEmptyInput = false;
 	UpdateDisplay();

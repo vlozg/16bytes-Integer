@@ -248,23 +248,40 @@ void CCalculatorDlg::OnEnChangeEdit1()
 void CCalculatorDlg::UpdateAllData() 
 {
 	string ActiveInputString = (string)(CW2A(ActiveInput.GetString()));
-	if (mode == 2)
+	if (!(r_FloatMode.GetCheck()))
 	{
-		iInput = BinStrToDec(ActiveInputString);
-		PassiveInput1 = iInput.DecStr().c_str();
-		PassiveInput2 = iInput.HexStr().c_str();
+		//Nếu đang ở QInt mode
+		if (mode == 2)
+		{
+			iInput = BinStrToDec(ActiveInputString);
+			PassiveInput1 = iInput.DecStr().c_str();
+			PassiveInput2 = iInput.HexStr().c_str();
+		}
+		else if (mode == 10)
+		{
+			iInput = ActiveInputString;
+			PassiveInput1 = iInput.BinStr().c_str();
+			PassiveInput2 = iInput.HexStr().c_str();
+		}
+		else
+		{
+			iInput = HexToDec((char*)ActiveInputString.c_str());
+			PassiveInput1 = iInput.BinStr().c_str();
+			PassiveInput2 = iInput.DecStr().c_str();
+		}
 	}
-	else if (mode == 10)
+	else 
 	{
-		iInput = ActiveInputString;
-		PassiveInput1 = iInput.BinStr().c_str();
-		PassiveInput2 = iInput.HexStr().c_str();
-	}
-	else
-	{
-		iInput = HexToDec((char *)ActiveInputString.c_str());
-		PassiveInput1 = iInput.BinStr().c_str();
-		PassiveInput2 = iInput.DecStr().c_str();
+		if (mode == 2)
+		{
+			fInput = BinStrToDecF(ActiveInputString);
+			PassiveInput1 = fInput.DecStr().c_str();
+		}
+		else
+		{
+			ReadDecString(ActiveInputString, fInput);
+			PassiveInput1 = fInput.BinStr().c_str();
+		}
 	}
 	UpdateDisplay();
 }
@@ -272,6 +289,8 @@ void CCalculatorDlg::UpdateAllData()
 //Cập nhật output hiển thị trên app
 void CCalculatorDlg::UpdateDisplay()
 {
+	if (r_FloatMode.GetCheck())
+		PassiveInput2 = "";	//Float mode không hỗ trợ xuất hex
 	UpdateData(0);
 	t_ActiveInput.SetSel(-1);
 	t_PassiveInput1.SetSel(-1);
@@ -467,11 +486,12 @@ void CCalculatorDlg::OnBnClickedRadio1()
 	b_oprRightShift.EnableWindow(1);
 	b_oprLeftRol.EnableWindow(1);
 	b_oprRightRol.EnableWindow(1);
-
+	b_Equal.EnableWindow(1);
 	b_oprPlus.EnableWindow(1);
 	b_oprMinus.EnableWindow(1);
 	b_oprMultiply.EnableWindow(1);
 	b_oprDivision.EnableWindow(1);
+	b_ChangeSign.EnableWindow(1);
 	OnBnClickedBtnclear();
 }
 
@@ -489,17 +509,20 @@ void CCalculatorDlg::OnBnClickedRadio2()
 	b_oprRightShift.EnableWindow(0);
 	b_oprLeftRol.EnableWindow(0);
 	b_oprRightRol.EnableWindow(0);
+	b_Equal.EnableWindow(0);
+	b_ChangeSign.EnableWindow(0);
 
 	b_oprPlus.EnableWindow(0);
 	b_oprMinus.EnableWindow(0);
 	b_oprMultiply.EnableWindow(0);
 	b_oprDivision.EnableWindow(0);
+	OnBnClickedBtnclear();
 }
 
 
 void CCalculatorDlg::OnDropFiles(HDROP hDropInfo)
 {
-	CString sInputFile;	//Đường dẫn của file được kéo thả vào
+	CString sInputFile;		//Đường dẫn của file được kéo thả vào
 	CString sOutputFile;	//Đường dẫn của file output
 
 	DWORD nBuffer = 0;
@@ -525,7 +548,11 @@ void CCalculatorDlg::OnDropFiles(HDROP hDropInfo)
 		sOutputFile = sInputFile.Left(len) + _T("output.txt");
 
 		//Xử lý file input
-		ReadFile((string)(CW2A(sInputFile)), (string)(CW2A(sOutputFile)));
+		if (r_FloatMode.GetCheck())
+			ReadFileF((string)(CW2A(sInputFile)), (string)(CW2A(sOutputFile)));
+		else
+			ReadFile((string)(CW2A(sInputFile)), (string)(CW2A(sOutputFile)));
+		
 		ShellExecute(0, 0, sOutputFile, 0, 0, SW_SHOW);	//Mở file output
 	}
 

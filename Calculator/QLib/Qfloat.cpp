@@ -550,15 +550,15 @@ bool* DecToBin(Qfloat x) {
 
 
 //Hàm đọc file 
-void ReadFile()
+void ReadFileF(string input, string output)
 {
 	Qfloat number;
 
 	//tạo file txt output mới
-	freopen("OUTPUT.txt", "w", stdout);
+	freopen(output.c_str(), "w", stdout);
 	fclose(stdout);
 
-	freopen("INPUT.txt", "rt", stdin);
+	freopen(input.c_str(), "rt", stdin);
 	while (!cin.eof()) {
 		string p1 = ""; //chứa số đầu tiên để xác định hệ để xử lý
 		string p2 = ""; //chứa số thứ 2 để xác định hệ chuyển
@@ -602,13 +602,13 @@ void ReadFile()
 		if (p1 == "2") { 
 			bool* binary = StringToBool(inputNumber);
 			if (p2 == "") { //nhập hệ 2 xuất hệ 2
-				freopen("OUTPUT.txt", "a", stdout);
+				freopen(output.c_str(), "a", stdout);
 				PrintBinary(binary);
 				cout << endl;
 				fclose(stdout);
 			}
 			else { //nhập hệ 2 xuất hệ 10
-				freopen("OUTPUT.txt", "a", stdout);
+				freopen(output.c_str(), "a", stdout);
 				number = BinToDecF(binary);
 				PrintQfloat(number);
 				cout << endl;
@@ -618,13 +618,13 @@ void ReadFile()
 		else {
 			ReadDecString(inputNumber, number); //đọc và lưu vào Qfloat
 			if (p2 == "") { //nhập hệ 10 xuất hệ 10
-				freopen("OUTPUT.txt", "a", stdout);
+				freopen(output.c_str(), "a", stdout);
 				PrintQfloat(number);
 				cout << endl;
 				fclose(stdout);
 			}
 			else { //nhập hệ 10 xuất hệ 2
-				freopen("OUTPUT.txt", "a", stdout);
+				freopen(output.c_str(), "a", stdout);
 				bool* binary = DecToBin(number);
 				PrintBinary(binary);
 				cout << endl;
@@ -1159,4 +1159,27 @@ bool* StringToBool(string input)
 		i++;
 	}
 	return res;
+}
+
+//Chuyển chuỗi nhị phân chuẩn IEEE về Qfloat
+//(có khả năng tự chuẩn hóa nếu chuỗi không đủ độ dài)
+Qfloat BinStrToDecF(string bin)
+{
+	int len = bin.length();
+	while (len < 128)
+	{
+		bin = "0" + bin;
+		len++;
+	}
+	while (len > 128)
+	{
+		bin.erase(0);
+		len--;
+	}
+	bool* binArr = StringToBool(bin);
+	Qfloat result;
+	result = BinToDecF(binArr);
+	if(binArr != NULL) 
+		delete[] binArr;
+	return result;
 }

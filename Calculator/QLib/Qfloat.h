@@ -28,7 +28,7 @@ void PrintQfloat(Qfloat);
 Qfloat BinToDecF(bool* bit);
 bool* DecToBin(Qfloat x);
 
-void ReadFile();
+void ReadFileF(string input, string output);
 
 bool CheckMinus(char first);
 bool CheckNumber(char input);
@@ -52,3 +52,4 @@ void DeleteExcessiveZero(string&);
 void PrintBinary(bool*);
 bool CheckAllChar(string, char);
 bool* StringToBool(string);
+Qfloat BinStrToDecF(string bin);
