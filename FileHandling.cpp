@@ -183,7 +183,7 @@ void RotateOperation(QInt A, int num, string op, string base, string filename)
 }
 
 //Hàm xử lý từng dòng input
-void ProcessLine(string line)
+void ProcessLine(string line, string output)
 {
 	vector<string> tokenArr; //mảng chứa các giá trị được tách
 	string token;
@@ -198,11 +198,11 @@ void ProcessLine(string line)
 		QInt number = StringToQInt(tokenArr[0], tokenArr[2]);
 		if (tokenArr[1].compare("~") != 0)
 		{
-			Conversion(number, tokenArr[1], "output.txt");
+			Conversion(number, tokenArr[1], output);
 		}
 		else //nếu là dấu ~
 		{
-			Conversion(~number, tokenArr[0], "output.txt");
+			Conversion(~number, tokenArr[0], output);
 		}
 
 	}
@@ -213,14 +213,14 @@ void ProcessLine(string line)
 		QInt firstNum = StringToQInt(base, tokenArr[1]);
 		firstNum.Output();
 		if (op.compare("<<") == 0 || op.compare(">>") == 0)
-			ShiftOperation(firstNum, StringToInt(tokenArr[3]), op, base, "output.txt");
+			ShiftOperation(firstNum, StringToInt(tokenArr[3]), op, base, output);
 		else if (op.compare("ror") == 0 || op.compare("rol") == 0)
-			RotateOperation(firstNum, StringToInt(tokenArr[3]), op, base, "output.txt");
+			RotateOperation(firstNum, StringToInt(tokenArr[3]), op, base, output);
 		else
 		{
 			QInt secondNum = StringToQInt(base, tokenArr[3]);
 			secondNum.Output();
-			ArithmeticOperations(firstNum, secondNum, base, op, "output.txt");
+			ArithmeticOperations(firstNum, secondNum, base, op, output);
 		}
 	}
 
