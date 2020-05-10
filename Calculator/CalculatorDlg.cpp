@@ -516,13 +516,14 @@ void CCalculatorDlg::OnDropFiles(HDROP hDropInfo)
 		//Lấy đường dẫn
 		DragQueryFile(hDropInfo, 0, sInputFile.GetBuffer(nBuffer + 1), nBuffer + 1);
 		sInputFile.ReleaseBuffer();
-		sOutputFile = sInputFile.Left(0) + _T("output.txt");
 
 		//Tách riêng đường dẫn thư mục
 		int len = sInputFile.GetLength() - 1;
 		while (sInputFile[len] != '\\')
 			len--;
-		
+		len++;
+		sOutputFile = sInputFile.Left(len) + _T("output.txt");
+
 		//Xử lý file input
 		ReadFile((string)(CW2A(sInputFile)), (string)(CW2A(sOutputFile)));
 		ShellExecute(0, 0, sOutputFile, 0, 0, SW_SHOW);	//Mở file output
