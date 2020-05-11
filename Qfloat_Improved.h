@@ -49,7 +49,7 @@ private:
 public:
 	Qfloat();
 	Qfloat(const Qfloat& src);
-	Qfloat(const string& src);
+	Qfloat(const string& src);	//Note done
 	~Qfloat();
 
 	bool GetBit(int pos);
@@ -58,24 +58,20 @@ public:
 	const Qfloat Negate();
 	bool IsNegative();
 
-	const Qfloat operator+(const Qfloat& src);
-	const Qfloat operator-(const Qfloat& src);
-	const Qfloat operator*(const Qfloat& src);
-	const Qfloat operator/(const Qfloat& src);
-	const Qfloat operator%(const Qfloat& src);
+	const Qfloat operator+(const Qfloat& src);//
+	const Qfloat operator-(const Qfloat& src);//
+	const Qfloat operator*(const Qfloat& src);//
+	const Qfloat operator/(const Qfloat& src);//
+	const Qfloat operator%(const Qfloat& src);//
 
-	const Qfloat RotateLeft(int& number);
-	const Qfloat RotateRight(int& number);
 	const Qfloat operator&(const Qfloat& src);
 	const Qfloat operator|(const Qfloat& src);
 	const Qfloat operator^(const Qfloat& src);
 	const Qfloat operator~();
-	const Qfloat operator>>(int& number);
-	const Qfloat operator<<(int& number);
-	const Qfloat operator>>(const Qfloat& number);
-	const Qfloat operator<<(const Qfloat& number);
-	const Qfloat RotateLeft(const Qfloat& number);
-	const Qfloat RotateRight(const Qfloat& number);
+	const Qfloat operator>>(const int& number);
+	const Qfloat operator<<(const int& number);
+	const Qfloat RotateLeft(int number);
+	const Qfloat RotateRight(int number);
 
 	Qfloat& operator=(const Qfloat &);
 	Qfloat& operator=(const string& number);
@@ -86,8 +82,8 @@ public:
 	bool operator>=(const Qfloat& src);
 	bool operator==(const Qfloat& src);
 
-	string BinStr();
-	string DecStr();
+	string BinStr();//
+	string DecStr();//
 };
 
 namespace qfloat
