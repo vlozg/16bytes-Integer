@@ -57,31 +57,28 @@ public:
 	Qfloat Negate();
 	bool IsNegative();
 
-	//các hàm số học
-	Qfloat operator+(const Qfloat& src);
-	Qfloat operator-(const Qfloat& src);
-	Qfloat operator*(const Qfloat& src);
-	Qfloat operator/(const Qfloat& src);
-	Qfloat operator%(const Qfloat& src);
+	const Qfloat operator+(const Qfloat& src);
+	const Qfloat operator-(const Qfloat& src);
+	const Qfloat operator*(const Qfloat& src);
+	const Qfloat operator/(const Qfloat& src);
+	const Qfloat operator%(const Qfloat& src);
 
-	//các hàm bitwise
-	Qfloat RotateLeft(int number);
-	Qfloat RotateRight(int number);
-	Qfloat operator&(const Qfloat& src);
-	Qfloat operator|(const Qfloat& src);
-	Qfloat operator^(const Qfloat& src);
-	Qfloat operator~();
-	Qfloat operator>>(int number);
-	Qfloat operator<<(int number);
-	Qfloat operator>>(Qfloat number);
-	Qfloat operator<<(Qfloat number);
-	Qfloat RotateLeft(Qfloat number);
-	Qfloat RotateRight(Qfloat number);
+	const Qfloat RotateLeft(int number);
+	const Qfloat RotateRight(int number);
+	const Qfloat operator&(const Qfloat& src);
+	const Qfloat operator|(const Qfloat& src);
+	const Qfloat operator^(const Qfloat& src);
+	const Qfloat operator~();
+	const Qfloat operator>>(int number);
+	const Qfloat operator<<(int number);
+	const Qfloat operator>>(Qfloat number);
+	const Qfloat operator<<(Qfloat number);
+	const Qfloat RotateLeft(Qfloat number);
+	const Qfloat RotateRight(Qfloat number);
 
-	//Qfloat operator=(const Qfloat &);
-	//Qfloat operator=(string number);
+	Qfloat& operator=(const Qfloat &);
+	Qfloat& operator=(string number);
 
-	//các hàm so sánh
 	bool operator<(const Qfloat& src);
 	bool operator>(const Qfloat& src);
 	bool operator<=(const Qfloat& src);
@@ -97,7 +94,7 @@ namespace qfloat
 bool ReadDecString(string, Qfloat &);
 void ScanQfloat(Qfloat &);
 void PrintQfloat(Qfloat);
-Qfloat BinToDecF(bool *bit);
+Qfloat BinToDec(bool *bit);
 bool *DecToBin(Qfloat x);
 
 bool CheckMinus(char first);
@@ -119,10 +116,12 @@ void PowOfTwoMinus(string pow[128]);
 string SumNumbers(string n1, string n2);
 string SumFractionals(string n1, string n2);
 void DeleteExcessiveZero(string &);
-void PrintBinary(bool *);
 bool CheckAllChar(string, char);
 bool *StringToBool(string);
+
 Qfloat BinStrToDec(string bin);
+
+void PrintBinary(bool *);
 } // namespace qfloat
 
 #endif
