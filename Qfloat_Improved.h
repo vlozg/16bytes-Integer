@@ -54,7 +54,7 @@ public:
 	bool GetBit(int pos);
 	void SetBit(int pos, bool bit);
 
-	Qfloat Negate();
+	const Qfloat Negate();
 	bool IsNegative();
 
 	const Qfloat operator+(const Qfloat& src);
@@ -63,21 +63,21 @@ public:
 	const Qfloat operator/(const Qfloat& src);
 	const Qfloat operator%(const Qfloat& src);
 
-	const Qfloat RotateLeft(int number);
-	const Qfloat RotateRight(int number);
+	const Qfloat RotateLeft(int& number);
+	const Qfloat RotateRight(int& number);
 	const Qfloat operator&(const Qfloat& src);
 	const Qfloat operator|(const Qfloat& src);
 	const Qfloat operator^(const Qfloat& src);
 	const Qfloat operator~();
-	const Qfloat operator>>(int number);
-	const Qfloat operator<<(int number);
-	const Qfloat operator>>(Qfloat number);
-	const Qfloat operator<<(Qfloat number);
-	const Qfloat RotateLeft(Qfloat number);
-	const Qfloat RotateRight(Qfloat number);
+	const Qfloat operator>>(int& number);
+	const Qfloat operator<<(int& number);
+	const Qfloat operator>>(const Qfloat& number);
+	const Qfloat operator<<(const Qfloat& number);
+	const Qfloat RotateLeft(const Qfloat& number);
+	const Qfloat RotateRight(const Qfloat& number);
 
 	Qfloat& operator=(const Qfloat &);
-	Qfloat& operator=(string number);
+	Qfloat& operator=(const string& number);
 
 	bool operator<(const Qfloat& src);
 	bool operator>(const Qfloat& src);

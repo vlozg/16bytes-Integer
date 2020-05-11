@@ -47,7 +47,7 @@ Qfloat& Qfloat::operator=(const Qfloat& src)
 	return *this;
 }
 
-Qfloat& Qfloat::operator=(string src)
+Qfloat& Qfloat::operator=(const string& src)
 {
 	*this = Qfloat(src);
 	return *this;
