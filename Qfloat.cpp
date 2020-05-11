@@ -884,7 +884,7 @@ string IntegerBinToDec(string bin) {
 string FractionalBinToDec(string bin) {
 	string number = "";
 
-	string pow[128];
+	string pow[17000];
 	PowOfTwoMinus(pow);	//khởi tạo chuỗi có các số 2 mũ -n
 
 	pow[0] = "0.0";
