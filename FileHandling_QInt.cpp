@@ -3,16 +3,18 @@
 #include <sstream>
 #include <vector>
 
+using namespace qint;
+
 //Chuyển hướng cout qua file
-streambuf* CoutRedirect(ofstream& output)
+streambuf *CoutRedirect(ofstream &output)
 {
-	streambuf* coutbuf = std::cout.rdbuf(); //lưu buffer hiện tại
-	cout.rdbuf(output.rdbuf()); //chuyển hướng cout qua out (filename)
+	streambuf *coutbuf = std::cout.rdbuf(); //lưu buffer hiện tại
+	cout.rdbuf(output.rdbuf());				//chuyển hướng cout qua out (filename)
 	return coutbuf;
 }
 
 //Chuyển hướng cout về bình thường
-void NormalizeCout(streambuf* coutbuf)
+void NormalizeCout(streambuf *coutbuf)
 {
 	cout.rdbuf(coutbuf);
 }
@@ -22,22 +24,22 @@ int StringToInt(string str)
 {
 	int result = 0;
 	int exp = 1;
-	for (int i = str.length() - 1;i >= 0;i--)
+	for (int i = str.length() - 1; i >= 0; i--)
 	{
-		result += int(str[i] - '0')*exp;
+		result += int(str[i] - '0') * exp;
 		exp *= 10;
 	}
 	return result;
 }
 
 //Hàm chuyển đổi string về dãy bool* bin 128 bit
-bool* StringToBin(string str)
+bool *StringToBin(string str)
 {
-	bool* bin = new bool[BIT_RANGE];
+	bool *bin = new bool[BIT_RANGE];
 	int j = BIT_RANGE - 1;
-	for (int i = 0;i < BIT_RANGE;i++)
+	for (int i = 0; i < BIT_RANGE; i++)
 		bin[i] = 0;
-	for (int i = str.length() - 1;i >= 0;i--)
+	for (int i = str.length() - 1; i >= 0; i--)
 	{
 		if (str[i] == '1')
 			bin[j] = 1;
@@ -49,17 +51,17 @@ bool* StringToBin(string str)
 }
 
 //Hàm để chuyển string về char* size 32 (32 + '\0')
-char* StringToChar(string str)
+char *StringToChar(string str)
 {
-	char* newstr = new char[HEX_SIZE + 1];
-	
+	char *newstr = new char[HEX_SIZE + 1];
+
 	int i;
 	//Thêm 0 vào đầu
-	for (i = 0;i < HEX_SIZE - str.length();i++)
+	for (i = 0; i < HEX_SIZE - str.length(); i++)
 		newstr[i] = '0';
 	int j = 0;
 	//Thêm dãy hex
-	for (;i < HEX_SIZE;i++)
+	for (; i < HEX_SIZE; i++)
 	{
 		newstr[i] = str[j];
 		j++;
@@ -67,7 +69,6 @@ char* StringToChar(string str)
 	newstr[HEX_SIZE] = '\0';
 	return newstr;
 }
-
 
 //Gọi hàm chuyển đổi
 //Input: Base ban đầu, string chứa số cần chuyển đổi
@@ -78,7 +79,7 @@ QInt StringToQInt(string base, string input)
 	//chuyển đổi input về QInt number
 	if (base.compare("2") == 0) //hệ nhị phân
 	{
-		bool* binnum = StringToBin(input); //dãy nhị phân 128 bit
+		bool *binnum = StringToBin(input); //dãy nhị phân 128 bit
 		number = BinToDec(binnum);
 		delete[] binnum;
 	}
@@ -88,7 +89,7 @@ QInt StringToQInt(string base, string input)
 	}
 	else if (base.compare("16") == 0) //hệ thập lục phân
 	{
-		char* hexnum = StringToChar(input); //dãy thập lục phân theo string input
+		char *hexnum = StringToChar(input); //dãy thập lục phân theo string input
 		number = HexToDec(hexnum);
 		delete[] hexnum;
 	}
@@ -98,12 +99,12 @@ QInt StringToQInt(string base, string input)
 //Chuyển QInt theo base và xuất ra file
 void ConvertAndPrint(QInt number, string base, string filename)
 {
-	ofstream output(filename, ios::app); //mở file để ghi
-	streambuf* coutbuf = CoutRedirect(output); //lưu buffer của cout
+	ofstream output(filename, ios::app);	   //mở file để ghi
+	streambuf *coutbuf = CoutRedirect(output); //lưu buffer của cout
 
 	if (base.compare("2") == 0)
 	{
-		bool* bin = DecToBin(number);
+		bool *bin = DecToBin(number);
 		OutputBin(bin); //xuất số dạng binary ra file
 		delete[] bin;
 	}
@@ -113,7 +114,7 @@ void ConvertAndPrint(QInt number, string base, string filename)
 	}
 	else if (base.compare("16") == 0)
 	{
-		char* hex = DecToHex(number);
+		char *hex = DecToHex(number);
 		OutputHex(hex); //xuất số dạng hex ra file
 		delete[] hex;
 	}
@@ -123,7 +124,7 @@ void ConvertAndPrint(QInt number, string base, string filename)
 		output.close();
 }
 
-//Làm các phép so sánh 
+//Làm các phép so sánh
 bool ComparisonOperations(QInt A, QInt B, string op)
 {
 	if (op.compare(">") == 0)
@@ -181,8 +182,8 @@ void ArithmeticOperations(QInt A, QInt B, string base, string op, string filenam
 	}
 	else
 	{
-		ofstream output(filename, ios::app); //mở file để ghi
-		streambuf* coutbuf = CoutRedirect(output); //lưu buffer của cout
+		ofstream output(filename, ios::app);	   //mở file để ghi
+		streambuf *coutbuf = CoutRedirect(output); //lưu buffer của cout
 		cout << ComparisonOperations(A, B, op) << endl;
 		NormalizeCout(coutbuf); //chuyển về cout bình thường
 		if (output.is_open())
@@ -190,7 +191,7 @@ void ArithmeticOperations(QInt A, QInt B, string base, string op, string filenam
 	}
 }
 
-//Làm các phép << >> 
+//Làm các phép << >>
 void ShiftOperation(QInt A, int num, string op, string base, string filename)
 {
 	if (op.compare("<<") == 0)
@@ -203,7 +204,7 @@ void ShiftOperation(QInt A, int num, string op, string base, string filename)
 	}
 }
 
-//Làm các phép ror rol 
+//Làm các phép ror rol
 void RotateOperation(QInt A, int num, string op, string base, string filename)
 {
 	if (op.compare("rol") == 0)
@@ -238,12 +239,11 @@ void ProcessLine(string line, string output)
 		{
 			ConvertAndPrint(~number, tokenArr[0], output);
 		}
-
 	}
 	if (length == 4)
 	{
 		string base = tokenArr[0]; //base xử lý
-		string op = tokenArr[2]; //toán tử
+		string op = tokenArr[2];   //toán tử
 		QInt firstNum = StringToQInt(base, tokenArr[1]);
 		firstNum.Output();
 		if (op.compare("<<") == 0 || op.compare(">>") == 0)
@@ -257,12 +257,10 @@ void ProcessLine(string line, string output)
 			ArithmeticOperations(firstNum, secondNum, base, op, output);
 		}
 	}
-
 }
 
-
 //Hàm đọc và xử lý file input, xuất ra file output
-void ReadFile(string input, string output)
+void qint::ReadFile(string input, string output)
 {
 	ofstream out(output, ios::trunc); //xóa file để rewrite
 	if (out.is_open())
