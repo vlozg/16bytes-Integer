@@ -208,7 +208,23 @@ void CCalculatorDlg::HandleOprButton(char Opr)
 
 void CCalculatorDlg::OnBnClickedBtndot()
 {
-	// TODO: Add your control notification handler code here
+	isEmptyInput = false;	//Đánh dấu đã nhận input số
+	if (ActiveInput == "0" || isEmptyInput)
+	{
+		ActiveInput = "0.";
+	}
+	else
+	{
+		for (int i = 0; i < ActiveInput.GetLength(); i++)
+			if (ActiveInput[i] == _T('.'))
+			{
+				ActiveInput = ActiveInput.Left(i);
+				UpdateDisplay();
+				return;
+			}
+		ActiveInput += '.';
+	}
+	UpdateDisplay();
 }
 
 //Xử lý khi nhấn nút +

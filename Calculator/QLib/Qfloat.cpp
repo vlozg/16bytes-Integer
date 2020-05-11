@@ -55,8 +55,15 @@ Chuyển các bit trong Qfloat thành string
 */
 string Qfloat::BinStr()
 {
-	string result;
-	result = GetBit(0) + ' ';	//lấy bit dấu
+	string result = "";
+
+	if (GetBit(0) == 0) {
+		result += '0';
+	}
+	else {
+		result += '1';
+	}	//lấy bit dấu
+	result += " ";
 	for (int i = 1; i < 16; i++) {
 		if (GetBit(i) == 0) {
 			result += '0';
@@ -66,7 +73,7 @@ string Qfloat::BinStr()
 		}	//lấy 15 bit Exponent
 	}
 	result += ' ';
-	for (int i = 16; i < 127; i++) {
+	for (int i = 16; i < 128; i++) {
 		if (GetBit(i) == 0) {
 			result += '0';
 		}

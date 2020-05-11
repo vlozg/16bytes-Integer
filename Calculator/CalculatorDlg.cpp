@@ -247,7 +247,9 @@ void CCalculatorDlg::OnEnChangeEdit1()
 //	Cập nhập tất cả display khi user nhấn nút số
 void CCalculatorDlg::UpdateAllData() 
 {
+	ActiveInput.Remove(_T(' '));
 	string ActiveInputString = (string)(CW2A(ActiveInput.GetString()));
+	ActiveInputString = "0 000000000000001 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
 	if (!(r_FloatMode.GetCheck()))
 	{
 		//Nếu đang ở QInt mode
@@ -275,11 +277,13 @@ void CCalculatorDlg::UpdateAllData()
 		if (mode == 2)
 		{
 			fInput = BinStrToDecF(ActiveInputString);
+			ActiveInput = fInput.BinStr().c_str();
 			PassiveInput1 = fInput.DecStr().c_str();
 		}
 		else
 		{
 			ReadDecString(ActiveInputString, fInput);
+			ActiveInput = fInput.DecStr().c_str();
 			PassiveInput1 = fInput.BinStr().c_str();
 		}
 	}
