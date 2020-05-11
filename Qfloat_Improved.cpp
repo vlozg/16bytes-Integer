@@ -1,4 +1,6 @@
-#include "Qfloat.h"
+#include "Qfloat_Improved.h"
+
+using namespace qfloat;
 
 /*
 Khởi tạo Qfloat với toàn bộ bit = 0 và độ dài -1
@@ -8,7 +10,6 @@ Qfloat::Qfloat()
 	for (int i = 0; i < 16; i++) {
 		value[i] = 0;
 	}
-	length = -1;
 }
 
 Qfloat::~Qfloat()
@@ -32,22 +33,6 @@ void Qfloat::SetBit(int pos, bool bit) {
 	else {
 		value[pos / 8] &= ~mask;  //Đảo mask và AND để tắt bit
 	}
-}
-
-/*
-Lấy độ dài của Qfloat
-*/
-int Qfloat::GetLength()
-{
-	return length;
-}
-
-/*
-Lưu độ dài của Qfloat từ số nguyên l
-*/
-void Qfloat::SetLength(int l)
-{
-	length = l;
 }
 
 /*
@@ -204,7 +189,7 @@ string Qfloat::DecStr()
 	result += fractionalDigits;
 
 	//so sánh độ dài ban đầu và kết quả để làm tròn
-	int initialLength = length;
+	int initialLength = 100/*length*/;
 	if (initialLength > 0) {
 		if (initialLength < result.length()) {
 			//xóa các kí tự dư
@@ -224,7 +209,7 @@ string Qfloat::DecStr()
 			DeleteExcessiveZero(fractionalDigits); //xóa số 0 dư
 
 			if (fractionalDigits[0] == '1') { //nếu kết quả lớn hơn 1
-				SumNumbersF(integerDigits, "1"); //+ thêm 1 vào phần nguyên
+				SumNumbers(integerDigits, "1"); //+ thêm 1 vào phần nguyên
 			}
 			fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa dấu .
 
@@ -246,7 +231,7 @@ bool Qfloat::GetBit(int pos) {
 }
 
 //hàm scan từ string lưu vào Qfloat
-bool ReadDecString(string input, Qfloat& output)
+bool qfloat::ReadDecString(string input, Qfloat& output)
 {
 	//set tất cả bit của input về 0 tránh TH trùng
 	for (int i = 0; i < 128; i++) {
@@ -257,7 +242,7 @@ bool ReadDecString(string input, Qfloat& output)
 
 	//khởi tạo mảng gồm các số 2 mũ n
 	string pow2[128], powminus2[128];
-	PowOfTwoF(pow2);
+	PowOfTwo(pow2);
 	PowOfFive(powminus2);
 
 	//nếu string không có gì thì stop
@@ -266,7 +251,7 @@ bool ReadDecString(string input, Qfloat& output)
 	}
 
 	//lấy độ dài số nhập vào
-	output.SetLength(temp.length());
+	/*output.SetLength(temp.length());*/
 
 	//kiểm tra dấu
 	if (CheckMinus(temp[0])) {
@@ -387,14 +372,14 @@ bool ReadDecString(string input, Qfloat& output)
 }
 
 //hàm nhập string từ console
-void ScanQfloat(Qfloat& input) {
+void qfloat::ScanQfloat(Qfloat& input) {
 	string temp;
 	getline(cin, temp);
 	ReadDecString(temp, input);
 }
 
 //hàm xuất Qfloat dưới dạng thập phân
-void PrintQfloat(Qfloat input)
+void qfloat::PrintQfloat(Qfloat input)
 {
 	string result = "";
 	string Exponent, Significand;
@@ -512,7 +497,7 @@ void PrintQfloat(Qfloat input)
 	result += fractionalDigits;
 
 	//so sánh độ dài ban đầu và kết quả để làm tròn
-	int initialLength = input.GetLength();
+	int initialLength = 100/*input.GetLength()*/;
 	if (initialLength > 0) {
 		if (initialLength < result.length()) {
 			//xóa các kí tự dư
@@ -532,7 +517,7 @@ void PrintQfloat(Qfloat input)
 			DeleteExcessiveZero(fractionalDigits); //xóa số 0 dư
 
 			if (fractionalDigits[0] == '1') { //nếu kết quả lớn hơn 1
-				SumNumbersF(integerDigits, "1"); //+ thêm 1 vào phần nguyên
+				SumNumbers(integerDigits, "1"); //+ thêm 1 vào phần nguyên
 			}
 			fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa dấu .
 
@@ -547,7 +532,7 @@ void PrintQfloat(Qfloat input)
 Parameter:
 - bit: dãy nhị phân 128bit
 */
-Qfloat BinToDecF(bool* bit) {
+Qfloat qfloat::BinToDecF(bool* bit) {
 	Qfloat res; //Lưu kết quả trả về
 
 	for (int i = 0; i < 128; i++) {
@@ -561,7 +546,7 @@ Qfloat BinToDecF(bool* bit) {
 Parameter:
 - x: số thực 128bit
 */
-bool* DecToBin(Qfloat x) {
+bool* qfloat::DecToBin(Qfloat x) {
 	bool* res = new bool[128];  //Lưu kết quả trả về
 
 	for (int i = 0; i < 128; i++) {
@@ -573,7 +558,7 @@ bool* DecToBin(Qfloat x) {
 
 
 //Hàm đọc file 
-void ReadFileF(string input, string output)
+void qfloat::ReadFile(string input, string output)
 {
 	Qfloat number;
 
@@ -662,12 +647,12 @@ void ReadFileF(string input, string output)
 /*--------Dưới đây là các hàm bổ trợ---------*/
 
 //Kiểm tra dấu trừ
-bool CheckMinus(char first) {
+bool qfloat::CheckMinus(char first) {
 	return first == 45;
 }
 
 //Kiểm tra xem char có phải là số không
-bool CheckNumber(char input) {
+bool qfloat::CheckNumber(char input) {
 	if (input >= 48 && input <= 57) {
 		return true;
 	}
@@ -675,7 +660,7 @@ bool CheckNumber(char input) {
 }
 
 //Kiểm tra string có phải bằng 1
-bool CheckOne(string input) {
+bool qfloat::CheckOne(string input) {
 	for (int i = 2; i < input.length(); i++) {
 		if (input[i] != '0') {
 			return false;
@@ -685,12 +670,12 @@ bool CheckOne(string input) {
 }
 
 //Kiểm tra dấu .
-bool CheckDecimalPoint(char input) {
+bool qfloat::CheckDecimalPoint(char input) {
 	return input == 46;
 }
 
 //Xóa các số 0 đứng đầu chuỗi
-void NormalizeNumberF(string& number)
+void qfloat::NormalizeNumber(string& number)
 {
 	/*
 		- Detecting those are not number
@@ -707,7 +692,7 @@ void NormalizeNumberF(string& number)
 }
 
 //Lấy string chia 2
-string DivideByTwoF(string number)	//Chia chuoi dec cho 2
+string qfloat::DivideByTwo(string number)	//Chia chuoi dec cho 2
 {
 	// Thuc hien nhu phep chia o cap 1
 
@@ -757,12 +742,12 @@ string DivideByTwoF(string number)	//Chia chuoi dec cho 2
 			}
 		}
 	}
-	NormalizeNumberF(result);	//Co nhiem vu xoa cac so 0 o phia truoc 
+	NormalizeNumber(result);	//Co nhiem vu xoa cac so 0 o phia truoc 
 	return result;
 }
 
 //Chia 1 cho chuỗi
-string DivideOne(string number) {
+string qfloat::DivideOne(string number) {
 	string result = "0.";
 	string temp = number;
 
@@ -789,7 +774,7 @@ string DivideOne(string number) {
 }
 
 //Chuyển chuỗi số nguyên sang binary
-string IntegerDecToBin(string number)
+string qfloat::IntegerDecToBin(string number)
 {
 	if (number.length() == 0) {
 		return "";
@@ -806,7 +791,7 @@ string IntegerDecToBin(string number)
 	{
 		lastIndex = temp.length() - 1;			//Trich chu so cuoi cung de xem so do chia co du hay khong
 		int r = (temp[lastIndex] - '0') % 2;	//r se la so du (0 hoac 1)
-		temp = DivideByTwoF(temp);				//temp mang ket qua sau khi chia 2
+		temp = DivideByTwo(temp);				//temp mang ket qua sau khi chia 2
 		char c = r + '0';
 		bin = c + bin;							//Them so du do vao truoc ket qua da co
 	}
@@ -814,7 +799,7 @@ string IntegerDecToBin(string number)
 }
 
 //Chuyển chuỗi số thập phân sang binary
-string FractionalDecToBin(string number) {
+string qfloat::FractionalDecToBin(string number) {
 
 	if (number.length() == 0) {
 		return "";
@@ -829,7 +814,7 @@ string FractionalDecToBin(string number) {
 
 	while (bin.length() < 112)
 	{
-		temp = MultiplyByTwoF(temp);	//temp mang kết quả sau khi nhân 2
+		temp = MultiplyByTwo(temp);	//temp mang kết quả sau khi nhân 2
 		if (temp[0] == '1') {
 			if (CheckOne(temp)) {
 				bin = bin + '1';
@@ -850,19 +835,19 @@ string FractionalDecToBin(string number) {
 }
 
 //Chuyển chuỗi binary sang chuỗi thập phân
-string IntegerBinToDec(string bin) {
+string qfloat::IntegerBinToDec(string bin) {
 	string number = "0";
 	int binLength = bin.length();
 
 	string pow[128];
-	PowOfTwoF(pow);	//khởi tạo chuỗi có các số 2 mũ n
+	PowOfTwo(pow);	//khởi tạo chuỗi có các số 2 mũ n
 
 	if (bin.length() < 128) {
 		for (int i = 0; i < bin.length(); i++)
 		{
 			if (bin[bin.length() - 1 - i] == '1')
 			{
-				number = SumNumbersF(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
+				number = SumNumbers(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
 			}
 		}
 	}
@@ -872,7 +857,7 @@ string IntegerBinToDec(string bin) {
 		{
 			if (bin[128 - 1 - i] == '1')
 			{
-				number = SumNumbersF(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
+				number = SumNumbers(number, pow[i]);	//	Cong lai theo kieu 2^x1 + 2^x2 + 2^x3 + ...
 			}
 		}
 	}
@@ -881,7 +866,7 @@ string IntegerBinToDec(string bin) {
 }
 
 //chuyển phần thập phân binary sang thập phân
-string FractionalBinToDec(string bin) {
+string qfloat::FractionalBinToDec(string bin) {
 	string number = "";
 
 	string pow[128];
@@ -900,7 +885,7 @@ string FractionalBinToDec(string bin) {
 }
 
 //Lấy chuỗi nhân 2
-string MultiplyByTwoF(string number)
+string qfloat::MultiplyByTwo(string number)
 {
 	string result = "";
 	int number_len = number.length();
@@ -931,7 +916,7 @@ string MultiplyByTwoF(string number)
 }
 
 //Lấy chuỗi nhân 5
-string MultiplyByFive(string number)
+string qfloat::MultiplyByFive(string number)
 {
 	string result = "";
 	int number_len = number.length();
@@ -962,17 +947,17 @@ string MultiplyByFive(string number)
 }
 
 //Tạo mảng 2 mũ n
-void PowOfTwoF(string pow[128])
+void qfloat::PowOfTwo(string pow[128])
 {
 	pow[0] = "1";
 	for (int i = 1; i < 128; i++)
 	{
-		pow[i] = MultiplyByTwoF(pow[i - 1]);
+		pow[i] = MultiplyByTwo(pow[i - 1]);
 	}
 }
 
 //Tạo mảng 5 mũ n
-void PowOfFive(string pow[128])
+void qfloat::PowOfFive(string pow[128])
 {
 	pow[0] = "1";
 	for (int i = 1; i < 128; i++)
@@ -986,7 +971,7 @@ void PowOfFive(string pow[128])
 	Đầu tiên tạo mảng các số 5^n
 	Vì các số 2^-n là 0.(00..0)5^n - với phần sau thập phân có n chữ số
 */
-void PowOfTwoMinus(string pow[128])
+void qfloat::PowOfTwoMinus(string pow[128])
 {
 	string five[128];
 	PowOfFive(five);	//khởi tạo mảng các số 5 mũ n
@@ -1003,7 +988,7 @@ void PowOfTwoMinus(string pow[128])
 }
 
 //Cộng 2 chuỗi số thập phân
-string SumNumbersF(string n1, string n2)
+string qfloat::SumNumbers(string n1, string n2)
 {
 	string result = "";
 	string longer = "", shorter = "";	//longer se luu chuoi so co nhieu chu so hon, shorter nguoc lai
@@ -1057,7 +1042,7 @@ string SumNumbersF(string n1, string n2)
 }
 
 //Cộng 2 chuỗi có dạng 0.(...)
-string SumFractionals(string n1, string n2) {
+string qfloat::SumFractionals(string n1, string n2) {
 	string result = "";
 	string longer = "", shorter = "";	//longer se luu chuoi so co nhieu chu so hon, shorter nguoc lai
 	int small = 0, large = 0;
@@ -1121,7 +1106,7 @@ string SumFractionals(string n1, string n2) {
 }
 
 //xóa số 0 đứng cuối chuỗi
-void DeleteExcessiveZero(string& input)
+void qfloat::DeleteExcessiveZero(string& input)
 {
 	for (int i = input.length(); i >= 0; i--) {
 		if (input[i] == '0') {
@@ -1135,7 +1120,7 @@ void DeleteExcessiveZero(string& input)
 }
 
 //xuất ra binary từ mảng bool
-void PrintBinary(bool* bit) {
+void qfloat::PrintBinary(bool* bit) {
 	cout << bit[0] << " ";
 
 	for (int i = 1; i < 16; i++) {
@@ -1153,7 +1138,7 @@ Hàm kiểm tra xem string có phải toàn là 1 char nào đó không
 	Input: string và char a
 	Output: true nếu string chứa toàn char a
 */
-bool CheckAllChar(string input, char a)
+bool qfloat::CheckAllChar(string input, char a)
 {
 	for (int i = 0; i < input.length(); i++) {
 		if (input[i] != a) {
@@ -1164,7 +1149,7 @@ bool CheckAllChar(string input, char a)
 }
 
 //Hàm đọc string lưu vào mảng bool
-bool* StringToBool(string input)
+bool* qfloat::StringToBool(string input)
 {
 	bool* res = new bool[128];  //Lưu kết quả trả về
 	int i = 0;
@@ -1186,7 +1171,7 @@ bool* StringToBool(string input)
 
 //Chuyển chuỗi nhị phân chuẩn IEEE về Qfloat
 //(có khả năng tự chuẩn hóa nếu chuỗi không đủ độ dài)
-Qfloat BinStrToDecF(string bin)
+Qfloat qfloat::BinStrToDec(string bin)
 {
 	int len = bin.length();
 	while (len < 128)
