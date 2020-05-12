@@ -38,9 +38,7 @@ Chú ý khi sử dụng tránh dùng cùng lúc với Qfloat.h là phiên bản 
 #define FOUR_BIT 4
 #endif
 
-#define KNUMBER 16383 // Số thừa K
-#define EXPONENT_BIT 15	// Số bit mũ
-#define SIGNIFICANT_BIT 112	// Số bit định trị
+#define KNUMBER 16383 // số thừa K
 using namespace std;
 
 class Qfloat
@@ -54,43 +52,38 @@ public:
 	Qfloat(const string& src);	//Note done
 	~Qfloat();
 
-	bool GetBit(int pos) const;
+	bool GetBit(int pos);
 	void SetBit(int pos, bool bit);
-	void SetBit(bool bit);
 
-	const Qfloat Negate() const;
-	bool IsNegative() const;
+	const Qfloat Negate();
+	bool IsNegative();
 
-	bool IsZero() const;
-	bool IsNaN() const;
-	bool IsInfinity() const;
+	const Qfloat operator+(const Qfloat& src);//
+	const Qfloat operator-(const Qfloat& src);//
+	const Qfloat operator*(const Qfloat& src);//
+	const Qfloat operator/(const Qfloat& src);//
+	const Qfloat operator%(const Qfloat& src);//
 
-	const Qfloat operator+(const Qfloat& src) const;
-	const Qfloat operator-(const Qfloat& src) const;
-	const Qfloat operator*(const Qfloat& src) const;//
-	const Qfloat operator/(const Qfloat& src) const;//
-	const Qfloat operator%(const Qfloat& src) const;//
+	const Qfloat operator&(const Qfloat& src);
+	const Qfloat operator|(const Qfloat& src);
+	const Qfloat operator^(const Qfloat& src);
+	const Qfloat operator~();
+	const Qfloat operator>>(const int& number);
+	const Qfloat operator<<(const int& number);
+	const Qfloat RotateLeft(int number);
+	const Qfloat RotateRight(int number);
 
-	const Qfloat operator&(const Qfloat& src) const;
-	const Qfloat operator|(const Qfloat& src) const;
-	const Qfloat operator^(const Qfloat& src) const;
-	const Qfloat operator~() const;
-	const Qfloat operator>>(const int& number) const;
-	const Qfloat operator<<(const int& number) const;
-	const Qfloat RotateLeft(int number) const;
-	const Qfloat RotateRight(int number) const;
-
-	Qfloat& operator=(const Qfloat&);
+	Qfloat& operator=(const Qfloat &);
 	Qfloat& operator=(const string& number);
 
-	bool operator<(const Qfloat& src) const;
-	bool operator>(const Qfloat& src) const;
-	bool operator<=(const Qfloat& src) const;
-	bool operator>=(const Qfloat& src) const;
-	bool operator==(const Qfloat& src) const;
+	bool operator<(const Qfloat& src);
+	bool operator>(const Qfloat& src);
+	bool operator<=(const Qfloat& src);
+	bool operator>=(const Qfloat& src);
+	bool operator==(const Qfloat& src);
 
-	string BinStr() const;//
-	string DecStr() const;//
+	string BinStr();//
+	string DecStr();//
 };
 
 namespace qfloat

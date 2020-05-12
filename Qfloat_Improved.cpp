@@ -34,7 +34,7 @@ Lấy giá trị bit tại vị trí bất kì
 Parameter:
 - pos: vị trí bit cần lấy
 */
-bool Qfloat::GetBit(int pos) const
+bool Qfloat::GetBit(int pos) 
 {
 	if (pos > 127 || pos < 0) return 0;
 	char mask = 1 << (pos % 8);   //Mặt nạ đánh dấu bit cần lấy
@@ -61,19 +61,8 @@ void Qfloat::SetBit(int pos, bool bit)
 	}
 }
 
-/*
-Set toàn bộ bit về 1 giá trị
-Parameter:
-- bit: giá trị set
-*/
-void Qfloat::SetBit(bool bit) 
-{
-	for (int i = 0; i < SIZE; i++)
-		this->value[i] = 255;
-}
-
 //	Lấy số đảo dấu
-const Qfloat Qfloat::Negate() const
+const Qfloat Qfloat::Negate()
 {
 	Qfloat res(*this);
 	res.SetBit(0,1);
@@ -81,232 +70,13 @@ const Qfloat Qfloat::Negate() const
 }
 
 //	Kiểm tra số âm.
-bool Qfloat::IsNegative() const
+bool Qfloat::IsNegative()
 {
 	return this->GetBit(0);
 }
 
-//	Kiểm tra số không.
-bool Qfloat::IsZero() const
-{
-	//Bỏ qua bit dấu, kết quả sai khi tồn tại bit 1
-	for (int i = 1; i < BIT_RANGE; i++)
-		if (this->GetBit(i)) return false;
-	
-	return true;
-}
-
-//	Kiểm tra có phải số.
-bool Qfloat::IsNaN() const
-{
-	int i;
-	//Bỏ qua bit dấu, kết quả sai khi exponent tồn tại bit 0
-	for (i = 1; i < EXPONENT_BIT + 1; i++)
-		if (!this->GetBit(i)) return false;
-
-	//Kết quả đúng khi significant tồn tại bit 1
-	for (; i < BIT_RANGE; i++)
-		if (this->GetBit(i)) return true;
-
-	return false;	//Significant toán bit 0 là infinity
-}
-
-//	Kiểm tra vô cực.
-bool Qfloat::IsInfinity() const
-{
-	int i;
-	//Bỏ qua bit dấu, kết quả sai khi exponent tồn tại bit 0
-	for (i = 1; i < EXPONENT_BIT + 1; i++)
-		if (!this->GetBit(i)) return false;
-		
-	//Kết quả sai khi significant tồn tại bit 1
-	for (; i < BIT_RANGE; i++)
-		if (this->GetBit(i)) return false;
-
-	return true;
-}
-
-/*Tổng 2 bit dùng half adder
-Input: bit A, bit B, bit nhớ C
-Output: bit tổng và kết quả nhớ lưu vào C*/
-bool HalfAdder(bool A, bool B, bool& C)
-{
-	C = A & B;
-	return A ^ B;
-}
-
-/*Tính tổng 2 bit dùng full-adder
-Input: bit A, bit B, carrier bit prevC
-Output: trả về tổng 2 bit, bit nhớ được đưa vào prevC*/
-bool FullAdder(bool A, bool B, bool& prevC)
-{
-	bool C, newC; //các bit nhớ
-	bool sum = HalfAdder(A, B, C); //C bit nhớ
-	sum = HalfAdder(sum, prevC, newC);
-	prevC = C | newC;
-	return sum;
-}
-
-/*Tính tổng 2 số thực theo cách của số nguyên 128bit
-Input: số thực num1, num2 và product là kết quả phép cộng
-Output: true nếu tràn bit và ngược lại*/
-bool Adder_128bit(const Qfloat& num1, const Qfloat& num2, Qfloat& product){
-	bool carrierBit = 0;
-	bool firstBit, secondBit, newBit;
-	bool isSignExpected = ~(num1.GetBit(0) ^ num2.GetBit(0));	//Dấu của phép toán có xác định trước được không
-
-	//Tính toán chừa bit dấu
-	for (int i = 0; i < BIT_RANGE; i++)
-	{
-		firstBit = num1.GetBit(BIT_RANGE - i - 1);
-		secondBit = num2.GetBit(BIT_RANGE - i - 1);
-		newBit = FullAdder(firstBit, secondBit, carrierBit);
-		product.SetBit(BIT_RANGE - i - 1, newBit);
-	}
-
-	return (isSignExpected & (num1.GetBit(0) ^ product.GetBit(0)));
-}
-
-//	Output: dạng bù 2 của số nguyên 128bit
-Qfloat& ComplementTwo(Qfloat& src)
-{
-	src = ~src;	//Đảo bit
-
-	//Lấy số nguyên 1
-	Qfloat num1;
-	num1.SetBit(BIT_RANGE-1, 1);
-
-	//Lấy bù 2
-	Adder_128bit(src, num1, src);
-	return src;
-}
-
-//	Toán tử cộng
-const Qfloat Qfloat::operator+(const Qfloat& src) const
-{
-	Qfloat res;
-	Qfloat mask;
-
-	//Lấy exponent bit
-	mask.SetBit(1);	//Reset mask
-	mask = mask << SIGNIFICANT_BIT;	//Remove significant
-	mask.SetBit(0,0);	//Remove sign bit
-	Qfloat exp1, exp2;
-	exp1 = (*this) & mask;
-	exp2 = src & mask;
-
-	//Lấy significant bit
-	Qfloat frac1, frac2;
-		//Loại bỏ sign và exponent bit nhưng chừa lại 2 khoảng cho số 1 mặc định và dấu
-	frac1 = ((*this) << (EXPONENT_BIT + 1)) >> 2;
-	frac2 = (src << (EXPONENT_BIT + 1)) >> 2;
-
-	//Cân bằng exponent
-	Qfloat expInterval;
-	expInterval.SetBit(EXPONENT_BIT, 1);
-	int expDelta = 0;
-	bool isMixNormal = exp1.IsZero() ^ exp2.IsZero();	//Case: subnormal + normal
-	if (isMixNormal) 
-		expDelta--;
-
-	//Set bit 1 mặc định cho số chuẩn
-	if (!exp1.IsZero())
-		frac1.SetBit(1,1);
-	if (!exp2.IsZero())
-		frac2.SetBit(1,1);
-
-	//Tính chênh lệch exponent, nếu chênh lệch lớn hơn 112 bit thì return số còn lại
-	bool biasNum1 = exp1 < exp2;	//Bên nào bị lệch
-	while (exp1 < exp2 && expDelta <= SIGNIFICANT_BIT){
-		Adder_128bit(exp1, expInterval, exp1);	//Tăng exp
-		expDelta++;
-	}
-	if (expDelta > SIGNIFICANT_BIT)
-		return src;
-
-	while (exp1 > exp2 && expDelta <= SIGNIFICANT_BIT){
-		Adder_128bit(exp2, expInterval, exp2);	//Tăng exp
-		expDelta++;
-	}
-	if (expDelta > SIGNIFICANT_BIT)
-		return (*this);
-
-	//Dịch significant theo số chênh exponent
-	if (biasNum1)
-		frac1 = frac1 >> expDelta;
-	else
-		frac2 = frac2 >> expDelta;
-
-	//Lấy bù 2 nếu gặp số âm
-	if (this->IsNegative())
-		ComplementTwo(frac1);
-	if (src.IsNegative())
-		ComplementTwo(frac2);
-
-	//Nếu dịch xong có số bằng 0 thì return số còn lại
-	if (frac1.IsZero())
-		return src;
-	else if (frac2.IsZero())
-		return (*this);
-
-	bool isOverflow = Adder_128bit(frac1, frac2, res);
-
-	if (res.IsZero() && !isOverflow)
-		return res;
-
-	if (isOverflow)
-	{
-		//Dịch số
-		res = res >> 1;
-		res.SetBit(0, !res.GetBit(1));	//Tràn số thì bit dấu sẽ ngược với bit đầu
-		//Tăng exp
-		Adder_128bit(exp1, expInterval, exp1);
-	}
-
-	//Xử lý exponent đề phòng exponent tràn số
-	exp1.SetBit(0,0);	//Xóa bit dấu của
-	if (exp1.IsZero())
-		//Tràn số
-		return Qfloat("0");
-
-	bool resSign = res.GetBit(0);	//Lưu lại dấu
-	if (resSign)	//Số âm thì lấy bù 2 
-		ComplementTwo(res);
-
-	//Chuẩn hóa số
-	ComplementTwo(expInterval);
-
-	//Nếu bit thứ 2 là 0 
-	//	(vị trí được chừa dành cho 
-	//	bit đầu mặc định của định dạng số thực) 
-	//thì liên tục chuẩn hóa
-	//cho đến khi tìm được bit số 1 vào vị trí đó
-	while (!res.GetBit(1) && !exp1.IsZero() && !res.IsZero())
-	{
-		res = res << 1;
-		//Giảm exp
-		Adder_128bit(exp1, expInterval, exp1);
-	}
-
-	//Chuẩn hóa thất bại
-	if (res.IsZero())
-		return Qfloat("0");
-
-	res = (res << 2) >> (EXPONENT_BIT + 1);	//Đưa significant xuống
-	res = res | exp1;	//Set bit exponent, exponent của res ban đầu luôn là 0
-	res.SetBit(0,resSign);
-
-	return res;
-}
-
-const Qfloat Qfloat::operator-(const Qfloat& src) const
-{
-	//Đảo dấu rồi cộng
-	return (*this) + src.Negate();
-}
-
 //	Toán tử AND
-const Qfloat Qfloat::operator&(const Qfloat& src) const
+const Qfloat Qfloat::operator&(const Qfloat& src) 
 {
 	Qfloat res;
 
@@ -318,7 +88,7 @@ const Qfloat Qfloat::operator&(const Qfloat& src) const
 }
 
 //	Toán tử OR
-const Qfloat Qfloat::operator|(const Qfloat& src) const
+const Qfloat Qfloat::operator|(const Qfloat& src)
 {
 	Qfloat res;
 
@@ -330,7 +100,7 @@ const Qfloat Qfloat::operator|(const Qfloat& src) const
 }
 
 //	Toán tử XOR
-const Qfloat Qfloat::operator^(const Qfloat& src) const
+const Qfloat Qfloat::operator^(const Qfloat& src)
 {
 	Qfloat res;
 
@@ -342,7 +112,7 @@ const Qfloat Qfloat::operator^(const Qfloat& src) const
 }
 
 //	Toán tử NOT
-const Qfloat Qfloat::operator~() const
+const Qfloat Qfloat::operator~()
 {
 	Qfloat res;
 
@@ -354,7 +124,7 @@ const Qfloat Qfloat::operator~() const
 }
 
 //	Toán tử shift right
-const Qfloat Qfloat::operator>>(const int& number) const
+const Qfloat Qfloat::operator>>(const int& number)
 {
 	//Số bé hơn 0 thì kết quả giữ nguyên
 	if (number <= 0)
@@ -365,7 +135,7 @@ const Qfloat Qfloat::operator>>(const int& number) const
 
 	Qfloat res;
 
-	for (int i = BIT_RANGE - 1; i >= number; i--)
+	for (int i = BIT_RANGE; i >= number; i--)
 	{
 		res.SetBit(i, this->GetBit(i - number));
 		res.SetBit(i - number, 0);
@@ -374,7 +144,7 @@ const Qfloat Qfloat::operator>>(const int& number) const
 }
 
 //	Toán tử shift left
-const Qfloat Qfloat::operator<<(const int& number) const
+const Qfloat Qfloat::operator<<(const int& number)
 {
 	//Số bé hơn 0 thì kết quả giữ nguyên
 	if (number <= 0)
@@ -385,16 +155,16 @@ const Qfloat Qfloat::operator<<(const int& number) const
 
 	Qfloat res;
 
-	for (int i = 0; i < BIT_RANGE - number; i++)
+	for (int i = BIT_RANGE - number; i <= BIT_RANGE; i++)
 	{
-		res.SetBit(i, this->GetBit(i + number));
-		res.SetBit(i + number, 0);
+		res.SetBit(i - number, this->GetBit(i));
+		res.SetBit(i, 0);
 	}
 	return res;
 }
 
 //	Toán tử xoay bit bên trái
-const Qfloat Qfloat::RotateLeft(int number) const
+const Qfloat Qfloat::RotateLeft(int number) 
 {
 	//Số âm hoặc bộ số của 128 thì giữ nguyên
 	if (number <= 0 || (number%BIT_RANGE == 0)) 
@@ -410,7 +180,7 @@ const Qfloat Qfloat::RotateLeft(int number) const
 }
 
 //	Toán tử xoay bit bên phải
-const Qfloat Qfloat::RotateRight(int number) const
+const Qfloat Qfloat::RotateRight(int number) 
 {
 	//Số âm hoặc bộ số của 128 thì giữ nguyên
 	if (number <= 0 || (number%BIT_RANGE == 0)) 
@@ -448,10 +218,11 @@ Qfloat& Qfloat::operator=(const string& src)
 }
 
 //	Toán tử so sánh bé hơn
-bool Qfloat::operator<(const Qfloat& src) const
+bool Qfloat::operator<(const Qfloat& src)
 {
+	Qfloat B = src; //biến tạm để so sánh
 	bool negative1 = this->IsNegative();
-	bool negative2 = src.IsNegative();
+	bool negative2 = B.IsNegative();
 
 	if (negative1 && !negative2) //số hiện tại âm, số number dương
 		return true;
@@ -461,7 +232,7 @@ bool Qfloat::operator<(const Qfloat& src) const
 	for (int i = 1; i < BIT_RANGE; i++)
 	{
 		//Nếu bit tại vị trí i của this > src
-		if (this->GetBit(i) && !src.GetBit(i))
+		if (this->GetBit(i) && !B.GetBit(i))
 		{
 			if (!negative1) //nếu cả 2 số dương
 				return false;
@@ -469,7 +240,7 @@ bool Qfloat::operator<(const Qfloat& src) const
 				return true;
 		}
 		//ngược lại
-		else if (!(this->GetBit(i)) && src.GetBit(i))
+		else if (!(this->GetBit(i)) && B.GetBit(i))
 		{
 			if (!negative1) //nếu cả 2 số dương
 				return true;
@@ -483,10 +254,11 @@ bool Qfloat::operator<(const Qfloat& src) const
 }
 
 //	Toán tử so sánh lớn hơn
-bool Qfloat::operator>(const Qfloat& src) const
+bool Qfloat::operator>(const Qfloat& src)
 {
+	Qfloat B = src; //biến tạm để so sánh
 	bool negative1 = this->IsNegative();
-	bool negative2 = src.IsNegative();
+	bool negative2 = B.IsNegative();
 
 	if (negative1 && !negative2) //số hiện tại âm, số number dương
 		return true;
@@ -496,7 +268,7 @@ bool Qfloat::operator>(const Qfloat& src) const
 	for (int i = 1; i < BIT_RANGE; i++)
 	{
 		//Nếu bit tại vị trí i của this > src
-		if (this->GetBit(i) && !src.GetBit(i))
+		if (this->GetBit(i) && !B.GetBit(i))
 		{
 			if (!negative1) //nếu cả 2 số dương
 				return true;
@@ -504,7 +276,7 @@ bool Qfloat::operator>(const Qfloat& src) const
 				return false;
 		}
 		//ngược lại
-		else if (!(this->GetBit(i)) && src.GetBit(i))
+		else if (!(this->GetBit(i)) && B.GetBit(i))
 		{
 			if (!negative1) //nếu cả 2 số dương
 				return false;
@@ -518,19 +290,19 @@ bool Qfloat::operator>(const Qfloat& src) const
 }
 
 //	Toán tử so sánh bé hơn hoặc bằng
-bool Qfloat::operator<=(const Qfloat& src) const
+bool Qfloat::operator<=(const Qfloat& src)
 {
 	return (*this == src || *this < src);
 }
 
 //	Toán tử so sánh lớn hơn hoặc bằng
-bool Qfloat::operator>=(const Qfloat& src) const
+bool Qfloat::operator>=(const Qfloat& src)
 {
 	return (*this == src || *this > src);
 }
 
 //	Toán tử so sánh bằng
-bool Qfloat::operator==(const Qfloat& src) const
+bool Qfloat::operator==(const Qfloat& src)
 {
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -543,7 +315,7 @@ bool Qfloat::operator==(const Qfloat& src) const
 /*
 Chuyển các bit trong Qfloat thành string
 */
-string Qfloat::BinStr() const
+string Qfloat::BinStr()
 {
 	string result = "";
 
@@ -577,7 +349,7 @@ string Qfloat::BinStr() const
 /*
 Chuyển Qfloat dưới dạng thập phân thành string
 */
-string Qfloat::DecStr() const
+string Qfloat::DecStr()
 {
 	string result = "";
 	string Exponent, Significand;
