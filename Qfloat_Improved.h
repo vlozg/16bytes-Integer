@@ -48,8 +48,7 @@ private:
 
 public:
 	Qfloat();
-	Qfloat(const Qfloat& src);
-	Qfloat(const string& src);
+	Qfloat(string);
 	~Qfloat();
 
 	bool GetBit(int pos);

@@ -35,20 +35,6 @@ void Qfloat::SetBit(int pos, bool bit) {
 	}
 }
 
-//	Lấy số đảo dấu
-const Qfloat Qfloat::Negate()
-{
-	Qfloat res(*this);
-	res.SetBit(0,1);
-	return res;
-}
-
-//	Kiểm tra số âm.
-bool Qfloat::IsNegative()
-{
-	return this->GetBit(0);
-}
-
 Qfloat& Qfloat::operator=(const Qfloat& src)
 {
 	if (this == &src) //nếu gán cho chính nó
