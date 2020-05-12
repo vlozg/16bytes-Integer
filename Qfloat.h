@@ -1,21 +1,4 @@
-/*
-
-Qfloat.h là thư viện khai báo kiểu dữ liệu số thực 128bit
-
-và chứa các hàm/phương thức/toán tử phục vụ cho việc cài đặt Qfloat
-
-Đây là phiên bản đầu tiên của Qfloat
-
-Có một số vấn đề liên quan đến chuyển đổi qua lại giữa 2 hệ thập phân và nhị phân
-
-Khuyến khích sử dụng Qfloat_Improved.h là phiên bản cải tiến hơn khắc phụ được các lỗi trên
-
-Chú ý khi sử dụng tránh dùng cùng lúc với Qfloat_Improved.h
-
-*/
-
-#ifndef _QFLOAT_H_
-#define _QFLOAT_H_
+#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
@@ -70,5 +53,3 @@ void PrintBinary(bool*);
 bool CheckAllChar(string, char);
 bool* StringToBool(string);
 Qfloat BinStrToDecF(string bin);
-
-#endif

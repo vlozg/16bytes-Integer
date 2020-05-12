@@ -6,10 +6,10 @@ test.cpp
 *.pdb
 *.iobj
 *.ipdb
+Calculator/.vs/Calculator/v16/ipch/f96c95a75a58103a.ipch
 *.ipch
 *.tlog
 *.idb
 *.opendb
 *.db
-Calculator/.vs/
-Calculator/Release
+Calculator/.vs/Calculator/v16/Browse.VC.db

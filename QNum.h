@@ -1,16 +1,21 @@
-/*
-
-QNum.h là thư viện chứa các hàm/phương thức/toán tử
-
-mà trong đó cả 2 thư viện QInt Qfloat đều có liên quan
-
-giúp thư viện QInt, Qfloat được độc lập với nhau
-
-Trong hầu hết trường hợp, khuyến khích nên sử dụng thư viện này.
-
-*/
-
 #pragma once
 
-#include "QInt.h"
-#include "Qfloat.h"
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <string>
+
+#define SIZE 16
+#define HEX_SIZE 32
+#define BIT_RANGE 128
+#define MAX_VALUE_BIT 16
+#define FOUR_BIT 4
+using namespace std;
+
+
+string DivideByTwo(string number);
+bool* DecToBinStr(string number);	
+string MultiplyByTwo(string number);
+void PowOfTwo(string pow[BIT_RANGE]);
+string SumNumbers(string n1, string n2);
+bool CheckNumber(string number);
+void NormalizeNumber(string& number);
