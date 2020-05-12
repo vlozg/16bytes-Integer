@@ -229,7 +229,6 @@ const Qfloat Qfloat::operator+(const Qfloat& src) const
 	Qfloat frac1, frac2;
 	frac1 = SignificantExtract(*this);
 	frac2 = SignificantExtract(src);
-
 	//Cân bằng exponent
 	Qfloat expInterval;
 	expInterval.SetBit(EXPONENT_BIT, 1);
@@ -372,13 +371,6 @@ QInt QInt::operator *(QInt number)
 	return result;
 }
 */
-
-//	Chuyển dạng bias sang dạng bù 2
-const Qfloat BiasToNorm(const Qfloat& src)
-{
-
-}
-
 //	Toán tử nhân
 const Qfloat Qfloat::operator*(const Qfloat& src) const
 {
@@ -394,18 +386,14 @@ const Qfloat Qfloat::operator*(const Qfloat& src) const
 
 	//Lấy significant bit
 	Qfloat frac1, frac2;
-	frac1 = SignificantExtract(*this);
-	frac2 = SignificantExtract(src);
+		//Loại bỏ sign và exponent bit nhưng chừa lại 2 khoảng cho số 1 mặc định và dấu
+	frac1 = ((*this) << (EXPONENT_BIT + 1)) >> 2;
+	frac2 = (src << (EXPONENT_BIT + 1)) >> 2;
 
-	//Cộng exponent
-	Adder_128bit(exp1, exp2, res);
-	
-	//Trừ bias
-	Qfloat bias;
-	bias.SetBit(EXPONENT_BIT, 1);
-	bias.SetBit(0,1);
-	bias.SetBit(1,1);
-
+	//Cân bằng exponent
+	Qfloat expInterval;
+	expInterval.SetBit(EXPONENT_BIT, 1);
+	int expDelta = 0;
 	bool isMixNormal = exp1.IsZero() ^ exp2.IsZero();	//Case: subnormal + normal
 	if (isMixNormal) 
 		expDelta--;
