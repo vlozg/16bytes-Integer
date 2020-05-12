@@ -51,25 +51,24 @@ public:
 	Qfloat(string);
 	~Qfloat();
 
-	bool GetBit(int pos);
-	void SetBit(int pos, bool bit);
+	bool GetBit(int);
+	void SetBit(int, bool);
 
-	Qfloat Negate();
-	bool IsNegative();
+	Qfloat ComplementTwo();
 
 	//các hàm số học
-	Qfloat operator+(const Qfloat& src);
-	Qfloat operator-(const Qfloat& src);
-	Qfloat operator*(const Qfloat& src);
-	Qfloat operator/(const Qfloat& src);
-	Qfloat operator%(const Qfloat& src);
+	Qfloat operator+(Qfloat);
+	Qfloat operator-(Qfloat);
+	Qfloat operator*(Qfloat);
+	Qfloat operator/(Qfloat);
+	Qfloat operator%(Qfloat);
 
 	//các hàm bitwise
 	Qfloat RotateLeft(int number);
 	Qfloat RotateRight(int number);
-	Qfloat operator&(const Qfloat& src);
-	Qfloat operator|(const Qfloat& src);
-	Qfloat operator^(const Qfloat& src);
+	Qfloat operator&(Qfloat number);
+	Qfloat operator|(Qfloat number);
+	Qfloat operator^(Qfloat number);
 	Qfloat operator~();
 	Qfloat operator>>(int number);
 	Qfloat operator<<(int number);
@@ -78,15 +77,17 @@ public:
 	Qfloat RotateLeft(Qfloat number);
 	Qfloat RotateRight(Qfloat number);
 
-	//Qfloat operator=(const Qfloat &);
-	//Qfloat operator=(string number);
+	Qfloat operator=(const Qfloat &);
+	Qfloat operator=(string number);
 
 	//các hàm so sánh
-	bool operator<(const Qfloat& src);
-	bool operator>(const Qfloat& src);
-	bool operator<=(const Qfloat& src);
-	bool operator>=(const Qfloat& src);
-	bool operator==(const Qfloat& src);
+	bool operator<(const Qfloat &);
+	bool operator>(const Qfloat &);
+	bool operator<=(const Qfloat &);
+	bool operator>=(const Qfloat &);
+	bool operator==(const Qfloat &);
+
+	bool IsNegative();
 
 	string BinStr();
 	string DecStr();
@@ -99,6 +100,8 @@ void ScanQfloat(Qfloat &);
 void PrintQfloat(Qfloat);
 Qfloat BinToDecF(bool *bit);
 bool *DecToBin(Qfloat x);
+
+void ReadFile(string input, string output);
 
 bool CheckMinus(char first);
 bool CheckNumber(char input);
