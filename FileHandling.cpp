@@ -245,7 +245,7 @@ void ProcessLine(string line, string output)
 		string base = tokenArr[0]; //base xử lý
 		string op = tokenArr[2]; //toán tử
 		QInt firstNum = StringToQInt(base, tokenArr[1]);
-		firstNum.Output();
+		//firstNum.Output();
 		if (op.compare("<<") == 0 || op.compare(">>") == 0)
 			ShiftOperation(firstNum, StringToInt(tokenArr[3]), op, base, output);
 		else if (op.compare("ror") == 0 || op.compare("rol") == 0)
@@ -253,7 +253,7 @@ void ProcessLine(string line, string output)
 		else
 		{
 			QInt secondNum = StringToQInt(base, tokenArr[3]);
-			secondNum.Output();
+			//secondNum.Output();
 			ArithmeticOperations(firstNum, secondNum, base, op, output);
 		}
 	}

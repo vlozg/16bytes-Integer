@@ -40,12 +40,20 @@ void CCalculatorDlg::GetResultOutput()
 
 void CCalculatorDlg::OnBnClickedBtnequal()
 {
-	PreCalc(prevOpr);	//Tính toán lần cuối
+	if (r_IntMode.GetCheck())
+	{
+		PreCalc(prevOpr);	//Tính toán lần cuối
 
-	ResetInput(0);
+		ResetInput(0);
 
-	prevOpr = '=';
-	isEmptyInput = true;
+		prevOpr = '=';
+		isEmptyInput = true;
+	}
+	else
+	{
+		UpdateData(1);
+		UpdateAllData();
+	}
 	UpdateDisplay();
 }
 

@@ -30,6 +30,7 @@
 //- bInput: ký tự muốn thêm vào active input
 void CCalculatorDlg::AddInput(char bInput)
 {
+	UpdateData(1);
 	if (ActiveInput == "0" || isEmptyInput)
 	{
 		ActiveInput = bInput;

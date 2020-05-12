@@ -249,7 +249,7 @@ void CCalculatorDlg::UpdateAllData()
 {
 	ActiveInput.Remove(_T(' '));
 	string ActiveInputString = (string)(CW2A(ActiveInput.GetString()));
-	ActiveInputString = "0 000000000000001 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+
 	if (!(r_FloatMode.GetCheck()))
 	{
 		//Nếu đang ở QInt mode
@@ -480,6 +480,7 @@ void CCalculatorDlg::OnEnChangeEdit4()
 void CCalculatorDlg::OnBnClickedRadio1()
 {
 	ChangeMode_Dec();
+	t_ActiveInput.SetReadOnly(1);
 	b_Passive2.EnableWindow(1);
 	t_PassiveInput2.EnableWindow(1);
 	b_oprAnd.EnableWindow(1);
@@ -503,6 +504,7 @@ void CCalculatorDlg::OnBnClickedRadio1()
 void CCalculatorDlg::OnBnClickedRadio2()
 {
 	ChangeMode_Dec();
+	t_ActiveInput.SetReadOnly(0);
 	b_Passive2.EnableWindow(0);
 	t_PassiveInput2.EnableWindow(0);
 	b_oprAnd.EnableWindow(0);
@@ -513,7 +515,6 @@ void CCalculatorDlg::OnBnClickedRadio2()
 	b_oprRightShift.EnableWindow(0);
 	b_oprLeftRol.EnableWindow(0);
 	b_oprRightRol.EnableWindow(0);
-	b_Equal.EnableWindow(0);
 	b_ChangeSign.EnableWindow(0);
 
 	b_oprPlus.EnableWindow(0);
