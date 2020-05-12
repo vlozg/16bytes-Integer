@@ -10,14 +10,11 @@ class Qfloat
 {
 private:
 	char value[16];
-	int length;
 public:
 	Qfloat();
 	~Qfloat();
 	bool GetBit(int);
 	void SetBit(int, bool);
-	int GetLength();
-	void SetLength(int);
 	string BinStr();
 	string DecStr();
 };
