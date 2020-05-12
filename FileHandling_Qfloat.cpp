@@ -62,7 +62,7 @@ void qfloat::ReadFile(string input, string output)
 			}
 			else { //nhập hệ 2 xuất hệ 10
 				freopen(output.c_str(), "a", stdout);
-				number = BinToDec(binary);
+				number = BinToDecF(binary);
 				PrintQfloat(number);
 				cout << endl;
 				fclose(stdout);

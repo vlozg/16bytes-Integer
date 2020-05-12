@@ -13,4 +13,4 @@ Trong hầu hết trường hợp, khuyến khích nên sử dụng thư viện 
 #pragma once
 
 #include "QInt.h"
-#include "Qfloat_Improved.h"
+#include "Qfloat.h"

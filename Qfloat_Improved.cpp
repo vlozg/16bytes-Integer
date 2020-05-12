@@ -35,24 +35,6 @@ void Qfloat::SetBit(int pos, bool bit) {
 	}
 }
 
-Qfloat& Qfloat::operator=(const Qfloat& src)
-{
-	if (this == &src) //nếu gán cho chính nó
-		return *this;
-
-	for (int i = 0; i < SIZE; i++) //copy giá trị
-	{
-		this->value[i] = src.value[i];
-	}
-	return *this;
-}
-
-Qfloat& Qfloat::operator=(string src)
-{
-	*this = Qfloat(src);
-	return *this;
-}
-
 /*
 Chuyển các bit trong Qfloat thành string
 */
@@ -550,7 +532,7 @@ void qfloat::PrintQfloat(Qfloat input)
 Parameter:
 - bit: dãy nhị phân 128bit
 */
-Qfloat qfloat::BinToDec(bool* bit) {
+Qfloat qfloat::BinToDecF(bool* bit) {
 	Qfloat res; //Lưu kết quả trả về
 
 	for (int i = 0; i < 128; i++) {
@@ -1117,7 +1099,7 @@ Qfloat qfloat::BinStrToDec(string bin)
 	}
 	bool* binArr = StringToBool(bin);
 	Qfloat result;
-	result = BinToDec(binArr);
+	result = BinToDecF(binArr);
 	if (binArr != NULL)
 		delete[] binArr;
 	return result;
