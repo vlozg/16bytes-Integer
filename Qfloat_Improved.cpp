@@ -7,38 +7,13 @@ Khởi tạo Qfloat với toàn bộ bit = 0 và độ dài -1
 */
 Qfloat::Qfloat()
 {
-	for (int i = 0; i < SIZE; i++) 
-	{
+	for (int i = 0; i < 16; i++) {
 		value[i] = 0;
 	}
 }
 
-//	Constructor với Qfloat
-Qfloat::Qfloat(const Qfloat& src)
-{
-	*this = src;
-}
-
-//	Constructor với string
-Qfloat::Qfloat(const string& src)
-{
-	
-}
-
 Qfloat::~Qfloat()
 {
-}
-
-/*
-Lấy giá trị bit tại vị trí bất kì
-Parameter:
-- pos: vị trí bit cần lấy
-*/
-bool Qfloat::GetBit(int pos) 
-{
-	if (pos > 127 || pos < 0) return 0;
-	char mask = 1 << (pos % 8);   //Mặt nạ đánh dấu bit cần lấy
-	return (value[pos / 8] & mask);
 }
 
 /*
@@ -47,8 +22,7 @@ Parameter:
 - pos: vị trí set
 - bit: giá trị set
 */
-void Qfloat::SetBit(int pos, bool bit) 
-{
+void Qfloat::SetBit(int pos, bool bit) {
 	if (pos > 127) return;
 
 	char mask = 1 << (pos % 8);   //Mặt nạ đánh dấu bit cần sửa
@@ -75,241 +49,22 @@ bool Qfloat::IsNegative()
 	return this->GetBit(0);
 }
 
-//	Toán tử AND
-const Qfloat Qfloat::operator&(const Qfloat& src) 
-{
-	Qfloat res;
-
-	for (int i = 0; i < MAX_VALUE_BIT; i++) {
-		res.value[i] = this->value[i] & src.value[i];
-	}
-
-	return res;
-}
-
-//	Toán tử OR
-const Qfloat Qfloat::operator|(const Qfloat& src)
-{
-	Qfloat res;
-
-	for (int i = 0; i < MAX_VALUE_BIT; i++) {
-		res.value[i] = this->value[i] | src.value[i];
-	}
-
-	return res;
-}
-
-//	Toán tử XOR
-const Qfloat Qfloat::operator^(const Qfloat& src)
-{
-	Qfloat res;
-
-	for (int i = 0; i < MAX_VALUE_BIT; i++) {
-		res.value[i] = this->value[i] | src.value[i];
-	}
-
-	return res;
-}
-
-//	Toán tử NOT
-const Qfloat Qfloat::operator~()
-{
-	Qfloat res;
-
-	for (int i = 0; i < MAX_VALUE_BIT; i++) {
-		res.value[i] = ~(this->value[i]);
-	}
-
-	return res;
-}
-
-//	Toán tử shift right
-const Qfloat Qfloat::operator>>(const int& number)
-{
-	//Số bé hơn 0 thì kết quả giữ nguyên
-	if (number <= 0)
-		return *this;
-	//Vượt quá bit range thì kết quả bằng 0
-	if (number >= BIT_RANGE)
-		return Qfloat("0");
-
-	Qfloat res;
-
-	for (int i = BIT_RANGE; i >= number; i--)
-	{
-		res.SetBit(i, this->GetBit(i - number));
-		res.SetBit(i - number, 0);
-	}
-	return res;
-}
-
-//	Toán tử shift left
-const Qfloat Qfloat::operator<<(const int& number)
-{
-	//Số bé hơn 0 thì kết quả giữ nguyên
-	if (number <= 0)
-		return *this;
-	//Vượt quá bit range thì kết quả bằng 0
-	if (number >= BIT_RANGE)
-		return Qfloat("0");
-
-	Qfloat res;
-
-	for (int i = BIT_RANGE - number; i <= BIT_RANGE; i++)
-	{
-		res.SetBit(i - number, this->GetBit(i));
-		res.SetBit(i, 0);
-	}
-	return res;
-}
-
-//	Toán tử xoay bit bên trái
-const Qfloat Qfloat::RotateLeft(int number) 
-{
-	//Số âm hoặc bộ số của 128 thì giữ nguyên
-	if (number <= 0 || (number%BIT_RANGE == 0)) 
-		return *this;
-	
-	number %= BIT_RANGE;
-	Qfloat res;
-	
-	res = (*this) << number;	//Đẩy phần đuôi lên
-	res = res | ((*this) >> (BIT_RANGE - number));	//Đẩy phần đầu xuống và set bit vào
-
-	return res;
-}
-
-//	Toán tử xoay bit bên phải
-const Qfloat Qfloat::RotateRight(int number) 
-{
-	//Số âm hoặc bộ số của 128 thì giữ nguyên
-	if (number <= 0 || (number%BIT_RANGE == 0)) 
-		return *this;
-	
-	number %= BIT_RANGE;
-	Qfloat res;
-	
-	res = (*this) >> number;	//Đẩy phần đầu xuống
-	res = res | ((*this) << (BIT_RANGE - number));	//Đẩy phần đuôi lên và set bit vào
-
-	return res;
-}
-
-//	Toán tử gán cơ bản
 Qfloat& Qfloat::operator=(const Qfloat& src)
 {
 	if (this == &src) //nếu gán cho chính nó
 		return *this;
 
-	//copy giá trị
-	for (int i = 0; i < SIZE; i++) 
+	for (int i = 0; i < SIZE; i++) //copy giá trị
 	{
 		this->value[i] = src.value[i];
 	}
-
 	return *this;
 }
 
-//	Toán tử gán trực tiếp với string
 Qfloat& Qfloat::operator=(const string& src)
 {
 	*this = Qfloat(src);
 	return *this;
-}
-
-//	Toán tử so sánh bé hơn
-bool Qfloat::operator<(const Qfloat& src)
-{
-	Qfloat B = src; //biến tạm để so sánh
-	bool negative1 = this->IsNegative();
-	bool negative2 = B.IsNegative();
-
-	if (negative1 && !negative2) //số hiện tại âm, số number dương
-		return true;
-	if (!negative1 && negative2) //số hiện tại dương, số number âm
-		return false;
-	
-	for (int i = 1; i < BIT_RANGE; i++)
-	{
-		//Nếu bit tại vị trí i của this > src
-		if (this->GetBit(i) && !B.GetBit(i))
-		{
-			if (!negative1) //nếu cả 2 số dương
-				return false;
-			else
-				return true;
-		}
-		//ngược lại
-		else if (!(this->GetBit(i)) && B.GetBit(i))
-		{
-			if (!negative1) //nếu cả 2 số dương
-				return true;
-			else
-				return false;
-		}
-	}
-
-	//Trường hợp bằng nhau
-	return false;
-}
-
-//	Toán tử so sánh lớn hơn
-bool Qfloat::operator>(const Qfloat& src)
-{
-	Qfloat B = src; //biến tạm để so sánh
-	bool negative1 = this->IsNegative();
-	bool negative2 = B.IsNegative();
-
-	if (negative1 && !negative2) //số hiện tại âm, số number dương
-		return true;
-	if (!negative1 && negative2) //số hiện tại dương, số number âm
-		return false;
-	
-	for (int i = 1; i < BIT_RANGE; i++)
-	{
-		//Nếu bit tại vị trí i của this > src
-		if (this->GetBit(i) && !B.GetBit(i))
-		{
-			if (!negative1) //nếu cả 2 số dương
-				return true;
-			else
-				return false;
-		}
-		//ngược lại
-		else if (!(this->GetBit(i)) && B.GetBit(i))
-		{
-			if (!negative1) //nếu cả 2 số dương
-				return false;
-			else
-				return true;
-		}
-	}
-
-	//Trường hợp bằng nhau
-	return false;
-}
-
-//	Toán tử so sánh bé hơn hoặc bằng
-bool Qfloat::operator<=(const Qfloat& src)
-{
-	return (*this == src || *this < src);
-}
-
-//	Toán tử so sánh lớn hơn hoặc bằng
-bool Qfloat::operator>=(const Qfloat& src)
-{
-	return (*this == src || *this > src);
-}
-
-//	Toán tử so sánh bằng
-bool Qfloat::operator==(const Qfloat& src)
-{
-	for (int i = 0; i < SIZE; i++)
-	{
-		if (value[i] != src.value[i])
-			return false;
-	}
-	return true;
 }
 
 /*
@@ -494,6 +249,17 @@ string Qfloat::DecStr()
 		}
 	}
 	return result;
+}
+
+/*
+Lấy giá trị bit tại vị trí bất kì
+Parameter:
+- pos: vị trí bit cần lấy
+*/
+bool Qfloat::GetBit(int pos) {
+	if (pos > 127 || pos < 0) return 0;
+	char mask = 1 << (pos % 8);   //Mặt nạ đánh dấu bit cần lấy
+	return (value[pos / 8] & mask);
 }
 
 //hàm scan từ string lưu vào Qfloat
