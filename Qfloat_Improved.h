@@ -64,6 +64,7 @@ public:
 	bool IsZero() const;
 	bool IsNaN() const;
 	bool IsInfinity() const;
+	bool IsNumber() const;
 
 	const Qfloat operator+(const Qfloat& src) const;
 	const Qfloat operator-(const Qfloat& src) const;

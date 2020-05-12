@@ -126,6 +126,12 @@ bool Qfloat::IsInfinity() const
 	return true;
 }
 
+//	Kiểm tra có phải số hợp lệ
+bool Qfloat::IsNumber() const
+{
+	return (!(this->IsInfinity() || this->IsNaN()));
+}
+
 /*Tổng 2 bit dùng half adder
 Input: bit A, bit B, bit nhớ C
 Output: bit tổng và kết quả nhớ lưu vào C*/
@@ -181,30 +187,225 @@ Qfloat& ComplementTwo(Qfloat& src)
 	return src;
 }
 
-//	Toán tử cộng
-const Qfloat Qfloat::operator+(const Qfloat& src) const
+//	Lấy phần Exponent
+const Qfloat ExponentExtract(const Qfloat& src)
 {
-	Qfloat res;
 	Qfloat mask;
-
-	//Lấy exponent bit
 	mask.SetBit(1);	//Reset mask
 	mask = mask << SIGNIFICANT_BIT;	//Remove significant
 	mask.SetBit(0,0);	//Remove sign bit
+	return (src & mask);
+}
+
+//	Lấy phần Significant và đẩy lên đầu và chừa 2 chỗ bit dấu và bit định trị mạc định
+const Qfloat SignificantExtract(const Qfloat& src)
+{
+	Qfloat res;
+	res = (src << (EXPONENT_BIT + 1)) >> 2;
+	
+	//Nếu phần mũ khác 0
+	//-> Đây là số chuẩn
+	//-> Thêm 1 bit định trị mặc định vào
+	if (!ExponentExtract(src).IsZero())
+		res.SetBit(1,1);
+	
+	return res;
+}
+
+//	Toán tử cộng
+const Qfloat Qfloat::operator+(const Qfloat& src) const
+{
+	if (!this->IsNumber() || !src.IsNumber())
+		return Qfloat("NaN");
+
+	Qfloat res;
+
+	//Lấy exponent bit
 	Qfloat exp1, exp2;
-	exp1 = (*this) & mask;
-	exp2 = src & mask;
+	exp1 = ExponentExtract(*this);
+	exp2 = ExponentExtract(src);
 
 	//Lấy significant bit
 	Qfloat frac1, frac2;
-		//Loại bỏ sign và exponent bit nhưng chừa lại 2 khoảng cho số 1 mặc định và dấu
-	frac1 = ((*this) << (EXPONENT_BIT + 1)) >> 2;
-	frac2 = (src << (EXPONENT_BIT + 1)) >> 2;
+	frac1 = SignificantExtract(*this);
+	frac2 = SignificantExtract(src);
 
 	//Cân bằng exponent
 	Qfloat expInterval;
 	expInterval.SetBit(EXPONENT_BIT, 1);
 	int expDelta = 0;
+	bool isMixNormal = exp1.IsZero() ^ exp2.IsZero();	//Case: subnormal + normal
+	if (isMixNormal) 
+		expDelta--;
+
+	//Tính chênh lệch exponent, nếu chênh lệch lớn hơn 112 bit thì return số còn lại
+	bool biasNum1 = exp1 < exp2;	//Bên nào bị lệch
+	while (exp1 < exp2 && expDelta <= SIGNIFICANT_BIT){
+		Adder_128bit(exp1, expInterval, exp1);	//Tăng exp
+		expDelta++;
+	}
+	if (expDelta > SIGNIFICANT_BIT)
+		return src;
+
+	while (exp1 > exp2 && expDelta <= SIGNIFICANT_BIT){
+		Adder_128bit(exp2, expInterval, exp2);	//Tăng exp
+		expDelta++;
+	}
+	if (expDelta > SIGNIFICANT_BIT)
+		return (*this);
+
+	//Dịch significant theo số chênh exponent
+	if (biasNum1)
+		frac1 = frac1 >> expDelta;
+	else
+		frac2 = frac2 >> expDelta;
+
+	//Lấy bù 2 nếu gặp số âm
+	if (this->IsNegative())
+		ComplementTwo(frac1);
+	if (src.IsNegative())
+		ComplementTwo(frac2);
+
+	//Nếu dịch xong có số bằng 0 thì return số còn lại
+	if (frac1.IsZero())
+		return src;
+	else if (frac2.IsZero())
+		return (*this);
+
+	bool isOverflow = Adder_128bit(frac1, frac2, res);
+
+	if (res.IsZero() && !isOverflow)
+		return res;
+
+	if (isOverflow)
+	{
+		//Dịch số
+		res = res >> 1;
+		res.SetBit(0, !res.GetBit(1));	//Tràn số thì bit dấu sẽ ngược với bit đầu
+		//Tăng exp
+		Adder_128bit(exp1, expInterval, exp1);
+	}
+
+	//Xử lý exponent đề phòng exponent tràn số
+	exp1.SetBit(0,0);	//Xóa bit dấu của
+	if (exp1.IsZero())
+		//Tràn số
+		return Qfloat("0");
+
+	bool resSign = res.GetBit(0);	//Lưu lại dấu
+	if (resSign)	//Số âm thì lấy bù 2 
+		ComplementTwo(res);
+
+	//Chuẩn hóa số
+	ComplementTwo(expInterval);
+
+	//Nếu bit thứ 2 là 0 
+	//	(vị trí được chừa dành cho 
+	//	bit đầu mặc định của định dạng số thực) 
+	//thì liên tục chuẩn hóa
+	//cho đến khi tìm được bit số 1 vào vị trí đó
+	while (!res.GetBit(1) && !exp1.IsZero() && !res.IsZero())
+	{
+		res = res << 1;
+		//Giảm exp
+		Adder_128bit(exp1, expInterval, exp1);
+	}
+
+	//Chuẩn hóa thất bại
+	if (res.IsZero())
+		return Qfloat("0");
+
+	res = (res << 2) >> (EXPONENT_BIT + 1);	//Đưa significant xuống
+	res = res | exp1;	//Set bit exponent, exponent của res ban đầu luôn là 0
+	res.SetBit(0,resSign);
+
+	return res;
+}
+
+//	Toán tử trừ
+const Qfloat Qfloat::operator-(const Qfloat& src) const
+{
+	//Đảo dấu rồi cộng
+	return ((*this) + src.Negate());
+}
+/*
+//Phép nhân 2 số dương
+QInt Multiplication(QInt A, QInt B)
+{
+	QInt result;
+	for (int i = BIT_RANGE - 1; i >= 1; i--)
+	{
+		if (B.GetBit(i) == 1)
+		{
+			result = result + (A << (BIT_RANGE - 1 - i));
+		}
+	}
+	return result;
+}
+
+
+QInt QInt::operator *(QInt number)
+{
+	QInt result; //kết quả
+	QInt A = *this, B = number; //biến tạm
+	bool negative1 = A.IsNegative();
+	bool negative2 = B.IsNegative();
+	//chuyển 2 số về dương
+	if (negative1)
+		A = A.ComplementTwo();
+	if (negative2)
+		B = B.ComplementTwo();
+	/*lấy số lớn hơn làm toán hạng thứ nhất
+	choice = false: *this làm toán hạng 1
+	choice = true: number làm toán hạng 1
+	bool choice = false;
+	if (number > * this)
+		choice = true;
+	if (choice)
+		result = Multiplication(B, A);
+	else
+		result = Multiplication(A, B);
+
+	if (negative1 ^ negative2) //2 số trái dấu
+		result = result.ComplementTwo();
+
+	return result;
+}
+*/
+
+//	Chuyển dạng bias sang dạng bù 2
+const Qfloat BiasToNorm(const Qfloat& src)
+{
+
+}
+
+//	Toán tử nhân
+const Qfloat Qfloat::operator*(const Qfloat& src) const
+{
+	if (this->IsZero() || src.IsZero())
+		return Qfloat("0");
+
+	Qfloat res;
+
+	//Lấy exponent bit
+	Qfloat exp1, exp2;
+	exp1 = ExponentExtract(*this);
+	exp2 = ExponentExtract(src);
+
+	//Lấy significant bit
+	Qfloat frac1, frac2;
+	frac1 = SignificantExtract(*this);
+	frac2 = SignificantExtract(src);
+
+	//Cộng exponent
+	Adder_128bit(exp1, exp2, res);
+	
+	//Trừ bias
+	Qfloat bias;
+	bias.SetBit(EXPONENT_BIT, 1);
+	bias.SetBit(0,1);
+	bias.SetBit(1,1);
+
 	bool isMixNormal = exp1.IsZero() ^ exp2.IsZero();	//Case: subnormal + normal
 	if (isMixNormal) 
 		expDelta--;
@@ -297,12 +498,6 @@ const Qfloat Qfloat::operator+(const Qfloat& src) const
 	res.SetBit(0,resSign);
 
 	return res;
-}
-
-const Qfloat Qfloat::operator-(const Qfloat& src) const
-{
-	//Đảo dấu rồi cộng
-	return (*this) + src.Negate();
 }
 
 //	Toán tử AND
