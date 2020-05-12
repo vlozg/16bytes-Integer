@@ -8,7 +8,6 @@ Qfloat::Qfloat()
 	for (int i = 0; i < 16; i++) {
 		value[i] = 0;
 	}
-	length = -1;
 }
 
 Qfloat::~Qfloat()
@@ -32,22 +31,6 @@ void Qfloat::SetBit(int pos, bool bit) {
 	else {
 		value[pos / 8] &= ~mask;  //Đảo mask và AND để tắt bit
 	}
-}
-
-/*
-Lấy độ dài của Qfloat
-*/
-int Qfloat::GetLength()
-{
-	return length;
-}
-
-/*
-Lưu độ dài của Qfloat từ số nguyên l
-*/
-void Qfloat::SetLength(int l)
-{
-	length = l;
 }
 
 /*
@@ -203,34 +186,6 @@ string Qfloat::DecStr()
 	}
 	result += fractionalDigits;
 
-	//so sánh độ dài ban đầu và kết quả để làm tròn
-	int initialLength = length;
-	if (initialLength > 0) {
-		if (initialLength < result.length()) {
-			//xóa các kí tự dư
-			while (result.length() > initialLength) {
-				result.pop_back();
-				fractionalDigits.pop_back();
-			}
-
-			string addIn = "0."; //phần sẽ được cộng thêm vào kết quả
-			while (addIn.length() < fractionalDigits.length()) {
-				addIn += '0';//thêm số không
-			}
-			addIn += '1';
-			fractionalDigits = '0' + fractionalDigits;
-
-			fractionalDigits = SumFractionals(fractionalDigits, addIn); //lấy phần thập phân + 0.(0...00)1
-			DeleteExcessiveZero(fractionalDigits); //xóa số 0 dư
-
-			if (fractionalDigits[0] == '1') { //nếu kết quả lớn hơn 1
-				SumNumbersF(integerDigits, "1"); //+ thêm 1 vào phần nguyên
-			}
-			fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa dấu .
-
-			result = integerDigits + fractionalDigits;
-		}
-	}
 	return result;
 }
 
@@ -264,9 +219,6 @@ bool ReadDecString(string input, Qfloat& output)
 	if (temp.length() == 0) {
 		return false;
 	}
-
-	//lấy độ dài số nhập vào
-	output.SetLength(temp.length());
 
 	//kiểm tra dấu
 	if (CheckMinus(temp[0])) {
@@ -511,34 +463,6 @@ void PrintQfloat(Qfloat input)
 	}
 	result += fractionalDigits;
 
-	//so sánh độ dài ban đầu và kết quả để làm tròn
-	int initialLength = input.GetLength();
-	if (initialLength > 0) {
-		if (initialLength < result.length()) {
-			//xóa các kí tự dư
-			while (result.length() > initialLength) {
-				result.pop_back();
-				fractionalDigits.pop_back();
-			}
-
-			string addIn = "0."; //phần sẽ được cộng thêm vào kết quả
-			while (addIn.length() < fractionalDigits.length()) {
-				addIn += '0';//thêm số không
-			}
-			addIn += '1';
-			fractionalDigits = '0' + fractionalDigits;
-
-			fractionalDigits = SumFractionals(fractionalDigits, addIn); //lấy phần thập phân + 0.(0...00)1
-			DeleteExcessiveZero(fractionalDigits); //xóa số 0 dư
-
-			if (fractionalDigits[0] == '1') { //nếu kết quả lớn hơn 1
-				SumNumbersF(integerDigits, "1"); //+ thêm 1 vào phần nguyên
-			}
-			fractionalDigits.erase(fractionalDigits.begin(), fractionalDigits.begin() + 1); //xóa dấu .
-
-			result = integerDigits + fractionalDigits;
-		}
-	}
 	cout << result;
 }
 
@@ -1196,7 +1120,7 @@ Qfloat BinStrToDecF(string bin)
 	}
 	while (len > 128)
 	{
-		bin.erase(0,1);
+		bin.erase(0, 1);
 		len--;
 	}
 	bool* binArr = StringToBool(bin);
