@@ -141,19 +141,42 @@ void CCalculatorDlg::PushHistoryInput(char Opr)
 //- Opr: ký tự dấu được đưa vào
 void CCalculatorDlg::PreCalc(char Opr)
 {
+	QInt temp1, temp;
 	switch (Opr)
 	{
 	case '+':	//Plus
+		temp = iOutput;
 		iOutput = iOutput + iInput;
+		//Nếu 2 số đầu vào cùng dấu mà ra kết quả trái dấu thì báo tràn
+		if (!(temp.IsNegative()^iInput.IsNegative()) && (iOutput.IsNegative() ^ iInput.IsNegative()))
+		{
+			errorMessage = "Result Overflow";
+		}
 		break;
 	case '-':	//Minus
+		temp = iOutput;
 		iOutput = iOutput - iInput;
+		//Nếu 2 số đầu vào cùng dấu mà ra kết quả trái dấu thì báo tràn
+		if (!(temp.IsNegative() ^ !iInput.IsNegative()) && (iOutput.IsNegative() ^ !iInput.IsNegative()))
+		{
+			errorMessage = "Result Overflow";
+		}
 		break;
 	case '*':	//Multiply
+		temp = iOutput;
 		iOutput = iOutput * iInput;
+		
+		temp1 = iOutput / temp;
+		//Nếu 1 số đầu vào khác 0 và kết quả chia số đó khác số còn lại => tràn
+		if (!(temp == QInt("0")) && !((iOutput / temp) == iInput))
+		{
+			errorMessage = "Result Overflow";
+		}
 		break;
 	case '/':	//Division
 		iOutput = iOutput / iInput;
+		if (iInput == QInt("0"))
+			errorMessage = "Divide by 0";
 		break;
 	case '&':	//And
 		iOutput = iOutput & iInput;

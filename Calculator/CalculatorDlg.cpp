@@ -255,6 +255,12 @@ void CCalculatorDlg::UpdateAllData()
 		//Nếu đang ở QInt mode
 		if (mode == 2)
 		{
+			//Thừa bit thì bỏ bit vừa thêm
+			if (ActiveInputString.length() > 128)
+			{
+				PopInput();
+				ActiveInputString = (string)(CW2A(ActiveInput.GetString()));
+			}
 			iInput = BinStrToDec(ActiveInputString);
 			PassiveInput1 = iInput.DecStr().c_str();
 			PassiveInput2 = iInput.HexStr().c_str();
@@ -262,12 +268,26 @@ void CCalculatorDlg::UpdateAllData()
 		else if (mode == 10)
 		{
 			iInput = ActiveInputString;
+			//Nếu số chuyển đổi khác số ban đầu thì bỏ số vừa thêm
+			if (ActiveInputString != iInput.DecStr())
+			{
+				PopInput();
+				ActiveInputString = (string)(CW2A(ActiveInput.GetString()));
+				iInput = ActiveInputString;
+			}
 			PassiveInput1 = iInput.BinStr().c_str();
 			PassiveInput2 = iInput.HexStr().c_str();
 		}
 		else
 		{
 			iInput = HexToDec((char*)ActiveInputString.c_str());
+			//Nếu số chuyển đổi khác số ban đầu thì bỏ số vừa thêm
+			if (ActiveInputString != iInput.HexStr())
+			{
+				PopInput();
+				ActiveInputString = (string)(CW2A(ActiveInput.GetString()));
+				iInput = HexToDec((char*)ActiveInputString.c_str());
+			}
 			PassiveInput1 = iInput.BinStr().c_str();
 			PassiveInput2 = iInput.DecStr().c_str();
 		}

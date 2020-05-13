@@ -83,7 +83,6 @@ private:
 	void ChangeMode_Dec();
 	void ChangeMode_Hex();
 	void ChangeMode_Bin();
-	void ChangeMode_Float();
 	void ResetInput(bool fullReset);
 	void AddInput(char bInput);
 	void PopInput();
